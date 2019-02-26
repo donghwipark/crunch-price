@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ScrollView, StyleSheet, Text, Platform, View, TouchableHighlight, Image,
+  ScrollView, StyleSheet, Text, Platform, View, TouchableOpacity, Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Emoji from 'react-native-emoji';
@@ -31,7 +31,7 @@ export default class CategoryScreen extends React.Component {
           />
         </ScrollView>
         <View style={styles.main}>
-          <TouchableHighlight
+          <TouchableOpacity
             onPress={() => { console.log('식품'); }}
           >
             <View style={styles.category}>
@@ -52,8 +52,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('생활/건강'); }}
           >
             <View style={styles.category}>
@@ -74,8 +74,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('출산/육아'); }}
           >
             <View style={styles.category}>
@@ -96,8 +96,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('화장품/미용'); }}
           >
             <View style={styles.category}>
@@ -118,8 +118,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('디지털/가전'); }}
           >
             <View style={styles.category}>
@@ -140,8 +140,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('스포츠/레저'); }}
           >
             <View style={styles.category}>
@@ -162,8 +162,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('여행/문화'); }}
           >
             <View style={styles.category}>
@@ -184,8 +184,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('가구/인테리어'); }}
           >
             <View style={styles.category}>
@@ -206,8 +206,8 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
-          <TouchableHighlight
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => { console.log('패션잡화'); }}
           >
             <View style={styles.category}>
@@ -228,7 +228,7 @@ export default class CategoryScreen extends React.Component {
                 />
               </View>
             </View>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     );
