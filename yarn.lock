@@ -2123,7 +2123,7 @@ cosmiconfig@^5.0.5:
     lodash.get "^4.4.2"
     parse-json "^4.0.0"
 
-create-react-class@^15.6.0, create-react-class@^15.6.3:
+create-react-class@^15.6.3:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
   integrity sha512-M+/3Q6E6DLO6Yx3OwrWjwHBnvfXXYA7W+dFjt/ZDBemHO1DDZhsalX/NUtnTYclN6GfnBDRh4qRHjcDHmlJBJg==
@@ -6113,14 +6113,6 @@ react-native-maps@^0.23.0:
 react-native-maps@expo/react-native-maps#v0.22.1-exp.0:
   version "0.22.1"
   resolved "https://codeload.github.com/expo/react-native-maps/tar.gz/e6f98ff7272e5d0a7fe974a41f28593af2d77bb2"
-
-react-native-page-control@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-page-control/-/react-native-page-control-1.1.1.tgz#8ac0b0ba74dbc195eeb2f9f18bfb131ed1e6808f"
-  integrity sha512-xknOvJvMHwkW/6z7goh0JvUDFUPr8c1Ho8PyKZK4ZnEKLNEIPCwtuXYMeZxp9vJeS8ym5u+IoCMgEZZOve7edw==
-  dependencies:
-    create-react-class "^15.6.0"
-    prop-types "^15.5.10"
 
 react-native-platform-touchable@^1.1.1:
   version "1.1.1"
