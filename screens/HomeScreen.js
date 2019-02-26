@@ -8,35 +8,51 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Colors from '../constants/Colors';
-import { WebBrowser } from 'expo';
-import { MonoText } from '../components/StyledText';
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import MainRecommended from '../components/Main/MainRecommended';
+import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
+
+// 현재 3번째 컴포넌트(배너)는 두번째(열어본 상품에)서 같이 렌더되고 있음. 차후 data 받아서 수정 예정 배너 dynamic하게 수정할 예정
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Home CTO chunjae',
-    headerRight: (
+    title: 'HomeScreen',
+    titleStyle: {
+      color: '#fefefe',
+      justifyContent: 'space-between',
+      textAlign: 'center',
+    },
+    headerLeft: (
       <Icon
         name={
           Platform.OS === 'ios'
-            ? `ios-cart`
+            ? 'ios-cart'
             : 'md-cart'
         }
         size={26}
         style={{ marginBottom: -3 }}
-        color={Colors.tabIconSelected}
       />
-    )
+    ),
+    headerRight: (
+      <Icon
+        name={
+          Platform.OS === 'ios'
+            ? 'arrowleft'
+            : 'arrowleft'
+        }
+        size={26}
+        style={{ marginBottom: -3 }}
+      />
+    ),
   };
 
   render() {
     return (
-      <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Text>Home Screen</Text>
-          </View>
+      <View style={styles.primeContainer}>
+        <ScrollView vertical>
+          <MainRecommended />
+          <MainRecentlyOpened />
         </ScrollView>
       </View>
     );
@@ -44,90 +60,11 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  primeContainer: {
     backgroundColor: '#fff',
+    flex: 1,
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+  Container: {
+    flex: 1,
   },
 });
