@@ -10,12 +10,23 @@ import {
   Animated,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
+import { blue } from 'ansi-colors';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 const photos = [
-  { uri: 'https://cdn.skillflow.io/resources/img/skillflowninja.png' },
-  { uri: 'https://cdn.skillflow.io/resources/img/skillflowninja.png' },
-  { uri: 'https://cdn.skillflow.io/resources/img/skillflowninja.png' },
+  {
+    id: 1,
+    name: '인기 검색어',
+  },
+  {
+    id: 2,
+    name: '최근 검색어',
+  },
+  {
+    id: 3,
+    name: '최근 본 상품',
+  },
 ];
 
 export default class SearchScreen extends React.Component {
@@ -58,7 +69,7 @@ export default class SearchScreen extends React.Component {
         }}
         >
           <View
-            style={{ flexDirection: 'row' }}
+            style={{ flexDirection: 'row', padding: 10 }}
           >
             {photos.map((_, i) => { // the _ just means we won't use that parameter
               const opacity = position.interpolate({
@@ -81,7 +92,7 @@ export default class SearchScreen extends React.Component {
           <View
             // this will bound the size of the ScrollView to be a square because
             // by default, it will expand regardless if it has a flex value or not
-            style={{ width, height: width }}
+            style={{ width, height: width, flexDirection: 'column' }}
           >
             <ScrollView
               horizontal
@@ -93,12 +104,30 @@ export default class SearchScreen extends React.Component {
               )} // in this case we are mapping the value of nativeEvent.contentOffset.x to this.scrollX
               scrollEventThrottle={16}
             >
-              {photos.map((source, i) => ( // ... we will return a square Image with the corresponding object as the source
-                <Image
-                  key={i} // we will use i for the key because no two (or more) elements in an array will have the same index
-                  style={{ width, height: width }}
-                  source={source}
-                />
+              {photos.map(source => ( // ... we will return a square Image with the corresponding object as the source
+                <View style={{
+                  width: wp('80%'),
+                  height: hp('100%'),
+                  borderRadius: 10,
+                  backgroundColor: 'rgb(239, 239, 244)',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 2, height: 2 },
+                  shadowOpacity: 0.6,
+                  shadowRadius: 2,
+                  marginLeft: wp('5%'),
+                }}
+                >
+                  <View style={{ borderBottomWidth: 0.2, borderColor: 'rgb(142, 142, 147)' }}>
+                    <Text
+                      style={{
+                        color: 'rgb(142, 142, 147)',
+                        margin: 15,
+                      }} // we will use i for the key because no two (or more) elements in an array will have the same index
+                    >
+                      {source.name}
+                    </Text>
+                  </View>
+                </View>
               ))}
             </ScrollView>
           </View>
