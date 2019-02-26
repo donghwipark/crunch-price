@@ -8,9 +8,33 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 export default class CategoryScreen extends React.Component {
   static navigationOptions = {
-    title: 'Category',
     headerRight: (
-      <Emoji name="shopping_trolley" />
+      <Icon
+        name={
+          Platform.OS === 'ios'
+            ? 'ios-cart'
+            : 'md-cart'
+        }
+        size={26}
+        style={{ marginBottom: hp(0), marginRight: wp(5) }}
+      />
+    ),
+    headerLeft: (
+      <Icon
+        name={
+          Platform.OS === 'ios'
+            ? 'arrowleft'
+            : 'arrowleft'
+        }
+        size={26}
+        style={{ marginBottom: hp(0), marginLeft: wp(5) }}
+      />
+    ),
+    headerTitle: (
+      <Image
+        style={{ marginLeft: wp('8%') }}
+        source={require('../assets/images/crunch-logo.png')}
+      />
     ),
   };
 

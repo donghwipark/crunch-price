@@ -4,8 +4,9 @@ import {
   Text,
   Image,
   View,
-  TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default class StartScreen extends React.Component {
   static navigationOptions = {
@@ -18,17 +19,17 @@ export default class StartScreen extends React.Component {
       <View style={styles.container}>
         <Image
           style={styles.norasPhoto}
-          source={require('../assets/images/noras.jpg')}
+          source={require('../assets/images/noras_ice_cream.jpg')}
         />
         <Text style={styles.title}> 더-싸지는 쇼핑 </Text>
-        <TouchableHighlight
+        <TouchableOpacity
           style={styles.button}
-          onPress={() => { navigation.navigate('Main'); }}
+          onPress={() => { navigation.navigate('Login'); }}
         >
           <View style={styles.borders}>
             <Text style={styles.startTitle}> 시작하기 </Text>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
-    marginTop: '15%',
+    marginTop: hp('9%'),
     padding: '5%',
     fontSize: 45,
     lineHeight: 55,
@@ -53,19 +54,19 @@ const styles = StyleSheet.create({
   },
   norasPhoto: {
     position: 'absolute',
-    width: 200,
-    height: 200,
-    marginTop: '60%',
-    marginLeft: '20%',
+    width: wp(40),
+    height: hp(40),
+    marginTop: hp('30%'),
+    marginLeft: wp('30%'),
   },
   button: {
-    marginTop: '10%',
-    marginBottom: '15%',
-    marginLeft: '10%',
+    marginTop: hp('10%'),
+    marginBottom: hp('5%'),
+    marginLeft: wp('10%'),
     backgroundColor: 'white',
     borderRadius: 20,
-    width: '80%',
-    height: '8%',
+    width: wp('80%'),
+    height: hp('8%'),
   },
   borders: {
     flexDirection: 'row',
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'rgb(0, 122, 255)',
     lineHeight: 51,
-    marginTop: '35%',
+    marginTop: hp('0%'),
     fontSize: 18,
     marginBottom: 50,
   },
