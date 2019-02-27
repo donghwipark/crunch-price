@@ -24,7 +24,7 @@ export default class StartScreen extends React.Component {
         <Text style={styles.title}> 더-싸지는 쇼핑 </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { navigation.navigate('Login'); }}
+          onPress={() => { navigation.navigate('Main'); }}
         >
           <View style={styles.borders}>
             <Text style={styles.startTitle}> 시작하기 </Text>
