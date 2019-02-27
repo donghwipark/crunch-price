@@ -10,26 +10,19 @@ import {
   Animated,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { blue } from 'ansi-colors';
+import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const { width } = Dimensions.get('window');
 const photos = [
   {
     id: 1,
-    name: '인기 검색어',
-    result: ['초콜릿', '물티슈', '페레로로쉐', '발렌타인 데이', '생수', '무선청소기', '꽃다발', '에어팟', '롱원피스']
   },
   {
     id: 2,
-    name: '최근 검색어',
-    result: [ '물티슈', '에어프라이어', 'led 형광등 호환형' ]
   },
   {
     id: 3,
-    name: '최근 본 상품',
-    result: [ '물티슈', '에어프라이어', 'led 형광등 호환형' ]
-
   },
 ];
 
@@ -45,6 +38,7 @@ export default class SearchScreen extends React.Component {
 
   state = {
     search: '',
+    popularSearch: [],
   };
 
 
@@ -52,9 +46,20 @@ export default class SearchScreen extends React.Component {
     this.setState({ search });
   };
 
+  componentDidMount = () => {
+    axios.get('http://api.crunchprice.com/goods/get_popular_search.php')
+      .then(res => {
+        const result = res.data
+        this.setState({ popularSearch : result.data})
+      })
+  }
+
   render() {
     const position = Animated.divide(this.scrollX, width);
-    const { search } = this.state;
+    const { search, popularSearch } = this.state;   
+    let i = 0;
+    console.log(popularSearch)
+    // need to put the number of the values and the +2 to calculate the height of the tables
     return (
       <View style={styles.page}>
         <SearchBar
@@ -85,7 +90,7 @@ export default class SearchScreen extends React.Component {
               });
               return (
                 <Animated.View // we will animate the opacity of the dots so use Animated.View instead of View here
-                  key={i} // we will use i for the key because no two (or more) elements in an array will have the same index
+                  key={_.id} // we will use i for the key because no two (or more) elements in an array will have the same index
                   style={{
                     opacity, height: 10, width: 10, backgroundColor: '#595959', margin: 8, borderRadius: 5,
                   }}
@@ -96,7 +101,7 @@ export default class SearchScreen extends React.Component {
           <View
             // this will bound the size of the ScrollView to be a square because
             // by default, it will expand regardless if it has a flex value or not
-            style={{ top: 20, width:wp('100%'), height: hp('60%') }}
+            style={{ top: 20, width: wp('100%'), height: hp('60%') }}
           >
             <ScrollView
               horizontal
@@ -107,39 +112,110 @@ export default class SearchScreen extends React.Component {
                 [{ nativeEvent: { contentOffset: { x: this.scrollX } } }], // ... is an object that maps any nativeEvent prop to a variable
               )} // in this case we are mapping the value of nativeEvent.contentOffset.x to this.scrollX
               scrollEventThrottle={16}
-              contentContainerStyle={{  flexDirection:"row" }}
+              contentContainerStyle={{ flexDirection: 'row' }}
             >
-              {photos.map(source => ( // ... we will return a square Image with the corresponding object as the source
-                <View style={{
-                  width: wp('100%'),
-                  borderRadius: 10,
-                  backgroundColor: 'rgb(239, 239, 244)',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 2, height: 2 },
-                  shadowOpacity: 0.6,
-                  shadowRadius: 2,
-                }}
-                >
-                  <View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)' }}>
-                    <Text
-                      style={{
-                        color: 'rgb(142, 142, 147)',
-                        margin: 10,
-                      }} // we will use i for the key because no two (or more) elements in an array will have the same index
-                    >
-                      {source.name}
+        
+              <View style={{
+                width: wp('90%'),
+                marginLeft: wp('5%'),
+                height: hp('5%') * popularSearch.length + 2,
+                borderRadius: 10,
+                backgroundColor: 'rgb(239, 239, 244)',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 10 },
+                shadowOpacity: 0.6,
+                elevation: 1,
+                shadowRadius: 10,
+              }}
+              >
+                <View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)' }}>
+                  <Text
+                    style={styles.explainText}  // we will use i for the key because no two (or more) elements in an array will have the same index
+                  >
+                    인기 검색어
+                  </Text>
+                </View>
+                {
+                  popularSearch.map(result => {
+                    i++
+                    return (<View key={i} style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)', backgroundColor:"white", height: hp("5%"), width: wp("90%")}}>
+                      <Text style={{ margin: 10 }}> {i}  {result.keyword} </Text>  
+                    </View>)
+                  })
+                }
+                <View>
+                  <Text style={styles.explainText} >
+                    저장기능 끄기
+                  </Text>
+                  
+
+                </View>  
+              </View>
+
+              <View style={{
+                width: wp('90%'),
+                marginLeft: wp('10%'),
+                borderRadius: 10,
+                backgroundColor: 'rgb(239, 239, 244)',
+                shadowColor: '#000',
+                shadowOffset: { width: 2, height: 2 },
+                shadowOpacity: 0.6,
+                shadowRadius: 2,
+              }}
+              >
+                <View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)' }}>
+                  <Text
+                    style={styles.explainText} // we will use i for the key because no two (or more) elements in an array will have the same index
+                  >
+                    최근 검색어
+                  </Text>
+                </View>
+                  <View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)', backgroundColor: "white", height: hp("5%"), width: wp("90%")}}>
+                    <Text style={{ margin: 10 }}>
+                      이름 
                     </Text>
                   </View>
-                  {source.result.map(name => (<View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)', backgroundColor:"white", height: hp("5%"), width: wp("100%")}}>
-                    <Text style={{margin :10}}>
-                      {name} 
-                    </Text>  
-                  </View>))}
-                  <View>
-                    {source.bottom}
-                  </View>  
+                <View>
+                  <Text style={styles.explainText}>
+                  업데이트
+                  </Text>
                 </View>
-              ))}
+              </View>
+
+              <View style={{
+                width: wp('90%'),
+                marginLeft: wp('10%'),
+                marginRight: hp('3%'),
+                borderRadius: 10,
+                backgroundColor: 'rgb(239, 239, 244)',
+                shadowColor: '#000',
+                shadowOffset: { width: 2, height: 2 },
+                shadowOpacity: 0.6,
+                shadowRadius: 2,
+              }}
+              >
+                <View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)' }}>
+                  <Text
+                    style={styles.explainText} // we will use i for the key because no two (or more) elements in an array will have the same index
+                  >
+                    최근 본 상품
+                  </Text>
+                </View>
+                <View style={{
+                  borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)', backgroundColor: 'white', height: hp('5%'), width: wp('90%') 
+                }}
+                >
+                  <Text style={{ margin: 10 }}> 이름 </Text>
+                </View>
+                <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+                  <Text style={styles.explainText}>
+                    저장기능 끄기
+                  </Text>
+                  <Text style={styles.explainText}>
+                    전체삭제
+                  </Text>
+                </View>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -150,7 +226,10 @@ export default class SearchScreen extends React.Component {
 
 const styles = StyleSheet.create({
   page: {
-    //flexDirection: 'column',
+    position: 'absolute',
   },
- 
+  explainText:{
+    color: 'rgb(142, 142, 147)',
+    margin: 10,
+  }
 });
