@@ -18,14 +18,18 @@ const photos = [
   {
     id: 1,
     name: '인기 검색어',
+    result: ['초콜릿', '물티슈', '페레로로쉐', '발렌타인 데이', '생수', '무선청소기', '꽃다발', '에어팟', '롱원피스']
   },
   {
     id: 2,
     name: '최근 검색어',
+    result: [ '물티슈', '에어프라이어', 'led 형광등 호환형' ]
   },
   {
     id: 3,
     name: '최근 본 상품',
+    result: [ '물티슈', '에어프라이어', 'led 형광등 호환형' ]
+
   },
 ];
 
@@ -69,7 +73,7 @@ export default class SearchScreen extends React.Component {
         }}
         >
           <View
-            style={{ flexDirection: 'row', padding: 10 }}
+            style={{ flexDirection: 'row', padding: 5 }}
           >
             {photos.map((_, i) => { // the _ just means we won't use that parameter
               const opacity = position.interpolate({
@@ -92,7 +96,7 @@ export default class SearchScreen extends React.Component {
           <View
             // this will bound the size of the ScrollView to be a square because
             // by default, it will expand regardless if it has a flex value or not
-            style={{ width, height: width, flexDirection: 'column' }}
+            style={{ top: 20, width:wp('100%'), height: hp('60%') }}
           >
             <ScrollView
               horizontal
@@ -103,30 +107,37 @@ export default class SearchScreen extends React.Component {
                 [{ nativeEvent: { contentOffset: { x: this.scrollX } } }], // ... is an object that maps any nativeEvent prop to a variable
               )} // in this case we are mapping the value of nativeEvent.contentOffset.x to this.scrollX
               scrollEventThrottle={16}
+              contentContainerStyle={{  flexDirection:"row" }}
             >
               {photos.map(source => ( // ... we will return a square Image with the corresponding object as the source
                 <View style={{
-                  width: wp('80%'),
-                  height: hp('100%'),
+                  width: wp('100%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
                   shadowColor: '#000',
                   shadowOffset: { width: 2, height: 2 },
                   shadowOpacity: 0.6,
                   shadowRadius: 2,
-                  marginLeft: wp('5%'),
                 }}
                 >
-                  <View style={{ borderBottomWidth: 0.2, borderColor: 'rgb(142, 142, 147)' }}>
+                  <View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)' }}>
                     <Text
                       style={{
                         color: 'rgb(142, 142, 147)',
-                        margin: 15,
+                        margin: 10,
                       }} // we will use i for the key because no two (or more) elements in an array will have the same index
                     >
                       {source.name}
                     </Text>
                   </View>
+                  {source.result.map(name => (<View style={{ borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)', backgroundColor:"white", height: hp("5%"), width: wp("100%")}}>
+                    <Text style={{margin :10}}>
+                      {name} 
+                    </Text>  
+                  </View>))}
+                  <View>
+                    {source.bottom}
+                  </View>  
                 </View>
               ))}
             </ScrollView>
@@ -139,16 +150,7 @@ export default class SearchScreen extends React.Component {
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    //flexDirection: 'column',
   },
-  container: {
-    flex: 1,
-    paddingTop: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scrollView: {
-    backgroundColor: 'yellow',
-  },
+ 
 });
