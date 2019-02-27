@@ -1,55 +1,99 @@
 import React from 'react';
 import {
-  Image,
-  ScrollView,
+  // Image,
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  // Text,
+  // TouchableOpacity,
   View,
-  FlatList,
+  // FlatList,
 } from 'react-native';
+
+import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import fakeData from './fakeData';
+import List from './sorter/List';
+import Grid from './sorter/Grid';
+import OneBigStub from './sorter/oneBigStub';
+
 
 // 현재 배너와 열어본 상품을 여기에 함께 정의해 놓았음
+export default class MainRecentlyOpened extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sortingType: 'focused',
+    };
+  }
 
-const MainRecentlyOpened = () => (
-  <View style={styles.primeContainer}>
-    <FlatList
-      data={fakeData}
-      renderItem={({ item }) => (
-        <TouchableOpacity style={styles.primeContainer}>
-          <Image source={{ uri: item.image, width: wp('30%'), height: hp('30%') }} />
-          <Text>{item.name}</Text>
-          <Text>{item.description}</Text>
-        </TouchableOpacity>
-      )}
-      numColumns={2}
-      keyExtractor={(item) => item.name}
+  onPressList = () => {
+    this.setState({
+      sortingType: 'list',
+    });
+  }
 
-    />
-    <View style={[styles.box, styles.box3]}>
-      <ScrollView horizontal style={styles.container}>
-        <Image style={styles.recommendedImages} source={{ uri: 'http://i.imgur.com/k1yVI.jpg', width: wp('70%'), height: hp('40%') }} />
-        <Image style={styles.recommendedImages} source={{ uri: 'http://i.imgur.com/k1yVI.jpg', width: wp('70%'), height: hp('40%') }} />
-        <Image style={styles.recommendedImages} source={{ uri: 'https://i.imgur.com/k1yVI.jpg', width: wp('70%'), height: hp('40%') }} />
-      </ScrollView>
-    </View>
-  </View>
-);
+  onPressGrid = () => {
+    this.setState({
+      sortingType: 'grid',
+    });
+  }
 
+  onPressFocused = () => {
+    this.setState({
+      sortingType: 'focused',
+    });
+  }
+
+
+  render() {
+    const { sortingType } = this.state;
+    const grid = <Grid />;
+    const list = <List />;
+    const oneBigStub = <OneBigStub />;
+
+    return (
+      <View style={styles.primeContainer}>
+        <View style={styles.sortingIcons}>
+          <Entypo
+            name="list"
+            size={26}
+            onPress={this.onPressList}
+          />
+          <Entypo
+            name="grid"
+            size={26}
+            onPress={this.onPressGrid}
+          />
+          <Feather
+            name="square"
+            size={26}
+            onPress={this.onPressFocused}
+          />
+        </View>
+        {sortingType === 'grid' ? grid : sortingType === 'list' ? list : oneBigStub}
+      </View>
+    );
+  } 
+  /*
+    {sortingType === 'grid'? (
+      <Grid />
+     ) : sortingType === 'list'? (
+       <List /> 
+     ) : (
+       <Focused />
+     )}
+*/
+}
 const styles = StyleSheet.create({
   primeContainer: {
     flex: 1,
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     marginLeft: 10,
     marginTop: 10,
   },
@@ -60,10 +104,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
+  sortingIcons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: wp('95%'),
+  },
 });
 
-
-export default MainRecentlyOpened;
 /*
 <View style={[styles.box, styles.box2]}>
       <View style={[styles.smallBox, styles.box3]}>

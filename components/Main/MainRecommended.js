@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   Image,
-  Platform,
+  // Platform,
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  // Text,
+  // TouchableOpacity,
   View,
 } from 'react-native';
 import {
