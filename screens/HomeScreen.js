@@ -4,11 +4,13 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  // Text,
+  // TouchableOpacity,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 import MainRecommended from '../components/Main/MainRecommended';
 import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
@@ -17,13 +19,7 @@ import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'HomeScreen',
-    titleStyle: {
-      color: '#fefefe',
-      justifyContent: 'space-between',
-      textAlign: 'center',
-    },
-    headerLeft: (
+    headerRight: (
       <Icon
         name={
           Platform.OS === 'ios'
@@ -31,10 +27,10 @@ export default class HomeScreen extends React.Component {
             : 'md-cart'
         }
         size={26}
-        style={{ marginBottom: -3 }}
+        style={{ marginBottom: hp(0), marginRight: wp(5) }}
       />
     ),
-    headerRight: (
+    headerLeft: (
       <Icon
         name={
           Platform.OS === 'ios'
@@ -42,7 +38,13 @@ export default class HomeScreen extends React.Component {
             : 'arrowleft'
         }
         size={26}
-        style={{ marginBottom: -3 }}
+        style={{ marginBottom: hp(0), marginLeft: wp(5) }}
+      />
+    ),
+    headerTitle: (
+      <Image
+        style={{ marginLeft: wp('8%') }}
+        source={require('../assets/images/crunch-logo.png')}
       />
     ),
   };
