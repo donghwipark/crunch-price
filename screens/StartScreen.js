@@ -10,7 +10,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 export default class StartScreen extends React.Component {
   static navigationOptions = {
-    title: null,
+    header: null,
   };
 
   render() {
@@ -28,6 +28,14 @@ export default class StartScreen extends React.Component {
         >
           <View style={styles.borders}>
             <Text style={styles.startTitle}> 시작하기 </Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => { navigation.navigate('SignUp'); }}
+        >
+          <View style={styles.borders}>
+            <Text style={styles.startTitle}> 회원가입 </Text>
           </View>
         </TouchableOpacity>
       </View>

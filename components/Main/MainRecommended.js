@@ -7,21 +7,36 @@ import {
   // Text,
   // TouchableOpacity,
   View,
+  Text,
+  TouchableOpacity,
+  Linking,
+  Alert,
+  FlatList,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const MainRecommended = () => (
+const MainRecommended = ({bannerData}) => (
   <View style={styles.primeContainer}>
-    <View style={[styles.box, styles.box1]}>
+   
       <ScrollView horizontal style={styles.container}>
-        <Image style={styles.recommendedImages} source={{ uri: 'http://i.imgur.com/k1yVI.jpg', width: wp('70%'), height: hp('40%') }} />
-        <Image style={styles.recommendedImages} source={{ uri: 'http://i.imgur.com/k1yVI.jpg', width: wp('70%'), height: hp('40%') }} />
-        <Image style={styles.recommendedImages} source={{ uri: 'https://i.imgur.com/k1yVI.jpg', width: wp('70%'), height: hp('40%') }} />
+      <FlatList horizontal
+      data={bannerData}
+      renderItem={({ item }) => (
+        <TouchableOpacity style={styles.container} onPress={() =>{Linking.openURL(item.bannerLink)}}>
+          <Image source={{ uri: item.imgLink, width: wp('65%'), height: hp('35%') }} style={styles.recommendedImages} />
+        </TouchableOpacity>
+      )}
+      numColumns={1}
+      keyExtractor={(item) => item.imgLink}
+    />
+      
+      
+      
       </ScrollView>
-    </View>
+ 
 
   </View>
 );
@@ -36,7 +51,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     marginLeft: 10,
     marginTop: 10,
   },
@@ -67,3 +81,56 @@ const styles = StyleSheet.create({
 
 
 export default MainRecommended;
+
+
+
+/*
+
+{bannerData.map((item, i) => (
+      <TouchableOpacity onPress={() => Alert.alert(item.bannerLink)}>
+      <View key={item.imgLink}>
+      <Image style={styles.recommendedImages} source={{uri: item.imgLink, width: wp('30%'), height: hp('30%')}} ></Image>
+      </View>
+      </TouchableOpacity>
+      )
+                  )}
+
+Array [
+  Object {
+    "bannerLink": "/",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "https://pf.kakao.com/_UraTC",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "https://m.blog.naver.com/PostView.nhn?blogId=crunchcompany&amp;logNo=221232936626&amp;referrerCode=0&amp;searchKeyword=%EC%82%AC%EC%97%85%EC%9E%90",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "https://m.blog.naver.com/PostView.nhn?blogId=crunchcompany&amp;logNo=221292118666&amp;navType=tl",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "https://m.docs.google.com/forms/d/e/1FAIpQLScvbfnspzxPcwJagoBPezuXHnEnWOGzWRIH4H_3837tYwQ4qg/viewform",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "https://pf.kakao.com/_UraTC",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "https://pf.kakao.com/_xdnfxfj",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "링크1",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+  Object {
+    "bannerLink": "테스트",
+    "imgLink": "http://image.auction.co.kr/itemimage/15/d6/48/15d6486f56.jpg",
+  },
+]
+*/

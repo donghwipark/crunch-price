@@ -6,7 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen';
 import MyPageScreen from '../screens/MyPageScreen';
-import SignInScreen from '../screens/SignInScreen'
+
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -74,6 +74,7 @@ MyPageScreenStack.navigationOptions = {
     />
   ),
 };
+
 
 export default createBottomTabNavigator({
   HomeStack,

@@ -82,7 +82,7 @@ export default class MainRecentlyOpened extends React.Component {
     {sortingType === 'grid'? (
       <Grid />
      ) : sortingType === 'list'? (
-       <List /> 
+       <List />
      ) : (
        <Focused />
      )}
