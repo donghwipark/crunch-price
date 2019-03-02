@@ -80,7 +80,7 @@ export default class HomeScreen extends React.Component {
     try {
       await Linking.openURL(URL);
     } catch {
-      Alert.alert('인터넷 연결이 불안정합니다. 와이파이를 확인해주세요.')
+      Alert.alert('인터넷 연결이 불안정합니다. 와이파이를 확인해주세요.');
     }
   }
 
@@ -112,7 +112,7 @@ export default class HomeScreen extends React.Component {
 
             )}
             numColumns={1}
-            keyExtractor={(item) => item.text1}
+            keyExtractor={item => item.text1}
           />
         </View>
       </View>

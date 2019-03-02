@@ -4,10 +4,10 @@ import {
   Text,
   View,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as Progress from 'react-native-progress';
-import Icon from 'react-native-vector-icons/AntDesign';
 // import { CheckBox } from 'react-native-elements';
 import CheckBox from 'react-native-check-box';
 
@@ -20,13 +20,13 @@ export default class SignUpScreen extends React.Component {
   }
 
   state = {
-    acceptAll: false,
     agreement: false,
     personalInfo: false,
     personalInfoOptional: false,
     delegatePersonalInfo: false,
     thirdPartyPersonalInfo: false,
     isCheckedAll: false,
+    agreements: [{text: 1111}],
   }
 
   render() {
@@ -40,7 +40,6 @@ export default class SignUpScreen extends React.Component {
           </View>
           <View style={{ marginLeft: wp('2%') }}>
             <CheckBox
-              style={{ fontSize: 15 }}
               onClick={() => {
                 this.setState({
                   agreement: agreement ? true : !agreement,
@@ -60,7 +59,6 @@ export default class SignUpScreen extends React.Component {
         </View>
         <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'black', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
-            
             onClick={() => {
               this.setState({
                 agreement: !agreement,
@@ -74,7 +72,6 @@ export default class SignUpScreen extends React.Component {
         </View>
         <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'black', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
-            
             onClick={() => {
               this.setState({
                 personalInfo: !personalInfo,
@@ -102,7 +99,6 @@ export default class SignUpScreen extends React.Component {
         </View>
         <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'black', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
-            
             onClick={() => {
               this.setState({
                 delegatePersonalInfo: !delegatePersonalInfo,
@@ -128,6 +124,26 @@ export default class SignUpScreen extends React.Component {
           <Text style={{ fontSize: 15 }}> (선택) 개인정보 제 3 자 제공</Text>
           <Text style={{ fontSize: 20, color: 'blue', marginLeft: 'auto' }}>내용보기</Text>
         </View>
+        <FlatList 
+          data={this.state.agreements}
+          renderItem={(item) => (
+            <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'grey', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
+          <CheckBox
+
+            onClick={() => {
+              this.setState({
+                thirdPartyPersonalInfo: !thirdPartyPersonalInfo,
+              });
+            }
+          }
+            isChecked={thirdPartyPersonalInfo}
+          />
+          <Text style={{ fontSize: 15 }}>1111</Text>
+          <Text>{item.text}</Text>
+        </View>
+          )}
+          keyExtractor={item => item.text}
+          />
         <View style={{ flex: 1, flexDirection: 'row', width: wp('90%'), alignSelf: 'center' }}>
           <View style={{ marginTop: hp('2%') }}>
             <TouchableOpacity style={{ width: wp('44%'), height: hp('8%'), backgroundColor: 'rgb(162,222,161)', justifyContent: 'center', alignItems: 'center' }}>
