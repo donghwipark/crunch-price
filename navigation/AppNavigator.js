@@ -2,6 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator, createStackNavigator } from 'react-navigation';
 import StartScreen from '../screens/StartScreen';
 import SignUpScreen from '../screens/signUps/SignUpScreen';
+import SignUpScreenTwo from '../screens/signUps/SignUpScreenTwo';
 import MainTabNavigator from './MainTabNavigator';
 // import SignInScreen from '../screens/SignInScreen';
 import LoadingScreen from '../screens/LoadingScreen';
@@ -9,6 +10,7 @@ import LoadingScreen from '../screens/LoadingScreen';
 const SignUpStack = createStackNavigator({
   StartScreen,
   SignUp: SignUpScreen,
+  SignUpTwo: SignUpScreenTwo,
 });
 
 export default createAppContainer(createSwitchNavigator({
