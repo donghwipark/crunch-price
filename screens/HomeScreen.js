@@ -30,6 +30,12 @@ import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/bo
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
+    headerTitle: (
+      <Image
+        style={{ width: '50%', height: '60%' }}
+        source={require('../assets/images/crunch-logo.png')}
+      />
+    ),
     headerRight: (
       <Icon
         name={
@@ -38,24 +44,7 @@ export default class HomeScreen extends React.Component {
             : 'md-cart'
         }
         size={26}
-        style={{ marginBottom: hp(0), marginRight: wp(5) }}
-      />
-    ),
-    headerLeft: (
-      <Icon
-        name={
-          Platform.OS === 'ios'
-            ? 'arrowleft'
-            : 'arrowleft'
-        }
-        size={26}
-        style={{ marginBottom: hp(0), marginLeft: wp(5) }}
-      />
-    ),
-    headerTitle: (
-      <Image
-        style={{ marginLeft: wp('8%') }}
-        source={require('../assets/images/crunch-logo.png')}
+        style={{ marginRight: wp('3%') }}
       />
     ),
   };

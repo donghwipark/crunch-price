@@ -29,9 +29,6 @@ const photos = [
 export default class SearchScreen extends React.Component {
   static navigationOptions = {
     title: '검색',
-    headerRight: (
-      <Text>취소</Text>
-    ),
   };
 
   scrollX = new Animated.Value(0)
