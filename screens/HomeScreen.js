@@ -30,6 +30,12 @@ import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/bo
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
+    headerTitle: (
+      <Image
+        style={{ width: '50%', height: '60%' }}
+        source={require('../assets/images/crunch-logo.png')}
+      />
+    ),
     headerRight: (
       <Icon
         name={
@@ -38,24 +44,7 @@ export default class HomeScreen extends React.Component {
             : 'md-cart'
         }
         size={26}
-        style={{ marginBottom: hp(0), marginRight: wp(5) }}
-      />
-    ),
-    headerLeft: (
-      <Icon
-        name={
-          Platform.OS === 'ios'
-            ? 'arrowleft'
-            : 'arrowleft'
-        }
-        size={26}
-        style={{ marginBottom: hp(0), marginLeft: wp(5) }}
-      />
-    ),
-    headerTitle: (
-      <Image
-        style={{ marginLeft: wp('8%') }}
-        source={require('../assets/images/crunch-logo.png')}
+        style={{ marginRight: wp('3%') }}
       />
     ),
   };
@@ -80,7 +69,7 @@ export default class HomeScreen extends React.Component {
     try {
       await Linking.openURL(URL);
     } catch {
-      Alert.alert('인터넷 연결이 불안정합니다. 와이파이를 확인해주세요.')
+      Alert.alert('인터넷 연결이 불안정합니다. 와이파이를 확인해주세요.');
     }
   }
 
@@ -112,7 +101,7 @@ export default class HomeScreen extends React.Component {
 
             )}
             numColumns={1}
-            keyExtractor={(item) => item.text1}
+            keyExtractor={item => item.text1}
           />
         </View>
       </View>

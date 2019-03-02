@@ -19,18 +19,15 @@ export default class MyPageScreen extends React.Component {
       <TouchableOpacity
         onPress={console.log(1)}
       >
-        <View>
-          <Icon
-            name={
-              Platform.OS === 'ios'
-                ? 'ios-cart'
-                : 'md-cart'
-            }
-            size={26}
-            style={{ marginBottom: -3 }}
-            color={Colors.tabIconSelected}
-          />
-        </View>
+        <Icon
+          name={
+          Platform.OS === 'ios'
+            ? 'ios-cart'
+            : 'md-cart'
+        }
+          size={26}
+          style={{ marginRight: wp('3%') }}
+        />
       </TouchableOpacity>
     ),
   };
