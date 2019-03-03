@@ -25,7 +25,6 @@ import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 // 템플릿 아이템 박스
 import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/boxTemplate';
 
-
 // 현재 3번째 컴포넌트(배너)는 두번째(열어본 상품에)서 같이 렌더되고 있음. 차후 data 받아서 수정 예정 배너 dynamic하게 수정할 예정
 
 export default class HomeScreen extends React.Component {
