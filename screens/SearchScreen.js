@@ -8,10 +8,12 @@ import {
   ScrollView,
   Dimensions,
   Animated,
+  AsyncStorage,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { asyncStorageSet, asyncStorageGet } from '../helper/asyncHelper';
 
 const { width } = Dimensions.get('window');
 const photos = [
@@ -37,23 +39,36 @@ export default class SearchScreen extends React.Component {
   scrollX = new Animated.Value(0)
 
   state = {
-    search: '',
     popularSearch: [],
+    search: '',
   };
   
-  updateSearch = (search) => {
-    this.setState({ search: search });
+  updateSearch = async () => {
+    const { search } = this.state
     axios.get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
       params: {
         searchWords: search
       }
     })
     .then(function (response) {
-      console.log(response.data);
+      //console.log(response.data);
     })
     .catch(function (error) {
-      console.log(error);
+      //console.log(error);
     });
+
+    //await AsyncStorage.removeItem('search')
+    let getItem = await AsyncStorage.getItem('search')
+    if ( getItem === null) {
+      let array = []
+      array.push(search)
+      await AsyncStorage.setItem('search', JSON.stringify(array))
+    } else {
+      let getItemArray = JSON.parse(getItem)
+      getItemArray.push(search)
+      await AsyncStorage.setItem('search', JSON.stringify(getItemArray))
+    }
+    console.log('최종 결과값', await AsyncStorage.getItem('search'))
   };
 
   componentDidMount = () => {
@@ -68,7 +83,6 @@ export default class SearchScreen extends React.Component {
     const position = Animated.divide(this.scrollX, width);
     const { search, popularSearch } = this.state;
     let i = 0;
-    console.log(popularSearch);
     // need to put the number of the values and the +2 to calculate the height of the tables
     return (
       <View style={styles.page}>
@@ -80,7 +94,8 @@ export default class SearchScreen extends React.Component {
           }
           placeholder="검색어 입력"
           onClear={this.search}
-          onChangeText={this.updateSearch}
+          onSubmitEditing={this.updateSearch}
+          onChangeText={ val => this.setState({ search: val }) } 
           value={search}
           style={{ position: 'relative' }}
         />
