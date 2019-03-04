@@ -20,8 +20,6 @@ import List from './sorter/List';
 import Grid from './sorter/Grid';
 import OneBigStub from './sorter/oneBigStub';
 
-
-// 현재 배너와 열어본 상품을 여기에 함께 정의해 놓았음
 export default class MainRecentlyOpened extends React.Component {
   constructor(props) {
     super(props);
@@ -50,11 +48,12 @@ export default class MainRecentlyOpened extends React.Component {
 
 
   render() {
+    const { fakeData } = this.props;
     const { sortingType } = this.state;
-    const grid = <Grid />;
-    const list = <List />;
-    const oneBigStub = <OneBigStub />;
-
+    const grid = <Grid fakeData={fakeData} />;
+    const list = <List fakeData={fakeData} />;
+    const oneBigStub = <OneBigStub fakeData={fakeData} />;
+    console.log(fakeData)
     return (
       <View style={styles.primeContainer}>
         <View style={styles.sortingIcons}>

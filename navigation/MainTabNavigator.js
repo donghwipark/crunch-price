@@ -13,7 +13,8 @@ const HomeStack = createStackNavigator({
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: '홈',
+  headerLayoutPreset: 'center',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -31,7 +32,7 @@ Category: CategoryScreen,
 });
 
 CategoryStack.navigationOptions = {
-  tabBarLabel: 'Category',
+  tabBarLabel: '카테고리',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -47,7 +48,7 @@ const SearchStack = createStackNavigator({
 });
 
 SearchStack.navigationOptions = {
-  tabBarLabel: 'Search',
+  tabBarLabel: '검색',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -64,7 +65,7 @@ const MyPageScreenStack = createStackNavigator({
 });
 
 MyPageScreenStack.navigationOptions = {
-  tabBarLabel: 'MyPage',
+  tabBarLabel: '마이 쇼핑',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}

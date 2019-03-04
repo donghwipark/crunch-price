@@ -13,13 +13,14 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import fakeData from '../fakeData';
+import fakeDatab from '../fakeData';
 
 // 현재 배너와 열어본 상품을 여기에 함께 정의해 놓았음
-const Grid = () => (
+const Grid = (props) => {
+  return (
   <View style={styles.primeContainer}>
     <FlatList
-      data={fakeData}
+      data={props.fakeData}
       renderItem={({ item }) => (
         <TouchableOpacity style={styles.container}>
           <Image source={{ uri: item.image, width: wp('40%'), height: hp('25%') }} style={styles.recommendedImages} />
@@ -31,7 +32,7 @@ const Grid = () => (
       keyExtractor={(item) => item.name}
     />
   </View>
-);
+)};
 
 const styles = StyleSheet.create({
   primeContainer: {

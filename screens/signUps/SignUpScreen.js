@@ -5,6 +5,8 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Alert,
+  Modal,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import * as Progress from 'react-native-progress';
@@ -26,7 +28,17 @@ export default class SignUpScreen extends React.Component {
     delegatePersonalInfo: false,
     thirdPartyPersonalInfo: false,
     isCheckedAll: false,
-    agreements: [{text: 1111}],
+  }
+
+  onPressNextButton = () => {
+    const { agreement, personalInfo } = this.state;
+    const { navigation } = this.props;
+
+    if (agreement && personalInfo) {
+      navigation.navigate('SignUpTwo');
+    } else {
+      Alert.alert('약관에 동의해주세요');
+    }
   }
 
   render() {
@@ -41,14 +53,25 @@ export default class SignUpScreen extends React.Component {
           <View style={{ marginLeft: wp('2%') }}>
             <CheckBox
               onClick={() => {
-                this.setState({
-                  agreement: agreement ? true : !agreement,
-                  personalInfo: personalInfo ? true : !personalInfo,
-                  personalInfoOptional: personalInfoOptional ? true : !personalInfoOptional,
-                  delegatePersonalInfo: delegatePersonalInfo ? true : !delegatePersonalInfo,
-                  thirdPartyPersonalInfo: thirdPartyPersonalInfo ? true : !thirdPartyPersonalInfo,
-                  isCheckedAll: isCheckedAll ? true : !isCheckedAll,
-                });
+                if (isCheckedAll) {
+                  this.setState({
+                    agreement: agreement ? false : agreement,
+                    personalInfo: personalInfo ? false : personalInfo,
+                    personalInfoOptional: personalInfoOptional ? false : personalInfoOptional,
+                    delegatePersonalInfo: delegatePersonalInfo ? false : delegatePersonalInfo,
+                    thirdPartyPersonalInfo: thirdPartyPersonalInfo ? false : thirdPartyPersonalInfo,
+                    isCheckedAll: false,
+                  });
+                } else {
+                  this.setState({
+                    agreement: agreement ? true : !agreement,
+                    personalInfo: personalInfo ? true : !personalInfo,
+                    personalInfoOptional: personalInfoOptional ? true : !personalInfoOptional,
+                    delegatePersonalInfo: delegatePersonalInfo ? true : !delegatePersonalInfo,
+                    thirdPartyPersonalInfo: thirdPartyPersonalInfo ? true : !thirdPartyPersonalInfo,
+                    isCheckedAll: true,
+                  });
+                }
               }
           }
               isChecked={isCheckedAll}
@@ -57,7 +80,7 @@ export default class SignUpScreen extends React.Component {
           </View>
           <View style={{ borderWidth: 1, borderColor: 'black', margin: 10, marginTop: hp('2%') }} />
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'black', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'grey', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
             onClick={() => {
               this.setState({
@@ -68,9 +91,9 @@ export default class SignUpScreen extends React.Component {
             isChecked={agreement}
           />
           <Text style={{ fontSize: 15 }}> (필수) 이용약관</Text>
-          <Text style={{ fontSize: 20, color: 'blue', marginLeft: 'auto' }}>내용보기</Text>
+          <Text onPress={() => { navigation.navigate('content1'); }} style={styles.contentText}>내용보기</Text>
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'black', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'grey', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
             onClick={() => {
               this.setState({
@@ -81,9 +104,9 @@ export default class SignUpScreen extends React.Component {
             isChecked={personalInfo}
           />
           <Text style={{ fontSize: 15 }}> (필수) 개인정보 수집 및 이용</Text>
-          <Text style={{ fontSize: 20, color: 'blue', marginLeft: 'auto' }}>내용보기</Text>
+          <Text onPress={() => { navigation.navigate('content1'); }} style={styles.contentText}>내용보기</Text>
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.8, borderBottomColor: 'black', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'grey', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
 
             onClick={() => {
@@ -95,9 +118,9 @@ export default class SignUpScreen extends React.Component {
             isChecked={personalInfoOptional}
           />
           <Text style={{ fontSize: 15 }}> (선택) 개인정보 수집 및 이용</Text>
-          <Text style={{ fontSize: 20, color: 'blue', marginLeft: 'auto' }}>내용보기</Text>
+          <Text onPress={() => { navigation.navigate('content1'); }} style={styles.contentText}>내용보기</Text>
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'black', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'grey', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
             onClick={() => {
               this.setState({
@@ -108,7 +131,7 @@ export default class SignUpScreen extends React.Component {
             isChecked={delegatePersonalInfo}
           />
           <Text style={{ fontSize: 15 }}> (선택) 개인정보 수집위탁</Text>
-          <Text style={{ fontSize: 20, color: 'blue', marginLeft: 'auto' }}>내용보기</Text>
+          <Text onPress={() => { navigation.navigate('content1'); }} style={styles.contentText}>내용보기</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'grey', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
           <CheckBox
@@ -122,36 +145,16 @@ export default class SignUpScreen extends React.Component {
             isChecked={thirdPartyPersonalInfo}
           />
           <Text style={{ fontSize: 15 }}> (선택) 개인정보 제 3 자 제공</Text>
-          <Text style={{ fontSize: 20, color: 'blue', marginLeft: 'auto' }}>내용보기</Text>
+          <Text onPress={() => { navigation.navigate('content1'); }} style={styles.contentText}>내용보기</Text>
         </View>
-        <FlatList 
-          data={this.state.agreements}
-          renderItem={(item) => (
-            <View style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 0.4, borderBottomColor: 'grey', width: wp('90%'), height: hp('20%'), alignSelf: 'center', alignItems: 'center' }}>
-          <CheckBox
-
-            onClick={() => {
-              this.setState({
-                thirdPartyPersonalInfo: !thirdPartyPersonalInfo,
-              });
-            }
-          }
-            isChecked={thirdPartyPersonalInfo}
-          />
-          <Text style={{ fontSize: 15 }}>1111</Text>
-          <Text>{item.text}</Text>
-        </View>
-          )}
-          keyExtractor={item => item.text}
-          />
         <View style={{ flex: 1, flexDirection: 'row', width: wp('90%'), alignSelf: 'center' }}>
           <View style={{ marginTop: hp('2%') }}>
-            <TouchableOpacity style={{ width: wp('44%'), height: hp('8%'), backgroundColor: 'rgb(162,222,161)', justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => { navigation.replace('StartScreen'); }} style={styles.prevNextButton}>
               <Text style={{ alignSelf: 'center', justifyContent: 'center' }}>이전</Text>
             </TouchableOpacity>
           </View>
           <View style={{ marginTop: hp('2%'), marginLeft: 'auto' }}>
-            <TouchableOpacity onPress={() => { navigation.navigate('SignUpTwo'); }} style={{ width: wp('44%'), height: hp('8%'), backgroundColor: 'rgb(83,66,51)', justifyContent: 'center', alignItems: 'center' }}>
+            <TouchableOpacity onPress={this.onPressNextButton} style={styles.prevNextButton}>
               <Text style={{ alignSelf: 'center', justifyContent: 'center', color: 'white' }}>다음</Text>
             </TouchableOpacity>
           </View>
@@ -166,47 +169,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgb(244,226,212)',
   },
-  title: {
-    flex: 1,
-    marginTop: hp('9%'),
-    padding: '5%',
-    fontSize: 45,
-    lineHeight: 55,
-    color: 'white',
-  },
-  startBotton: {
-    flex: 1,
-    fontSize: 30,
-  },
-  norasPhoto: {
-    position: 'absolute',
-    width: wp(40),
-    height: hp(40),
-    marginTop: hp('30%'),
-    marginLeft: wp('30%'),
-  },
-  button: {
-    marginTop: hp('10%'),
-    marginBottom: hp('5%'),
-    marginLeft: wp('10%'),
-    backgroundColor: 'white',
-    borderRadius: 20,
-    width: wp('80%'),
+  prevNextButton: {
+    width: wp('44%'),
     height: hp('8%'),
-  },
-  borders: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: 'rgb(162,222,161)',
     justifyContent: 'center',
-    borderStyle: 'solid',
+    alignItems: 'center',
   },
-  startTitle: {
-    textAlign: 'center',
-    color: 'rgb(0, 122, 255)',
-    lineHeight: 51,
-    marginTop: hp('0%'),
-    fontSize: 18,
-    marginBottom: 50,
+  prevButton: {
+    width: wp('44%'),
+    height: hp('8%'),
+    backgroundColor: 'rgb(162,222,161)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contentText: {
+    fontSize: 15,
+    color: 'blue',
+    fontWeight: 'bold',
+    marginLeft: 'auto',
   },
 });
 

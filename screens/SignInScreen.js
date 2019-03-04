@@ -11,6 +11,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 export default class SignInScreen extends React.Component {
   static navigationOptions = {
+    headerTitleStyle: {
+      textAlign: 'center',
+    },
     title: 'signin',
   };
 

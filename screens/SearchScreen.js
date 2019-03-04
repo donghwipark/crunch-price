@@ -28,6 +28,9 @@ const photos = [
 
 export default class SearchScreen extends React.Component {
   static navigationOptions = {
+    headerTitleStyle: {
+      textAlign: 'center',
+    },
     title: '검색',
   };
 
