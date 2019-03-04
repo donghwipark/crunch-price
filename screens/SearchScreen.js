@@ -40,10 +40,20 @@ export default class SearchScreen extends React.Component {
     search: '',
     popularSearch: [],
   };
-
-
+  
   updateSearch = (search) => {
-    this.setState({ search });
+    this.setState({ search: search });
+    axios.get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
+      params: {
+        searchWords: search
+      }
+    })
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   };
 
   componentDidMount = () => {
@@ -69,6 +79,7 @@ export default class SearchScreen extends React.Component {
               : 'android'
           }
           placeholder="검색어 입력"
+          onClear={this.search}
           onChangeText={this.updateSearch}
           value={search}
           style={{ position: 'relative' }}
