@@ -39,6 +39,7 @@ export default class SearchScreen extends React.Component {
   scrollX = new Animated.Value(0)
 
   state = {
+    recentSearch: [],
     popularSearch: [],
     search: '',
   };
@@ -68,7 +69,10 @@ export default class SearchScreen extends React.Component {
       getItemArray.push(search)
       await AsyncStorage.setItem('search', JSON.stringify(getItemArray))
     }
-    console.log('최종 결과값', await AsyncStorage.getItem('search'))
+    await AsyncStorage.getItem('search')
+      .then((res) => {
+        this.setState({ recentSearch: JSON.parse(res) });
+      });
   };
 
   componentDidMount = () => {
@@ -77,12 +81,18 @@ export default class SearchScreen extends React.Component {
         const result = res.data;
         this.setState({ popularSearch: result.data });
       });
+
+    AsyncStorage.getItem('search')
+      .then((res) => {
+        this.setState({ recentSearch: JSON.parse(res) });
+      });
   }
 
   render() {
     const position = Animated.divide(this.scrollX, width);
-    const { search, popularSearch } = this.state;
+    const { search, popularSearch, recentSearch } = this.state;
     let i = 0;
+    let h = 0;
     // need to put the number of the values and the +2 to calculate the height of the tables
     return (
       <View style={styles.page}>
@@ -209,14 +219,27 @@ export default class SearchScreen extends React.Component {
                     최근 검색어
                   </Text>
                 </View>
-                <View style={{
-                  borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)', backgroundColor: 'white', height: hp('5%'), width: wp('90%'),
-                }}
-                >
-                  <Text style={{ margin: 10 }}>
-                      이름
-                  </Text>
-                </View>
+                {
+                  recentSearch.map((result) => {
+                    h += 1;
+                    return (
+                      <View
+                        key={h}
+                        style={{
+                          borderLeftWidth: 0.3, borderRightWidth: 0.3, borderBottomWidth: 0.3, borderColor: 'rgb(142, 142, 147)', backgroundColor: 'white', height: hp('5%'), width: wp('90%'),
+                        }}
+                      >
+                        <Text style={{ margin: 10 }}>
+                          {' '}
+                          {h}
+                          {' '}
+                          {result}
+                          {' '}
+                        </Text>
+                      </View>
+                    );
+                  })
+                }
                 <View>
                   <Text style={styles.explainText}>
                   업데이트
