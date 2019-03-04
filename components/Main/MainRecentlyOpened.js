@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-  // Image,
   StyleSheet,
-  // Text,
-  // TouchableOpacity,
+  Text,
+  TouchableOpacity,
   View,
-  // FlatList,
+  FlatList,
+  ScrollView,
+  Image,
 } from 'react-native';
 
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -28,56 +29,38 @@ export default class MainRecentlyOpened extends React.Component {
     };
   }
 
-  onPressList = () => {
-    this.setState({
-      sortingType: 'list',
-    });
-  }
-
-  onPressGrid = () => {
-    this.setState({
-      sortingType: 'grid',
-    });
-  }
-
-  onPressFocused = () => {
-    this.setState({
-      sortingType: 'focused',
-    });
-  }
-
-
   render() {
-    const { fakeData } = this.props;
-    const { sortingType } = this.state;
-    const grid = <Grid fakeData={fakeData} />;
-    const list = <List fakeData={fakeData} />;
-    const oneBigStub = <OneBigStub fakeData={fakeData} />;
-    console.log(fakeData)
+    const { recentlyOpened } = this.props;
     return (
       <View style={styles.primeContainer}>
-        <View style={styles.sortingIcons}>
-          <Entypo
-            name="list"
-            size={26}
-            onPress={this.onPressList}
-          />
-          <Entypo
-            name="grid"
-            size={26}
-            onPress={this.onPressGrid}
-          />
-          <Feather
-            name="square"
-            size={26}
-            onPress={this.onPressFocused}
-          />
+        <View style={{flex: 1, flexDirection: 'row', marginBottom: '-2%'}}>
+        <Text style={{ alignSelf: 'flex-start', marginLeft: 20, fontSize: 13}}>확인하신 상품들</Text> 
+        <Text style={{ marginLeft:'auto', marginRight: 10, fontSize: 13, color: 'blue' }}>더 보기</Text>
         </View>
-        {sortingType === 'grid' ? grid : sortingType === 'list' ? list : oneBigStub}
+        <ScrollView horizontal style={styles.container}>
+          <FlatList
+            horizontal
+            data={recentlyOpened}
+            renderItem={({ item }) => (
+              <View style={styles.container}>
+                <TouchableOpacity style={{ backgroundColor: 'white', width: wp('32%'), height: hp('25%'), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+                  <Image source={{ uri: item.mainImageUrl, width: wp('35%'), height: hp('15%') }} style={styles.recommendedImages} />
+                  <Text style={{ fontSize: 9 }} numberOfLines={2}>{item.goodsNm}</Text>
+                  <Text style={{ fontSize: 9 }}>{item.goodsPrice}</Text>
+                </TouchableOpacity>
+
+              </View>
+            )}
+            numColumns={1}
+            keyExtractor={(item) => item.name}
+          />
+        </ScrollView>
       </View>
     );
-  } 
+  }
+
   /*
+  <Text>{item.goodsUnitPrice1}</Text>
     {sortingType === 'grid'? (
       <Grid />
      ) : sortingType === 'list'? (
@@ -90,6 +73,8 @@ export default class MainRecentlyOpened extends React.Component {
 const styles = StyleSheet.create({
   primeContainer: {
     flex: 1,
+    flexDirection: 'column',
+    overflow: 'scroll',
   },
   container: {
     flex: 1,
@@ -97,10 +82,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   recommendedImages: {
-    marginLeft: 10,
-    marginRight: 10,
-    borderRadius: 10,
-    marginTop: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     marginBottom: 10,
   },
   sortingIcons: {
@@ -110,14 +93,108 @@ const styles = StyleSheet.create({
     width: wp('95%'),
   },
 });
-
 /*
-<View style={[styles.box, styles.box2]}>
-      <View style={[styles.smallBox, styles.box3]}>
-        <Image source={{ uri: 'http://i.imgur.com/k1yVI.jpg', width: 75, height: 80 }} />
-        <Text>몽골진간장</Text>
-        <Image source={{ uri: 'http://i.imgur.com/k1yVI.jpg', width: 75, height: 80 }} />
-        <Text>몽골진간장</Text>
-      </View>
-    </View>
-    */
+[
+    {
+        "goodsNo":"1004020377",
+        "cateCd":"004025010014",
+        "scmNo":"1163","brandCd":"",
+        "goodsNmFl":"d","goodsNmMain":"",
+        "goodsNmList":"",
+        "goodsNm":"레인OK 마이티2 초발수 메탈 하이브리드와이퍼 SET",
+        "mileageFl":"c","goodsPriceString":"",
+        "optionName":"옵션선택",
+        "optionValue":"",
+        "stockFl":"n",
+        "goodsModelNo":"",
+        "onlyAdultFl":"n",
+        "orderCnt":0,"makerNm":"",
+        "shortDescription":"",
+        "imageStorage":"url",
+        "imagePath":"",
+        "goodsCd":"",
+        "soldOutFl":"n",
+        "soldOut":"n",
+        "orderPossible":"y",
+        "goodsPrice":"31900.00",
+        "goodsUnitPrice1":"31900.00",
+        "goodsUnitPrice2":"31581.00",
+        "goodsUnitPrice3":"31262.00",
+        "goodsUnitPrice4":"30943.00",
+        "goodsUnitPrice5":"30624.00",
+        "goodsUnitPrice6":"30305.00",
+        "goodsUnitPrice7":"29986.00",
+        "goodsUnitPrice8":"29667.00",
+        "goodsUnitPrice9":"29348.00",
+        "goodsUnitPrice10":"29029.00",
+        "fixedPrice":"0.00",
+        "mileageGoods":"0.00",
+        "mileageGoodsUnit":"percent",
+        "goodsIconStartYmd":null,
+        "goodsIconEndYmd":null,
+        "goodsIconCdPeriod":null,
+        "goodsIconCd":null,
+        "hitCnt":"1",
+        "goodsDiscountFl":"n",
+        "goodsDiscount":"0.00",
+        "goodsDiscountUnit":"percent",
+        "optionFl":"y",
+        "sort":"00000",
+        "mainImageUrl":"https://shop-phinf.pstatic.net/20181217_92/jscom496_1545028141430APKRf_JPEG/101018_1.jpg?type=m510",
+        "minPrice":"29029",
+        "maxPrice":"31900"
+    },
+    {"goodsNo":"1004036866",
+    "cateCd":"006003007",
+    "scmNo":"748",
+    "brandCd":"","goodsNmFl":"d",
+    "goodsNmMain":"",
+    "goodsNmList":"",
+    "goodsNm":"오레가모 포테이토 크리스프 와사비맛 12g_수입과자",
+    "mileageFl":"c",
+    "goodsPriceString":"",
+    "optionName":"",
+    "optionValue":"",
+    "stockFl":"n",
+    "goodsModelNo":"",
+    "onlyAdultFl":"n",
+    "orderCnt":0,
+    "makerNm":"",
+    "shortDescription":"",
+    "imageStorage":"url",
+    "imagePath":"",
+    "goodsCd":"",
+    "soldOutFl":"n",
+    "soldOut":"n",
+    "orderPossible":"y",
+    "goodsPrice":"100.00",
+    "goodsUnitPrice1":"100.00",
+    "goodsUnitPrice2":"100.00",
+    "goodsUnitPrice3":"100.00",
+    "goodsUnitPrice4":"100.00",
+    "goodsUnitPrice5":"100.00",
+    "goodsUnitPrice6":"100.00",
+    "goodsUnitPrice7":"100.00",
+    "goodsUnitPrice8":"100.00",
+    "goodsUnitPrice9":"100.00",
+    "goodsUnitPrice10":"100.00",
+    "fixedPrice":"0.00",
+    "mileageGoods":"0.00",
+    "mileageGoodsUnit":"percent",
+    "goodsIconStartYmd":null,
+    "goodsIconEndYmd":null,
+    "goodsIconCdPeriod":null,
+    "goodsIconCd":null,
+    "hitCnt":0,
+    "goodsDiscountFl":"n",
+    "goodsDiscount":"0.00",
+    "goodsDiscountUnit":"percent",
+    "optionFl":"n",
+    "sort":"00001",
+    "mainImageUrl":"https://shop-phinf.pstatic.net/20190214_210/sjcluster_15501260390330RKfM_JPEG/107491_1.jpg?type=m510",
+    "minPrice":"100.00",
+    "maxPrice":"100.00"
+  }
+];
+
+*/

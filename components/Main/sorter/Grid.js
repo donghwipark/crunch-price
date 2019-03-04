@@ -14,18 +14,18 @@ import {
 } from 'react-native-responsive-screen';
 
 import fakeDatab from '../fakeData';
-
+ 
 // 현재 배너와 열어본 상품을 여기에 함께 정의해 놓았음
-const Grid = (props) => {
+const Grid = ({recentlyOpened}) => {
   return (
   <View style={styles.primeContainer}>
     <FlatList
-      data={props.fakeData}
+      data={recentlyOpened}
       renderItem={({ item }) => (
         <TouchableOpacity style={styles.container}>
-          <Image source={{ uri: item.image, width: wp('40%'), height: hp('25%') }} style={styles.recommendedImages} />
-          <Text>{item.name}</Text>
-          <Text>{item.description}</Text>
+          <Image source={{ uri: item.mainImageUrl, width: wp('40%'), height: hp('25%') }} style={styles.recommendedImages} />
+          <Text>{item.goodsNm}</Text>
+          <Text>{item.goodsUnitPrice1}</Text>
         </TouchableOpacity>
       )}
       numColumns={2}
