@@ -9,33 +9,43 @@ import {
   Image,
 } from 'react-native';
 
-import Entypo from 'react-native-vector-icons/Entypo';
-import Feather from 'react-native-vector-icons/Feather';
-
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import List from './sorter/List';
-import Grid from './sorter/Grid';
-import OneBigStub from './sorter/oneBigStub';
+import { handleNumberToPrice } from '../../helper/helperFuncs';
 
 export default class MainRecentlyOpened extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sortingType: 'focused',
+      recentlyOpened: [],
     };
   }
 
-  render() {
+  async componentDidMount() {
     const { recentlyOpened } = this.props;
+    await this.setState({ recentlyOpened });
+  }
+
+  onPressMoreDetails = () => {
+    const { navigation } = this.props;
+    const { recentlyOpened } = this.state;
+    navigation.navigate('OpenedList', {
+      recentlyOpened,
+    });
+  }
+
+
+  render() {
+    const { recentlyOpened } = this.state;
+    const { navigation } = this.props;
     return (
       <View style={styles.primeContainer}>
-        <View style={{flex: 1, flexDirection: 'row', marginBottom: '-2%'}}>
-        <Text style={{ alignSelf: 'flex-start', marginLeft: 20, fontSize: 13}}>확인하신 상품들</Text> 
-        <Text style={{ marginLeft:'auto', marginRight: 10, fontSize: 13, color: 'blue' }}>더 보기</Text>
+        <View style={{ flex: 1, flexDirection: 'row', marginBottom: '-2%' }}>
+          <Text style={{ alignSelf: 'flex-start', marginLeft: 20, fontSize: 13 }}>확인하신 상품들</Text>
+          <Text onPress={this.onPressMoreDetails} style={{ marginLeft: 'auto', marginRight: 10, fontSize: 13, color: 'blue' }}>더 보기</Text>
         </View>
         <ScrollView horizontal style={styles.container}>
           <FlatList
@@ -43,10 +53,25 @@ export default class MainRecentlyOpened extends React.Component {
             data={recentlyOpened}
             renderItem={({ item }) => (
               <View style={styles.container}>
-                <TouchableOpacity style={{ backgroundColor: 'white', width: wp('32%'), height: hp('25%'), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-                  <Image source={{ uri: item.mainImageUrl, width: wp('35%'), height: hp('15%') }} style={styles.recommendedImages} />
+                <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { item })} style={{ backgroundColor: 'white', width: wp('32%'), height: hp('26%'), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+                  <Image source={{ uri: item.mainImageUrl, width: wp('32%'), height: hp('15%') }} style={styles.recommendedImages} />
                   <Text style={{ fontSize: 9 }} numberOfLines={2}>{item.goodsNm}</Text>
-                  <Text style={{ fontSize: 9 }}>{item.goodsPrice}</Text>
+                  {
+                    item.goodsUnitPrice1 > item.goodsUnitPrice10 ? (
+                      <View>
+                        <Text />
+                        <Text style={{ fontSize: 9, textDecorationLine: 'line-through' }}>{`${handleNumberToPrice(Number(item.goodsPrice))}원`}</Text>
+                        <Text style={{ fontSize: 7 }}>10개 이상 구매 시 할인가</Text>
+                        <Text><Text style={{ fontSize: 9 }}>{`${handleNumberToPrice((Number(item.goodsUnitPrice1) - Number(item.goodsUnitPrice10)) * 10)}원`}</Text></Text>
+                      </View>
+                    )
+                      : (
+                        <View>
+                          <Text />
+                          <Text style={{ fontSize: 9 }}>{`${handleNumberToPrice(Number(item.goodsPrice))}원`}</Text>
+                        </View>
+                      )
+                  }
                 </TouchableOpacity>
 
               </View>
@@ -79,12 +104,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginLeft: 10,
+    marginRight: 10,
     marginTop: 10,
+    marginBottom: 10,
   },
   recommendedImages: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     marginBottom: 10,
+    overflow: 'hidden',
   },
   sortingIcons: {
     flex: 1,

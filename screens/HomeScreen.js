@@ -66,7 +66,7 @@ export default class HomeScreen extends React.Component {
   async componentDidMount() {
     const banner = await Axios.get('http://api.crunchprice.com/design/crunch_banner_list.php');
     this.setState({ bannerData: banner.data.data, bannerLoaded: true });
-    await asyncStorageSet('opened', JSON.stringify([1004020377, 1004036866])); // asyncstorage 추가 할 수 있는 펑션 필요. 최대길이는 10
+    await asyncStorageSet('opened', JSON.stringify([1004020377, 1004036866, 1004020315, 100403988, 100405555])); // asyncstorage 추가 할 수 있는 펑션 필요. 최대길이는 10
     const openedProducts = await (asyncStorageGet('opened'));
     // console.log(openedProducts);
     const receivedOpenedGoods = await Axios.get(`http://api.crunchprice.com/goods/recent_goods.php?todayGoodsNo=${openedProducts}`)
@@ -129,7 +129,7 @@ export default class HomeScreen extends React.Component {
       recentlyOpened,
       openedProductsLoaded,
     } = this.state;
-    // const { navigation } = this.props;
+    const { navigation } = this.props;
     // console.log(bannerData);
     if (!bannerLoaded && !openedProductsLoaded) {
       return (
@@ -140,7 +140,7 @@ export default class HomeScreen extends React.Component {
       <View style={styles.primeContainer}>
         <ScrollView vertical>
           <MainRecommended bannerData={bannerData} />
-          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened recentlyOpened={recentlyOpened} /> }
+          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened navigation={navigation} recentlyOpened={recentlyOpened} /> }
           <Text style={{ fontSize: 20 }}>크런치 프라이스에서,</Text>
           <MainRecommended bannerData={bannerData} />
           {this.createTemplateBox(kakaotalkAsk)}
