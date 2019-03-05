@@ -4,6 +4,7 @@ import {
   Text,
   Platform,
   View,
+  Alert,
   Image,
   ScrollView,
   Dimensions,
@@ -44,10 +45,12 @@ export default class SearchScreen extends React.Component {
     recentSearch: [],
     popularSearch: [],
     search: '',
+    searchInfo: [],
   };
 
   updateSearch = async () => {
     const { search, recentSearch } = this.state;
+
     axios
       .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
         params: {
@@ -55,10 +58,31 @@ export default class SearchScreen extends React.Component {
         },
       })
       .then((response) => {
-        // console.log(response.data);
+        const { length } = response.data.data;
+        if (length > 0) {
+          const itemsInfo = [];
+          for (let i = 0; i < length; i++) {
+            const produceInfo = [];
+            produceInfo.push(response.data.data[i].goodsNm);
+            produceInfo.push(response.data.data[i].goodsNo);
+            produceInfo.push(response.data.data[i].mainImageUrl);
+            produceInfo.push(response.data.data[i].goodsUnitPrice10);
+            produceInfo.push(response.data.data[i].goodsUnitPrice1);
+            itemsInfo.push(produceInfo);
+          }
+          return itemsInfo;
+        }
+        // name response.data.data[0].goodsNm
+        // key response.data.data[0].goodsNo
+        // image  response.data.data[0].mainImageUrl
+        // 10th price response.data.data[0].goodsUnitPrice10
+        // 1th price response.data.data[0].goodsUnitPrice1
+      })
+      .then((result) => {
+        this.props.navigation.navigate('Result', { result });
       })
       .catch((error) => {
-        // console.log(error);
+        Alert(error);
       });
     // await AsyncStorage.removeItem('search')
 
@@ -78,8 +102,6 @@ export default class SearchScreen extends React.Component {
         this.setState({ recentSearch: getResult.reverse() });
       });
     }
-
-    this.props.navigation.navigate('Result');
   };
 
   componentDidMount = () => {

@@ -18,25 +18,26 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const MainRecommended = ({bannerData}) => (
+const MainRecommended = ({ bannerData }) => (
   <View style={styles.primeContainer}>
-   
-      <ScrollView horizontal style={styles.container}>
-      <FlatList horizontal
-      data={bannerData}
-      renderItem={({ item }) => (
-        <TouchableOpacity style={styles.container} onPress={() =>{Linking.openURL(item.bannerLink)}}>
+
+    <ScrollView horizontal style={styles.container}>
+        <FlatList
+horizontal
+        data={bannerData}
+        renderItem={({ item }) => (
+        <TouchableOpacity style={styles.container} onPress={() => { Linking.openURL(item.bannerLink); }}>
           <Image source={{ uri: item.imgLink, width: wp('65%'), height: hp('35%') }} style={styles.recommendedImages} />
         </TouchableOpacity>
       )}
-      numColumns={1}
-      keyExtractor={(item) => item.imgLink}
-    />
-      
-      
-      
+        numColumns={1}
+        keyExtractor={(item, i) => i.toString()}
+      />
+
+
+
       </ScrollView>
- 
+
 
   </View>
 );
@@ -81,7 +82,6 @@ const styles = StyleSheet.create({
 
 
 export default MainRecommended;
-
 
 
 /*

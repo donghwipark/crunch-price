@@ -5,12 +5,11 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
   FlatList,
 } from 'react-native';
-
-import Entypo from 'react-native-vector-icons/Entypo';
-import Feather from 'react-native-vector-icons/Feather';
-
+import axios from 'axios';
+import { Entypo, Feather, FontAwesome } from 'react-native-vector-icons';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -19,6 +18,7 @@ import {
 export default class SearchResult extends React.Component {
   state = {
     sortingType: 'focused',
+    searchInfo: null,
   };
 
   onPressList = () => {
@@ -39,8 +39,14 @@ export default class SearchResult extends React.Component {
     });
   }
 
+  onSearchResult = () => {
+
+  }
 
   render() {
+    const { navigation } = this.props;
+    const itemInfo = navigation.getParam('result');
+    console.log(itemInfo);
     const fakeData = [
       {
         name: 'Goldfish',
@@ -62,54 +68,60 @@ export default class SearchResult extends React.Component {
         image: 'http://www.monggofood.co.kr/base/component/board/board_18/u_image/84/1321693598_61.jpg',
         description: '2500원',
       },
-    ];  
+    ];
     const { sortingType } = this.state;
-    const grid =  <View style={styles.gridPrimeContainer}>
-                    <FlatList
-                      data={fakeData}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity style={styles.gridContainer}>
-                          <Image source={{ uri: item.image, width: wp('40%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
-                          <Text>{item.name}</Text>
-                          <Text>{item.description}</Text>
-                        </TouchableOpacity>
-                      )}
-                      numColumns={2}
-                      keyExtractor={(_, i) => i}
-                    />
-                  </View>
-    const list =  <View style={styles.listPrimeContainer}>
-                    <FlatList
-                      data={fakeData}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity style={styles.listContainer}>
-                          <Image source={{ uri: item.image, width: wp('25%'), height: hp('15%') }} style={styles.listRecommendedImages} />
-                          <View>
-                            <Text>{item.name}</Text>
-                            <Text>{item.description}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      )}
-                      numColumns={1}
-                      key={(_, i) => i}
-                    />
-                  </View>
-    const oneBigStub =  <View style={styles.onePrimeContainer}>
-                          <FlatList
-                            data={fakeData}
-                            renderItem={({ item }) => (
-                              <TouchableOpacity style={styles.oneContainer}>
-                                <Image source={{ uri: item.image, width: wp('65%'), height: hp('35%') }} style={styles.oneRecommendedImages} />
-                                <View>
-                                  <Text>{item.name}</Text>
-                                  <Text>{item.description}</Text>
-                                </View>
-                              </TouchableOpacity>
-                            )}
-                            numColumns={1}
-                            key={(_, i) => i}
-                          />
-                        </View>;
+    const grid = (
+      <View style={styles.gridPrimeContainer}>
+        <FlatList
+          data={itemInfo}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.gridContainer}>
+              <Image source={{ uri: item[2], width: wp('40%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
+              <Text>{item[0]}</Text>
+              <Text>{item[3]}</Text>
+            </TouchableOpacity>
+          )}
+          numColumns={2}
+          keyExtractor={(_, i) => i}
+        />
+      </View>
+    );
+    const list = (
+      <View style={styles.listPrimeContainer}>
+        <FlatList
+          data={itemInfo}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.listContainer}>
+              <Image source={{ uri: item[2], width: wp('25%'), height: hp('15%') }} style={styles.listRecommendedImages} />
+              <View>
+                <Text>{item[0]}</Text>
+                <Text>{item[3]}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          numColumns={1}
+          key={(_, i) => i}
+        />
+      </View>
+    );
+    const oneBigStub = (
+      <View style={styles.onePrimeContainer}>
+        <FlatList
+          data={itemInfo}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.oneContainer}>
+              <Image source={{ uri: item[2], width: wp('65%'), height: hp('35%') }} style={styles.oneRecommendedImages} />
+              <View>
+                <Text>{item[0]}</Text>
+                <Text>{item[3]}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          numColumns={1}
+          key={(_, i) => i}
+        />
+      </View>
+    );
     return (
       <View style={styles.primeContainer}>
         <View style={styles.sortingIcons}>
@@ -123,8 +135,8 @@ export default class SearchResult extends React.Component {
             size={26}
             onPress={this.onPressGrid}
           />
-          <Feather
-            name="square"
+          <FontAwesome
+            name="square-o"
             size={26}
             onPress={this.onPressFocused}
           />
@@ -132,8 +144,7 @@ export default class SearchResult extends React.Component {
         {sortingType === 'grid' ? grid : sortingType === 'list' ? list : oneBigStub}
       </View>
     );
-  } 
-
+  }
 }
 const styles = StyleSheet.create({
   primeContainer: {
@@ -159,14 +170,16 @@ const styles = StyleSheet.create({
   },
   gridPrimeContainer: {
     flex: 10,
+    backgroundColor: 'rgb(222,222,222)',
   },
   gridContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    marginLeft: 10,
+    // marginLeft: 10,
     width: wp('50%'),
+    margin: 5,
     height: hp('40%'),
-    marginTop: 10,
+    // marginTop: 10,
     borderRadius: 10,
     alignItems: 'center',
   },
@@ -180,14 +193,15 @@ const styles = StyleSheet.create({
   listPrimeContainer: {
     flex: 10,
     alignItems: 'center',
+    backgroundColor: 'rgb(222,222,222)',
   },
   listContainer: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#fff',
-    width: wp('90%'),
-    height: hp('20%'),
-    marginTop: 10,
+    width: wp('95%'),
+    height: hp('18%'),
+    marginTop: hp('1.5%'),
     borderRadius: 10,
     alignItems: 'center',
   },
@@ -201,14 +215,15 @@ const styles = StyleSheet.create({
   onePrimeContainer: {
     flex: 10,
     alignItems: 'center',
+    backgroundColor: 'rgb(222,222,222)',
   },
   oneContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    width: wp('80%'),
-    height: hp('50%'),
-    marginTop: 10,
+    width: wp('90%'),
+    height: hp('55%'),
     borderRadius: 10,
+    margin: 10,
     alignItems: 'center',
   },
   oneRecommendedImages: {
