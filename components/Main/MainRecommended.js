@@ -24,13 +24,13 @@ const MainRecommended = ({bannerData}) => (
       <ScrollView horizontal style={styles.container}>
       <FlatList horizontal
       data={bannerData}
-      renderItem={({ item }) => (
+      renderItem={({ item}) => (
         <TouchableOpacity style={styles.container} onPress={() =>{Linking.openURL(item.bannerLink)}}>
           <Image source={{ uri: item.imgLink, width: wp('65%'), height: hp('35%') }} style={styles.recommendedImages} />
         </TouchableOpacity>
       )}
       numColumns={1}
-      keyExtractor={(item) => item.imgLink}
+      keyExtractor={(item, i) => i}
     />
       
       

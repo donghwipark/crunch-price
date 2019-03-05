@@ -14,18 +14,35 @@ import {
 } from 'react-native-responsive-screen';
 
 import fakeDatab from '../fakeData';
-
+import { handleNumberToPrice } from '../../../helper/helperFuncs';
+ 
 // 현재 배너와 열어본 상품을 여기에 함께 정의해 놓았음
-const Grid = (props) => {
+const Grid = ({recentlyOpened}) => {
   return (
   <View style={styles.primeContainer}>
     <FlatList
-      data={props.fakeData}
+      data={recentlyOpened}
       renderItem={({ item }) => (
         <TouchableOpacity style={styles.container}>
-          <Image source={{ uri: item.image, width: wp('40%'), height: hp('25%') }} style={styles.recommendedImages} />
-          <Text>{item.name}</Text>
-          <Text>{item.description}</Text>
+          <Image source={{ uri: item.mainImageUrl, width: wp('40%'), height: hp('25%') }} style={styles.recommendedImages} />
+          <Text>{item.goodsNm}</Text>
+          <Text />
+          {
+                    item.goodsUnitPrice1 > item.goodsUnitPrice10 ? (
+                      <View>
+                        <Text />
+                        <Text style={{ fontSize: 9, textDecorationLine: 'line-through'}}>{`${handleNumberToPrice(Number(item.goodsPrice))}원`}</Text>
+                        <Text style={{ fontSize: 7 }}>10개 이상 구매 시 할인가</Text>
+                        <Text><Text style={{ fontSize: 9 }}>{`${handleNumberToPrice((Number(item.goodsUnitPrice1) - Number(item.goodsUnitPrice10))*10)}원`}</Text></Text>
+                      </View>
+                    )
+                      : (
+                        <View>
+                          <Text />
+                          <Text style={{ fontSize: 9 }}>{`${handleNumberToPrice(Number(item.goodsPrice))}원`}</Text>
+                        </View>
+                      )
+                  }
         </TouchableOpacity>
       )}
       numColumns={2}

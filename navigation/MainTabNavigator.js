@@ -6,15 +6,20 @@ import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen';
 import MyPageScreen from '../screens/MyPageScreen';
+import OpenedListScreen from '../screens/Home/OpenedList';
+import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
+import ProductDetails from '../screens/Home/productDetails';
 
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  OpenedList: OpenedListScreen,
+  MainRecentlyOpened,
+  ProductDetails,
 });
 
 HomeStack.navigationOptions = {
   tabBarLabel: '홈',
-  headerLayoutPreset: 'center',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
