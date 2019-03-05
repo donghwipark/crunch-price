@@ -16,7 +16,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { asyncStorageSet, asyncStorageGet } from "../helper/asyncHelper";
+import { asyncStorageSet, asyncStorageGet } from "../../helper/asyncHelper";
 
 const { width } = Dimensions.get("window");
 const photos = [
@@ -79,6 +79,8 @@ export default class SearchScreen extends React.Component {
         this.setState({ recentSearch: getResult.reverse() });
       });
     }
+
+    this.props.navigation.navigate('Result')
   };
 
   componentDidMount = () => {

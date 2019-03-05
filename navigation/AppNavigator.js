@@ -6,11 +6,13 @@ import SignUpScreenTwo from '../screens/signUps/SignUpScreenTwo';
 import MainTabNavigator from './MainTabNavigator';
 // import SignInScreen from '../screens/SignInScreen';
 import LoadingScreen from '../screens/LoadingScreen';
+import agreementContent from '../screens/signUps/userAgreements/agreementContent';
 
 const SignUpStack = createStackNavigator({
   StartScreen,
   SignUp: SignUpScreen,
   SignUpTwo: SignUpScreenTwo,
+  content1: agreementContent,
 });
 
 export default createAppContainer(createSwitchNavigator({

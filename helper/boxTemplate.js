@@ -5,6 +5,6 @@ const kakaotalkSellerCenter = [{emoji: require('../assets/images/sunglasses.png'
 const noOpenedGoods = [{emoji: require('../assets/images/shoppingBag.png'), text1: '아직 선택한 상품이 없어요~', text2: '상품을 둘러보러 갈까요?', text3: '카테고리 보기', URL: 1}]
 
 
-export {kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods};
+export { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods };
 
 // require('../assets/images/koreanBow.png')
