@@ -4,22 +4,23 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
-import SearchScreen from '../screens/SearchScreen';
+import SearchScreen from '../screens/SearchScreen/SearchScreen';
 import MyPageScreen from '../screens/MyPageScreen';
-
+import SearchResult from '../screens/SearchScreen/SearchResult';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: '홈',
+  headerLayoutPreset: 'center',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-home`
+          ? 'ios-home'
           : 'md-home'
       }
     />
@@ -27,33 +28,34 @@ HomeStack.navigationOptions = {
 };
 
 const CategoryStack = createStackNavigator({
-Category: CategoryScreen,
+  Category: CategoryScreen,
 });
 
 CategoryStack.navigationOptions = {
-  tabBarLabel: 'Category',
+  tabBarLabel: '카테고리',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios'
-      ? `ios-menu`
-      : 'md-menu'}
+        ? 'ios-menu'
+        : 'md-menu'}
     />
   ),
 };
 
 const SearchStack = createStackNavigator({
   Search: SearchScreen,
+  Result: SearchResult,
 });
 
 SearchStack.navigationOptions = {
-  tabBarLabel: 'Search',
+  tabBarLabel: '검색',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios'
-      ? `ios-search`
-      : 'md-search'}
+        ? 'ios-search'
+        : 'md-search'}
     />
   ),
 };
@@ -64,13 +66,13 @@ const MyPageScreenStack = createStackNavigator({
 });
 
 MyPageScreenStack.navigationOptions = {
-  tabBarLabel: 'MyPage',
+  tabBarLabel: '마이 쇼핑',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios'
-      ? `ios-person`
-      : 'md-person'}
+        ? 'ios-person'
+        : 'md-person'}
     />
   ),
 };

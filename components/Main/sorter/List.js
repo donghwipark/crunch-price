@@ -13,10 +13,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-import fakeData from '../fakeData';
-
 // 현재 배너와 열어본 상품을 여기에 함께 정의해 놓았음
-const List = () => (
+const List = (fakeData) => (
   <View style={styles.primeContainer}>
     <FlatList
       data={fakeData}

@@ -15,6 +15,7 @@ import Colors from '../constants/Colors';
 export default class MyPageScreen extends React.Component {
   static navigationOptions = {
     title: '마이 쇼핑',
+    headerTitleStyle: {flex: 1, textAlign: 'center'},
     headerRight: (
       <TouchableOpacity
         onPress={console.log(1)}

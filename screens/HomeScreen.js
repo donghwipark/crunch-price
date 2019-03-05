@@ -11,6 +11,7 @@ import {
   Linking,
   Alert,
   FlatList,
+  AsyncStorage,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Axios from 'axios';
@@ -22,10 +23,10 @@ import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 // import MainBannerLinks from '../components/Main/MainBannerLinks';
 // import fakeData from '../components/Main/fakeData';
 
-// 템플릿 아이템 박스
+// 템플릿 아이템 박스, Async헬퍼펑션
 import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/boxTemplate';
-
-// 현재 3번째 컴포넌트(배너)는 두번째(열어본 상품에)서 같이 렌더되고 있음. 차후 data 받아서 수정 예정 배너 dynamic하게 수정할 예정
+import { asyncStorageSet, asyncStorageGet } from '../helper/asyncHelper';
+import fakeData from '../components/Main/fakeData';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -48,16 +49,21 @@ export default class HomeScreen extends React.Component {
     ),
   };
 
-  state = {
-    bannerData: [],
-    bannerLoaded: false,
-    // setModalVisible: false,
-    recentlyOpened: [],
+  constructor() {
+    super();
+    this.state = {
+      bannerData: [],
+      bannerLoaded: false,
+      // setModalVisible: false,
+      recentlyOpened: [],
+    };
   }
 
   async componentDidMount() {
     const banner = await Axios.get('http://api.crunchprice.com/design/crunch_banner_list.php');
     this.setState({ bannerData: banner.data.data, bannerLoaded: true });
+    const asyncValue = await asyncStorageGet('a');
+    console.log(asyncValue);
   }
 
   setModalVisible(visible) {
@@ -125,12 +131,12 @@ export default class HomeScreen extends React.Component {
       <View style={styles.primeContainer}>
         <ScrollView vertical>
           <MainRecommended bannerData={bannerData} />
-          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened /> }
+          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened fakeData={fakeData} /> }
           <Text style={{ fontSize: 20 }}>크런치 프라이스에서,</Text>
           <MainRecommended bannerData={bannerData} />
           {this.createTemplateBox(kakaotalkAsk)}
           {this.createTemplateBox(kakaotalkSellerCenter)}
-          <View style={{ smarginLeft: 10, marginRight: 10, paddingBottom: 60 }}>
+          <View style={{ marginLeft: 10, marginRight: 10, paddingBottom: 60 }}>
             <Text style={styles.footerChar}>(주)크런치 컴퍼니는 결제정보의 중개서비스 또는 통신판매중개시스템의 제공자로서, 통신판매의 당사자가 아니며 상품의 주문, 배송 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.</Text>
             <View style={styles.footerLine} />
             <View style={{ flex: 1, flexDirection: 'row', marginLeft: 10, marginRight: 10, marginBottom: 10 }}>
@@ -290,3 +296,6 @@ const styles = StyleSheet.create({
           </View>
 
 */
+
+
+// 상품상세페이지 이동할 경우, 상세페이지는 웹뷰는 처리한다, 그 전에 상품 번호를 asyncstorage로 저장해서
