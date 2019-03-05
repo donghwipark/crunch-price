@@ -25,6 +25,7 @@ import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 
 // 템플릿 아이템 박스, Async헬퍼펑션
 import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/boxTemplate';
+// 현재 3번째 컴포넌트(배너)는 두번째(열어본 상품에)서 같이 렌더되고 있음. 차후 data 받아서 수정 예정 배너 dynamic하게 수정할 예정
 import { asyncStorageSet, asyncStorageGet } from '../helper/asyncHelper';
 import fakeData from '../components/Main/fakeData';
 
@@ -36,6 +37,9 @@ export default class HomeScreen extends React.Component {
         source={require('../assets/images/crunch-logo.png')}
       />
     ),
+    headerTitleStyle: {
+      alignSelf: (Platform.OS === 'android') ? 'flex-end' : 'center',
+    },
     headerRight: (
       <Icon
         name={
@@ -56,14 +60,20 @@ export default class HomeScreen extends React.Component {
       bannerLoaded: false,
       // setModalVisible: false,
       recentlyOpened: [],
+      openedProductsLoaded: false,
     };
   }
 
   async componentDidMount() {
     const banner = await Axios.get('http://api.crunchprice.com/design/crunch_banner_list.php');
     this.setState({ bannerData: banner.data.data, bannerLoaded: true });
-    const asyncValue = await asyncStorageGet('a');
-    console.log(asyncValue);
+    await asyncStorageSet('opened', JSON.stringify([1004020377, 1004036866, 1004020315, 100403988, 100405555])); // asyncstorage 추가 할 수 있는 펑션 필요. 최대길이는 10
+    const openedProducts = await (asyncStorageGet('opened'));
+    // console.log(openedProducts);
+    const receivedOpenedGoods = await Axios.get(`http://api.crunchprice.com/goods/recent_goods.php?todayGoodsNo=${openedProducts}`)
+    const processedOpenedResults = JSON.stringify(receivedOpenedGoods.data.data);
+    this.setState({ recentlyOpened: JSON.parse(processedOpenedResults), openedProductsLoaded: true });
+
   }
 
   setModalVisible(visible) {
@@ -119,10 +129,11 @@ export default class HomeScreen extends React.Component {
       bannerLoaded,
       // modalVisible,
       recentlyOpened,
+      openedProductsLoaded,
     } = this.state;
-    // const { navigation } = this.props;
+    const { navigation } = this.props;
     // console.log(bannerData);
-    if (!bannerLoaded) {
+    if (!bannerLoaded && !openedProductsLoaded) {
       return (
         <Text>loading</Text>
       );
@@ -131,7 +142,7 @@ export default class HomeScreen extends React.Component {
       <View style={styles.primeContainer}>
         <ScrollView vertical>
           <MainRecommended bannerData={bannerData} />
-          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened fakeData={fakeData} /> }
+          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened navigation={navigation} recentlyOpened={recentlyOpened} /> }
           <Text style={{ fontSize: 20 }}>크런치 프라이스에서,</Text>
           <MainRecommended bannerData={bannerData} />
           {this.createTemplateBox(kakaotalkAsk)}

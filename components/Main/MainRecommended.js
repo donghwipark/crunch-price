@@ -20,22 +20,17 @@ import {
 
 const MainRecommended = ({ bannerData }) => (
   <View style={styles.primeContainer}>
-
-    <ScrollView horizontal style={styles.container}>
-        <FlatList
-horizontal
-        data={bannerData}
-        renderItem={({ item }) => (
-        <TouchableOpacity style={styles.container} onPress={() => { Linking.openURL(item.bannerLink); }}>
+      <ScrollView horizontal style={styles.container}>
+      <FlatList horizontal
+      data={bannerData}
+      renderItem={({ item}) => (
+        <TouchableOpacity style={styles.container} onPress={() =>{Linking.openURL(item.bannerLink)}}>
           <Image source={{ uri: item.imgLink, width: wp('65%'), height: hp('35%') }} style={styles.recommendedImages} />
         </TouchableOpacity>
       )}
-        numColumns={1}
-        keyExtractor={(item, i) => i.toString()}
-      />
-
-
-
+      numColumns={1}
+      keyExtractor={(item, i) => i.toString()}
+    />
       </ScrollView>
 
 

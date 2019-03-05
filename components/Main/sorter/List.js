@@ -14,16 +14,16 @@ import {
 } from 'react-native-responsive-screen';
 
 // 현재 배너와 열어본 상품을 여기에 함께 정의해 놓았음
-const List = (fakeData) => (
+const List = ({recentlyOpened}) => (
   <View style={styles.primeContainer}>
     <FlatList
-      data={fakeData}
+      data={recentlyOpened}
       renderItem={({ item }) => (
         <TouchableOpacity style={styles.container}>
-          <Image source={{ uri: item.image, width: wp('25%'), height: hp('15%') }} style={styles.recommendedImages} />
+          <Image source={{ uri: item.mainImageUrl, width: wp('25%'), height: hp('15%') }} style={styles.recommendedImages} />
           <View>
-            <Text>{item.name}</Text>
-            <Text>{item.description}</Text>
+            <Text>{item.goodsNm}</Text>
+            <Text>{item.goodsUnitPrice1}</Text>
           </View>
         </TouchableOpacity>
       )}

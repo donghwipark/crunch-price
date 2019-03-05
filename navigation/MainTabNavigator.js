@@ -7,14 +7,20 @@ import CategoryScreen from '../screens/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen/SearchScreen';
 import SearchResult from '../screens/SearchScreen/SearchResult';
 import MyPageScreen from '../screens/MyPageScreen';
+import OpenedListScreen from '../screens/Home/OpenedList';
+import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
+import ProductDetails from '../screens/Home/productDetails';
 
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
+  OpenedList: OpenedListScreen,
+  MainRecentlyOpened,
+  ProductDetails,
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: '홈',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -32,7 +38,7 @@ const CategoryStack = createStackNavigator({
 });
 
 CategoryStack.navigationOptions = {
-  tabBarLabel: 'Category',
+  tabBarLabel: '카테고리',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -49,7 +55,7 @@ const SearchStack = createStackNavigator({
 });
 
 SearchStack.navigationOptions = {
-  tabBarLabel: 'Search',
+  tabBarLabel: '검색',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
