@@ -18,9 +18,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const MainRecommended = ({bannerData}) => (
+const MainRecommended = ({ bannerData }) => (
   <View style={styles.primeContainer}>
-   
       <ScrollView horizontal style={styles.container}>
       <FlatList horizontal
       data={bannerData}
@@ -30,13 +29,10 @@ const MainRecommended = ({bannerData}) => (
         </TouchableOpacity>
       )}
       numColumns={1}
-      keyExtractor={(item, i) => i}
+      keyExtractor={(item, i) => i.toString()}
     />
-      
-      
-      
       </ScrollView>
- 
+
 
   </View>
 );
@@ -81,7 +77,6 @@ const styles = StyleSheet.create({
 
 
 export default MainRecommended;
-
 
 
 /*

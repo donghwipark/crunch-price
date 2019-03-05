@@ -73,6 +73,7 @@ export default class HomeScreen extends React.Component {
     const receivedOpenedGoods = await Axios.get(`http://api.crunchprice.com/goods/recent_goods.php?todayGoodsNo=${openedProducts}`)
     const processedOpenedResults = JSON.stringify(receivedOpenedGoods.data.data);
     this.setState({ recentlyOpened: JSON.parse(processedOpenedResults), openedProductsLoaded: true });
+
   }
 
   setModalVisible(visible) {

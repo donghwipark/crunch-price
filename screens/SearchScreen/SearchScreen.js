@@ -1,42 +1,42 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   Text,
   Platform,
   View,
+  Alert,
   Image,
   ScrollView,
   Dimensions,
   Animated,
-  AsyncStorage
-} from "react-native";
-import { SearchBar } from "react-native-elements";
-import axios from "axios";
+  AsyncStorage,
+} from 'react-native';
+import { SearchBar } from 'react-native-elements';
+import axios from 'axios';
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
-} from "react-native-responsive-screen";
-import { asyncStorageSet, asyncStorageGet } from "../../helper/asyncHelper";
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 const photos = [
   {
-    id: 1
+    id: 1,
   },
   {
-    id: 2
+    id: 2,
   },
   {
-    id: 3
-  }
+    id: 3,
+  },
 ];
 
 export default class SearchScreen extends React.Component {
   static navigationOptions = {
     headerTitleStyle: {
-      textAlign: "center"
+      textAlign: 'center',
     },
-    title: "검색"
+    title: '검색',
   };
 
   scrollX = new Animated.Value(0);
@@ -44,55 +44,78 @@ export default class SearchScreen extends React.Component {
   state = {
     recentSearch: [],
     popularSearch: [],
-    search: ""
+    search: '',
+    searchInfo: [],
   };
 
   updateSearch = async () => {
     const { search, recentSearch } = this.state;
+
     axios
-      .get("http://api.crunchprice.com/goods/get_search_word_goods.php", {
+      .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
         params: {
-          searchWords: search
+          page: '1',
+          searchWords: search,
+        },
+      })
+      .then((response) => {
+        const { length } = response.data.data;
+        if (length > 0) {
+          const itemsInfo = [];
+          for (let i = 0; i < length; i++) {
+            const produceInfo = [];
+            produceInfo.push(response.data.data[i].goodsNm);
+            produceInfo.push(response.data.data[i].goodsNo);
+            produceInfo.push(response.data.data[i].mainImageUrl);
+            produceInfo.push(response.data.data[i].goodsUnitPrice10);
+            produceInfo.push(response.data.data[i].goodsUnitPrice1);
+            itemsInfo.push(produceInfo);
+          }
+          return itemsInfo;
         }
+        // name response.data.data[0].goodsNm
+        // key response.data.data[0].goodsNo
+        // image  response.data.data[0].mainImageUrl
+        // 10th price response.data.data[0].goodsUnitPrice10
+        // 1th price response.data.data[0].goodsUnitPrice1
       })
-      .then(function(response) {
-        //console.log(response.data);
+      .then((result) => {
+        this.props.navigation.navigate('Result', { result });
       })
-      .catch(function(error) {
-        //console.log(error);
+      .catch((error) => {
+        Alert(error);
       });
-    //await AsyncStorage.removeItem('search')
+    // await AsyncStorage.removeItem('search')
 
     if (search.length > 0) {
-      let getItem = await AsyncStorage.getItem("search");
+      const getItem = await AsyncStorage.getItem('search');
       if (getItem === null) {
-        let array = [];
+        const array = [];
         array.push(search);
-        await AsyncStorage.setItem("search", JSON.stringify(array));
+        await AsyncStorage.setItem('search', JSON.stringify(array));
       } else {
         let getItemArray = JSON.parse(getItem);
+        getItemArray = getItemArray.slice(-9);
         getItemArray.push(search);
-        await AsyncStorage.setItem("search", JSON.stringify(getItemArray));
+        await AsyncStorage.setItem('search', JSON.stringify(getItemArray));
       }
-      await AsyncStorage.getItem("search").then(res => {
-        let getResult = JSON.parse(res);
+      await AsyncStorage.getItem('search').then((res) => {
+        const getResult = JSON.parse(res);
         this.setState({ recentSearch: getResult.reverse() });
       });
     }
-
-    this.props.navigation.navigate('Result')
   };
 
   componentDidMount = () => {
     axios
-      .get("http://api.crunchprice.com/goods/get_popular_search.php")
-      .then(res => {
+      .get('http://api.crunchprice.com/goods/get_popular_search.php')
+      .then((res) => {
         const result = res.data;
         this.setState({ popularSearch: result.data });
       });
 
-    AsyncStorage.getItem("search").then(res => {
-      let getResult = JSON.parse(res);
+    AsyncStorage.getItem('search').then((res) => {
+      const getResult = JSON.parse(res);
       this.setState({ recentSearch: getResult.reverse() });
     });
   };
@@ -106,22 +129,22 @@ export default class SearchScreen extends React.Component {
     return (
       <View style={styles.page}>
         <SearchBar
-          platform={Platform.OS === "ios" ? "ios" : "android"}
+          platform={Platform.OS === 'ios' ? 'ios' : 'android'}
           placeholder="검색어 입력"
           onClear={this.search}
           onSubmitEditing={this.updateSearch}
           onChangeText={val => this.setState({ search: val })}
           value={search}
-          style={{ position: "relative" }}
+          style={{ position: 'relative' }}
         />
         <View
           style={{
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center"
+            position: 'relative',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <View style={{ flexDirection: "row", padding: 5 }}>
+          <View style={{ flexDirection: 'row', padding: 5 }}>
             {photos.map((_, i) => {
               // the _ just means we won't use that parameter
               const opacity = position.interpolate({
@@ -129,7 +152,7 @@ export default class SearchScreen extends React.Component {
                 outputRange: [0.3, 1, 0.3], // when position is not i, the opacity of the dot will animate to 0.3
                 // inputRange: [i - 0.50000000001, i - 0.5, i, i + 0.5, i + 0.50000000001], // only when position is ever so slightly more than +/- 0.5 of a dot's index
                 // outputRange: [0.3, 1, 1, 1, 0.3], // is when the opacity changes from 1 to 0.3
-                extrapolate: "clamp" // this will prevent the opacity of the dots from going outside of the outputRange (i.e. opacity will not be less than 0.3)
+                extrapolate: 'clamp', // this will prevent the opacity of the dots from going outside of the outputRange (i.e. opacity will not be less than 0.3)
               });
               return (
                 <Animated.View // we will animate the opacity of the dots so use Animated.View instead of View here
@@ -138,9 +161,9 @@ export default class SearchScreen extends React.Component {
                     opacity,
                     height: 10,
                     width: 10,
-                    backgroundColor: "#595959",
+                    backgroundColor: '#595959',
                     margin: 8,
-                    borderRadius: 5
+                    borderRadius: 5,
                   }}
                 />
               );
@@ -149,7 +172,7 @@ export default class SearchScreen extends React.Component {
           <View
             // this will bound the size of the ScrollView to be a square because
             // by default, it will expand regardless if it has a flex value or not
-            style={{ top: 20, width: wp("100%"), height: hp("100%") }}
+            style={{ top: 20, width: wp('100%'), height: hp('100%') }}
           >
             <ScrollView
               horizontal
@@ -158,25 +181,25 @@ export default class SearchScreen extends React.Component {
               // the onScroll prop will pass a nativeEvent object to a function
               onScroll={Animated.event(
                 // Animated.event returns a function that takes an array where the first element...
-                [{ nativeEvent: { contentOffset: { x: this.scrollX } } }] // ... is an object that maps any nativeEvent prop to a variable
+                [{ nativeEvent: { contentOffset: { x: this.scrollX } } }], // ... is an object that maps any nativeEvent prop to a variable
               )} // in this case we are mapping the value of nativeEvent.contentOffset.x to this.scrollX
               scrollEventThrottle={16}
-              contentContainerStyle={{ flexDirection: "row" }}
+              contentContainerStyle={{ flexDirection: 'row' }}
             >
               <View
                 style={{
-                  width: wp("90%"),
-                  marginLeft: wp("5%"),
-                  height: hp("5%") * 10,
+                  width: wp('90%'),
+                  marginLeft: wp('5%'),
+                  height: hp('5%') * 10,
                   borderRadius: 10,
-                  backgroundColor: "rgb(239, 239, 244)",
+                  backgroundColor: 'rgb(239, 239, 244)',
                   elevation: 10,
                 }}
               >
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: "rgb(142, 142, 147)",
+                    borderColor: 'rgb(239, 239, 244)',
                   }}
                 >
                   <Text
@@ -185,25 +208,28 @@ export default class SearchScreen extends React.Component {
                     인기 검색어
                   </Text>
                 </View>
-                {popularSearch.map(result => {
+                {popularSearch.map((result) => {
                   i += 1;
                   return (
                     <View
                       key={i}
                       style={{
-                        borderLeftWidth: 0.3,
-                        borderRightWidth: 0.3,
-                        borderBottomWidth: 0.3,
-                        borderColor: "rgb(142, 142, 147)",
-                        backgroundColor: "white",
-                        height: hp("5%"),
-                        width: wp("90%"),
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: 'rgb(239, 239, 244)',
+                        backgroundColor: 'white',
+                        height: hp('5%'),
+                        width: wp('90%'),
 
                       }}
                     >
                       <Text style={{ margin: 10 }}>
-                        {" "}
-                        {i} {result.keyword}{" "}
+                        {' '}
+                        {i}
+                        {' '}
+                        {result.keyword}
+                        {' '}
                       </Text>
                     </View>
                   );
@@ -215,41 +241,44 @@ export default class SearchScreen extends React.Component {
 
               <View
                 style={{
-                  width: wp("90%"),
-                  height: hp("5%") * 10,
-                  marginLeft: wp("10%"),
+                  width: wp('90%'),
+                  height: hp('5%') * 10,
+                  marginLeft: wp('10%'),
                   borderRadius: 10,
-                  backgroundColor: "rgb(239, 239, 244)",
+                  backgroundColor: 'rgb(239, 239, 244)',
 
                 }}
               >
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: "rgb(142, 142, 147)"
+                    borderColor: 'rgb(239, 239, 244)',
                   }}
                 >
                   <Text style={styles.explainText}>최근 검색어</Text>
                 </View>
-                {recentSearch.map(result => {
+                {recentSearch.map((result) => {
                   h += 1;
                   if (h <= 10) {
                     return (
                       <View
                         key={h}
                         style={{
-                          borderLeftWidth: 0.3,
-                          borderRightWidth: 0.3,
-                          borderBottomWidth: 0.3,
-                          borderColor: "rgb(142, 142, 147)",
-                          backgroundColor: "white",
-                          height: hp("5%"),
-                          width: wp("90%")
+                          borderLeftWidth: 1,
+                          borderRightWidth: 1,
+                          borderBottomWidth: 1,
+                          borderColor: 'rgb(239, 239, 244)',
+                          backgroundColor: 'white',
+                          height: hp('5%'),
+                          width: wp('90%'),
                         }}
                       >
                         <Text style={{ margin: 10 }}>
-                          {" "}
-                          {h} {result}{" "}
+                          {' '}
+                          {h}
+                          {' '}
+                          {result}
+                          {' '}
                         </Text>
                       </View>
                     );
@@ -262,18 +291,18 @@ export default class SearchScreen extends React.Component {
 
               <View
                 style={{
-                  width: wp("90%"),
-                  marginLeft: wp("10%"),
-                  marginRight: hp("3%"),
+                  width: wp('90%'),
+                  marginLeft: wp('10%'),
+                  marginRight: hp('3%'),
                   borderRadius: 10,
-                  backgroundColor: "rgb(239, 239, 244)",
+                  backgroundColor: 'rgb(239, 239, 244)',
 
                 }}
               >
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: "rgb(142, 142, 147)"
+                    borderColor: 'rgb(239, 239, 244)',
                   }}
                 >
                   <Text
@@ -285,18 +314,18 @@ export default class SearchScreen extends React.Component {
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: "rgb(142, 142, 147)",
-                    backgroundColor: "white",
-                    height: hp("5%"),
-                    width: wp("90%")
+                    borderColor: 'rgb(239, 239, 244)',
+                    backgroundColor: 'white',
+                    height: hp('5%'),
+                    width: wp('90%'),
                   }}
                 >
                   <Text style={{ margin: 10 }}> 이름 </Text>
                 </View>
                 <View
                   style={{
-                    justifyContent: "space-between",
-                    flexDirection: "row"
+                    justifyContent: 'space-between',
+                    flexDirection: 'row',
                   }}
                 >
                   <Text style={styles.explainText}>저장기능 끄기</Text>
@@ -313,15 +342,15 @@ export default class SearchScreen extends React.Component {
 
 const styles = StyleSheet.create({
   bottom: {
-    backgroundColor: "rgb(239, 239, 244)",
+    backgroundColor: 'rgb(239, 239, 244)',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
   page: {
-    position: "absolute"
+    position: 'absolute',
   },
   explainText: {
-    color: "rgb(142, 142, 147)",
-    margin: 10
-  }
+    color: 'rgb(142, 142, 147)',
+    margin: 10,
+  },
 });
