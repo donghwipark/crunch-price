@@ -54,6 +54,7 @@ export default class SearchScreen extends React.Component {
     axios
       .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
         params: {
+          page: '1',
           searchWords: search,
         },
       })
@@ -93,7 +94,8 @@ export default class SearchScreen extends React.Component {
         array.push(search);
         await AsyncStorage.setItem('search', JSON.stringify(array));
       } else {
-        const getItemArray = JSON.parse(getItem);
+        let getItemArray = JSON.parse(getItem);
+        getItemArray = getItemArray.slice(-9);
         getItemArray.push(search);
         await AsyncStorage.setItem('search', JSON.stringify(getItemArray));
       }
@@ -197,7 +199,7 @@ export default class SearchScreen extends React.Component {
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: 'rgb(142, 142, 147)',
+                    borderColor: 'rgb(239, 239, 244)',
                   }}
                 >
                   <Text
@@ -212,10 +214,10 @@ export default class SearchScreen extends React.Component {
                     <View
                       key={i}
                       style={{
-                        borderLeftWidth: 0.3,
-                        borderRightWidth: 0.3,
-                        borderBottomWidth: 0.3,
-                        borderColor: 'rgb(142, 142, 147)',
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: 'rgb(239, 239, 244)',
                         backgroundColor: 'white',
                         height: hp('5%'),
                         width: wp('90%'),
@@ -250,7 +252,7 @@ export default class SearchScreen extends React.Component {
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: 'rgb(142, 142, 147)',
+                    borderColor: 'rgb(239, 239, 244)',
                   }}
                 >
                   <Text style={styles.explainText}>최근 검색어</Text>
@@ -262,10 +264,10 @@ export default class SearchScreen extends React.Component {
                       <View
                         key={h}
                         style={{
-                          borderLeftWidth: 0.3,
-                          borderRightWidth: 0.3,
-                          borderBottomWidth: 0.3,
-                          borderColor: 'rgb(142, 142, 147)',
+                          borderLeftWidth: 1,
+                          borderRightWidth: 1,
+                          borderBottomWidth: 1,
+                          borderColor: 'rgb(239, 239, 244)',
                           backgroundColor: 'white',
                           height: hp('5%'),
                           width: wp('90%'),
@@ -300,7 +302,7 @@ export default class SearchScreen extends React.Component {
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: 'rgb(142, 142, 147)',
+                    borderColor: 'rgb(239, 239, 244)',
                   }}
                 >
                   <Text
@@ -312,7 +314,7 @@ export default class SearchScreen extends React.Component {
                 <View
                   style={{
                     borderBottomWidth: 0.3,
-                    borderColor: 'rgb(142, 142, 147)',
+                    borderColor: 'rgb(239, 239, 244)',
                     backgroundColor: 'white',
                     height: hp('5%'),
                     width: wp('90%'),

@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  Platform,
   FlatList,
 } from 'react-native';
 import axios from 'axios';
-import { Entypo, Feather, FontAwesome } from 'react-native-vector-icons';
+import { SearchBar } from 'react-native-elements';
+import { Entypo, Feather, SimpleLineIcons, FontAwesome } from 'react-native-vector-icons';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -17,11 +19,13 @@ import {
 
 export default class SearchResult extends React.Component {
   state = {
-    sortingType: 'focused',
+    sortingType: 'grid',
     searchInfo: null,
+    search: '',
   };
 
   onPressList = () => {
+    console.log('get into list');
     this.setState({
       sortingType: 'list',
     });
@@ -43,32 +47,19 @@ export default class SearchResult extends React.Component {
 
   }
 
+  checkLengthOnGrid = (description) => {
+    if (description.length > 38) {
+      return (
+        `${description.slice(0, 35)}...`
+      );
+    }
+    return description;
+  }
+
   render() {
-    const { navigation } = this.props;
+    const { navigation, search } = this.props;
     const itemInfo = navigation.getParam('result');
     console.log(itemInfo);
-    const fakeData = [
-      {
-        name: 'Goldfish',
-        image: 'http://tinyurl.com/n4vgcl5',
-        description: '1500원',
-      },
-      {
-        name: 'Pufferfish',
-        image: 'http://tinyurl.com/kxd7cuu',
-        description: '3000원',
-      },
-      {
-        name: 'Tuna',
-        image: 'http://tinyurl.com/zgs7z2s',
-        description: '300만원',
-      },
-      {
-        name: '몽고진간장',
-        image: 'http://www.monggofood.co.kr/base/component/board/board_18/u_image/84/1321693598_61.jpg',
-        description: '2500원',
-      },
-    ];
     const { sortingType } = this.state;
     const grid = (
       <View style={styles.gridPrimeContainer}>
@@ -76,13 +67,25 @@ export default class SearchResult extends React.Component {
           data={itemInfo}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.gridContainer}>
-              <Image source={{ uri: item[2], width: wp('40%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
-              <Text>{item[0]}</Text>
-              <Text>{item[3]}</Text>
+              <Image source={{ uri: item[2], width: wp('45%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
+              <View style={{ margin: wp('1.25%') }}>
+                <Text style={{ fontWeight: 'bold' }}>
+                  {
+                    this.checkLengthOnGrid(item[0])
+                  }
+                </Text>
+                <Text style={{ fontSize: 12, textDecorationLine: 'line-through', color: 'rgb(197,197,197)', marginTop: 3, marginBottom: 3 }}>{Number(item[4])}</Text>
+                <Text style={{ fontSize: 12 }}>10개 이상 구매 시 할인가</Text>
+                <Text style={{ fontWeight: 'bold' }}>
+                  {Number(item[3])}
+                  {'원'}
+                </Text>
+              </View>
             </TouchableOpacity>
           )}
           numColumns={2}
-          keyExtractor={(_, i) => i}
+          initialNumToRender={10}
+          keyExtractor={(_, i) => i.toString()}
         />
       </View>
     );
@@ -93,14 +96,20 @@ export default class SearchResult extends React.Component {
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.listContainer}>
               <Image source={{ uri: item[2], width: wp('25%'), height: hp('15%') }} style={styles.listRecommendedImages} />
-              <View>
-                <Text>{item[0]}</Text>
-                <Text>{item[3]}</Text>
+              <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 10, marginRight: 10 }}>{item[0]}</Text>
+                <Text />
+                <Text style={{ fontSize: 12, color: 'rgb(136,136,136)', textDecorationLine: 'line-through' }}>{Number(item[4])}</Text>
+                <Text style={{ fontSize: 14 }}>10개 이상 구매 시 할인가</Text>
+                <Text style={{ fontWeight: 'bold', marginBottom: 10, fontSize: 16 }}>
+                  {Number(item[3])}
+                  {'원'}
+                </Text>
               </View>
             </TouchableOpacity>
           )}
           numColumns={1}
-          key={(_, i) => i}
+          key={(item, h) => h.toString()}
         />
       </View>
     );
@@ -110,34 +119,54 @@ export default class SearchResult extends React.Component {
           data={itemInfo}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.oneContainer}>
-              <Image source={{ uri: item[2], width: wp('65%'), height: hp('35%') }} style={styles.oneRecommendedImages} />
-              <View>
-                <Text>{item[0]}</Text>
-                <Text>{item[3]}</Text>
+              <Image source={{ uri: item[2] }} style={styles.oneRecommendedImages} />
+              <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', margin: wp('2.5%'),
+              }}
+              >
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item[0]}</Text>
+                <Text style={{ fontSize: 16, textDecorationLine: 'line-through', color: 'rgb(197,197,197)', marginTop: 5 }}>{Number(item[4])}</Text>
+                <Text style={{ fontSize: 15, marginTop: 5 }}>10개 이상 구매 시 할인가</Text>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}>
+                  {Number(item[3])}
+                  {'원'}
+                </Text>
+
               </View>
             </TouchableOpacity>
           )}
           numColumns={1}
-          key={(_, i) => i}
+          key={(item, index) => index.toString()}
         />
       </View>
     );
     return (
       <View style={styles.primeContainer}>
+        <SearchBar
+          platform={Platform.OS === 'ios' ? 'ios' : 'android'}
+          placeholder="검색어 입력"
+          onClear={this.search}
+          onSubmitEditing={this.updateSearch}
+          onChangeText={val => this.setState({ search: val })}
+          value={search}
+          style={{ position: 'relative' }}
+        />
         <View style={styles.sortingIcons}>
-          <Entypo
+          <Feather
             name="list"
             size={26}
+            style={{ padding: 2 }}
             onPress={this.onPressList}
           />
-          <Entypo
+          <SimpleLineIcons
             name="grid"
-            size={26}
-            onPress={this.onPressGrid}
+            size={20}
+            style={{ padding: 2 }}
+            onPress={this.onPressGrid.bind(this)}
           />
           <FontAwesome
             name="square-o"
             size={26}
+            style={{ padding: 2 }}
             onPress={this.onPressFocused}
           />
         </View>
@@ -163,9 +192,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sortingIcons: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     width: wp('95%'),
   },
   gridPrimeContainer: {
@@ -175,20 +204,14 @@ const styles = StyleSheet.create({
   gridContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    // marginLeft: 10,
     width: wp('50%'),
     margin: 5,
     height: hp('40%'),
-    // marginTop: 10,
     borderRadius: 10,
-    alignItems: 'center',
   },
   gridRecommendedImages: {
-    marginLeft: 10,
-    marginRight: 10,
+    margin: wp('1.25%'),
     borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 10,
   },
   listPrimeContainer: {
     flex: 10,
@@ -200,10 +223,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     width: wp('95%'),
-    height: hp('18%'),
+    // height: hp('18%'),
     marginTop: hp('1.5%'),
     borderRadius: 10,
-    alignItems: 'center',
   },
   listRecommendedImages: {
     marginLeft: 10,
@@ -218,19 +240,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(222,222,222)',
   },
   oneContainer: {
-    flex: 1,
     backgroundColor: '#fff',
     width: wp('90%'),
-    height: hp('55%'),
     borderRadius: 10,
-    margin: 10,
-    alignItems: 'center',
+    marginTop: hp('2.5%'),
+    position: 'relative',
   },
   oneRecommendedImages: {
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: wp('2.5%'),
+    // marginRight: 10,
     borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 10,
+    overflow: 'hidden',
+    // marginTop: 10,
+    // marginBottom: 10,
+    resizeMode: 'contain',
+    width: wp('85%'),
+    height: hp('50%'),
+
   },
 });
