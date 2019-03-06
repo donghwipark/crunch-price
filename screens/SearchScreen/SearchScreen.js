@@ -80,7 +80,8 @@ export default class SearchScreen extends React.Component {
         // 1th price response.data.data[0].goodsUnitPrice1
       })
       .then((result) => {
-        this.props.navigation.navigate('Result', { result });
+        const { navigation } = this.props;
+        navigation.navigate('Result', { result, search });
       })
       .catch((error) => {
         Alert(error);
@@ -95,7 +96,8 @@ export default class SearchScreen extends React.Component {
         await AsyncStorage.setItem('search', JSON.stringify(array));
       } else {
         let getItemArray = JSON.parse(getItem);
-        getItemArray = getItemArray.slice(-9);
+        getItemArray = new Set(getItemArray);
+        getItemArray = Array.from(getItemArray).slice(-9);
         getItemArray.push(search);
         await AsyncStorage.setItem('search', JSON.stringify(getItemArray));
       }
