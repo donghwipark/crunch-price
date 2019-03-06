@@ -20,8 +20,8 @@ import {
 export default class SearchResult extends React.Component {
   state = {
     sortingType: 'grid',
-    searchInfo: null,
-    search: '',
+    beforeSearch: null,
+    search: null,
   };
 
   onPressList = () => {
@@ -43,9 +43,64 @@ export default class SearchResult extends React.Component {
     });
   }
 
-  onSearchResult = () => {
+  updateSearch = async () => {
+    const { beforeSearch } = this.state;
+    const search = beforeSearch;
+    axios
+      .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
+        params: {
+          page: '1',
+          searchWords: search,
+        },
+      })
+      .then((response) => {
+        const { length } = response.data.data;
+        if (length > 0) {
+          const itemsInfo = [];
+          for (let i = 0; i < length; i++) {
+            const produceInfo = [];
+            produceInfo.push(response.data.data[i].goodsNm);
+            produceInfo.push(response.data.data[i].goodsNo);
+            produceInfo.push(response.data.data[i].mainImageUrl);
+            produceInfo.push(response.data.data[i].goodsUnitPrice10);
+            produceInfo.push(response.data.data[i].goodsUnitPrice1);
+            itemsInfo.push(produceInfo);
+          }
+          return itemsInfo;
+        }
+        // name response.data.data[0].goodsNm
+        // key response.data.data[0].goodsNo
+        // image  response.data.data[0].mainImageUrl
+        // 10th price response.data.data[0].goodsUnitPrice10
+        // 1th price response.data.data[0].goodsUnitPrice1
+      })
+      .then((result) => {
+        this.setState({ search: result });
+      })
+      .catch((error) => {
+        Alert(error);
+      });
+    // await AsyncStorage.removeItem('search')
 
-  }
+    if (search.length > 0) {
+      const getItem = await AsyncStorage.getItem('search');
+      if (getItem === null) {
+        const array = [];
+        array.push(search);
+        await AsyncStorage.setItem('search', JSON.stringify(array));
+      } else {
+        let getItemArray = JSON.parse(getItem);
+        getItemArray = getItemArray.slice(-9);
+        getItemArray.push(search);
+        await AsyncStorage.setItem('search', JSON.stringify(getItemArray));
+      }
+      await AsyncStorage.getItem('search').then((res) => {
+        const getResult = JSON.parse(res);
+        this.setState({ recentSearch: getResult.reverse() });
+      });
+    }
+  };
+
 
   checkLengthOnGrid = (description) => {
     if (description.length > 38) {
@@ -57,10 +112,9 @@ export default class SearchResult extends React.Component {
   }
 
   render() {
-    const { navigation, search } = this.props;
-    const itemInfo = navigation.getParam('result');
-    console.log(itemInfo);
-    const { sortingType } = this.state;
+    const { navigation } = this.props;
+    const { sortingType, search } = this.state;
+    const itemInfo = search || navigation.getParam('result');
     const grid = (
       <View style={styles.gridPrimeContainer}>
         <FlatList
@@ -144,9 +198,8 @@ export default class SearchResult extends React.Component {
         <SearchBar
           platform={Platform.OS === 'ios' ? 'ios' : 'android'}
           placeholder="검색어 입력"
-          onClear={this.search}
           onSubmitEditing={this.updateSearch}
-          onChangeText={val => this.setState({ search: val })}
+          onChangeText={val => this.setState({ beforeSearch: val })}
           value={search}
           style={{ position: 'relative' }}
         />
