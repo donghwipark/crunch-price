@@ -5,13 +5,14 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,
+  ActivityIndicator,
   Platform,
   FlatList,
+  AsyncStorage,
 } from 'react-native';
 import axios from 'axios';
 import { SearchBar } from 'react-native-elements';
-import { Entypo, Feather, SimpleLineIcons, FontAwesome } from 'react-native-vector-icons';
+import { Feather, SimpleLineIcons, FontAwesome } from 'react-native-vector-icons';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -19,13 +20,14 @@ import {
 
 export default class SearchResult extends React.Component {
   state = {
-    sortingType: 'grid',
+    sortingType: 'list',
     beforeSearch: null,
     search: null,
+    searchInfo: '',
+    page: 1,
   };
 
   onPressList = () => {
-    console.log('get into list');
     this.setState({
       sortingType: 'list',
     });
@@ -75,10 +77,11 @@ export default class SearchResult extends React.Component {
         // 1th price response.data.data[0].goodsUnitPrice1
       })
       .then((result) => {
-        this.setState({ search: result });
+        this.setState({ searchInfo: result });
+        this.setState({ page: 1 });
       })
       .catch((error) => {
-        Alert(error);
+        console.error(error);
       });
     // await AsyncStorage.removeItem('search')
 
@@ -90,17 +93,51 @@ export default class SearchResult extends React.Component {
         await AsyncStorage.setItem('search', JSON.stringify(array));
       } else {
         let getItemArray = JSON.parse(getItem);
-        getItemArray = getItemArray.slice(-9);
+        getItemArray = new Set(getItemArray);
+        getItemArray = Array.from(getItemArray).slice(-9);
         getItemArray.push(search);
         await AsyncStorage.setItem('search', JSON.stringify(getItemArray));
       }
-      await AsyncStorage.getItem('search').then((res) => {
-        const getResult = JSON.parse(res);
-        this.setState({ recentSearch: getResult.reverse() });
-      });
     }
   };
 
+  makeRemoteRequest = async (val) => {
+    const { search, searchInfo, page } = this.state;
+    let num = Number(page);
+    num += 1;
+    this.setState({ page: num });
+    if (val.distanceFromEnd > 0) {
+      axios
+        .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
+          params: {
+            page,
+            searchWords: search,
+          },
+        })
+        .then((response) => {
+          const { length } = response.data.data;
+          if (length > 0) {
+            const itemsInfo = [];
+            for (let i = 0; i < length; i += 1) {
+              const produceInfo = [];
+              produceInfo.push(response.data.data[i].goodsNm);
+              produceInfo.push(response.data.data[i].goodsNo);
+              produceInfo.push(response.data.data[i].mainImageUrl);
+              produceInfo.push(response.data.data[i].goodsUnitPrice10);
+              produceInfo.push(response.data.data[i].goodsUnitPrice1);
+              itemsInfo.push(produceInfo);
+            }
+            return itemsInfo;
+          }
+        })
+        .then((result) => {
+          this.setState({ searchInfo: [...searchInfo, ...result] });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
 
   checkLengthOnGrid = (description) => {
     if (description.length > 38) {
@@ -111,10 +148,16 @@ export default class SearchResult extends React.Component {
     return description;
   }
 
+  componentDidMount() {
+    const { navigation } = this.props;
+    this.setState({ searchInfo: navigation.getParam('result') });
+    this.setState({ search: navigation.getParam('search') });
+  }
+
   render() {
     const { navigation } = this.props;
-    const { sortingType, search } = this.state;
-    const itemInfo = search || navigation.getParam('result');
+    const { sortingType, searchInfo, search, beforeSearch } = this.state;
+    const itemInfo = searchInfo || navigation.getParam('result');
     const grid = (
       <View style={styles.gridPrimeContainer}>
         <FlatList
@@ -138,8 +181,13 @@ export default class SearchResult extends React.Component {
             </TouchableOpacity>
           )}
           numColumns={2}
-          initialNumToRender={10}
-          keyExtractor={(_, i) => i.toString()}
+          refreshing={false}
+          legacyImplementation={false}
+          onRefresh={() => console.log('done')}
+          onEndReachedThreshold={0.5}
+          onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
+          ListFooterComponent={() => <ActivityIndicator animating size="large" />}
+          keyExtractor={(_, i) => i}
         />
       </View>
     );
@@ -163,6 +211,12 @@ export default class SearchResult extends React.Component {
             </TouchableOpacity>
           )}
           numColumns={1}
+          refreshing={false}
+          legacyImplementation={false}
+          onRefresh={() => console.log('done')}
+          onEndReachedThreshold={0.5}
+          onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
+          ListFooterComponent={() => <ActivityIndicator animating />}
           key={(item, h) => h.toString()}
         />
       </View>
@@ -189,7 +243,14 @@ export default class SearchResult extends React.Component {
             </TouchableOpacity>
           )}
           numColumns={1}
+          refreshing={false}
+          legacyImplementation={false}
+          onRefresh={() => console.log('done')}
+          onEndReachedThreshold={0.5}
+          onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
+          ListFooterComponent={() => <ActivityIndicator animating size="large" />}
           key={(item, index) => index.toString()}
+
         />
       </View>
     );
@@ -200,7 +261,7 @@ export default class SearchResult extends React.Component {
           placeholder="검색어 입력"
           onSubmitEditing={this.updateSearch}
           onChangeText={val => this.setState({ beforeSearch: val })}
-          value={search}
+          value={beforeSearch}
           style={{ position: 'relative' }}
         />
         <View style={styles.sortingIcons}>
@@ -214,7 +275,7 @@ export default class SearchResult extends React.Component {
             name="grid"
             size={20}
             style={{ padding: 2 }}
-            onPress={this.onPressGrid.bind(this)}
+            onPress={this.onPressGrid}
           />
           <FontAwesome
             name="square-o"
