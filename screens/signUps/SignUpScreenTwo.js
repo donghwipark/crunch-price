@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+// import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import { CheckBox } from 'react-native-elements';
 
 export default class SignUpScreenTwo extends React.Component {

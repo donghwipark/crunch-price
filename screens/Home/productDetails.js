@@ -7,12 +7,15 @@ import {
   View,
   FlatList,
   WebView,
+  Alert,
 } from 'react-native';
+import { WebBrowser, AuthSession } from 'expo';
 
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import Axios from 'axios';
 
 export default class ProductDetails extends React.Component {
   static navigationOptions = {
@@ -31,6 +34,8 @@ export default class ProductDetails extends React.Component {
     this.state = {
       goodData: {},
       isLoaded: false,
+      cookies: {},
+      webViewUrl: 'http://m.crunchprice.com/member/login.php',
     };
   }
 
@@ -41,31 +46,72 @@ export default class ProductDetails extends React.Component {
       goodData,
       isLoaded: true,
     });
-
   }
 
-  render() {
-    const { goodData, isLoaded } = this.state;
-    console.log(goodData)
-    if(!isLoaded){
-     return     (
-      <Text>loading</Text>
-    ) 
-}
-   return  (
-        <View style={styles.primeContainer}>
+onNavigationStateChange = (webViewState: { url: string }) => {
+  const { url } = webViewState;
 
+  // when WebView.onMessage called, there is not-http(s) url
+  if (url.includes('http')) {
+    this.setState({ webViewUrl: url })
+  }
+}
+
+_checkNeededCookies = () => {
+  const { cookies, webViewUrl } = this.state;
+
+  if (webViewUrl === 'http://m.crunchprice.com/') {
+    console.log(cookies)
+  }
+}
+
+_onMessage = (event) => {
+  const { data } = event.nativeEvent;
+  const cookies = data.split(';'); // `csrftoken=...; rur=...; mid=...; somethingelse=...`
+
+  cookies.forEach((cookie) => {
+    const c = cookie.trim().split('=');
+
+    const newCookies = this.state.cookies;
+    newCookies[c[0]] = c[1];
+
+    this.setState({ cookies: newCookies });
+  });
+
+  this._checkNeededCookies();
+}
+
+testCookieRequest = async () => {
+  const banner = await Axios.get('http://m.crunchprice.com/mypage/index.php');
+  console.log(JSON.stringify(banner))
+} 
+
+render() {
+  const { goodData, isLoaded, webViewUrl } = this.state;
+  console.log(webViewUrl);
+  if (!isLoaded) {
+    return (
+      <Text>loading</Text>
+    );
+  }
+  return (
+    <View style={styles.primeContainer}>
+      <TouchableOpacity onPress={this.testCookieRequest}>
         <Image source={{ uri: goodData.mainImageUrl, width: wp('40%'), height: hp('25%') }}/>
         <Text>{goodData.goodsNm}</Text>
-        <View style = {styles.container}>
-         <WebView
-         source = {{ uri:
-         `https://www.google.com/?gws_rd=cr,ssl&ei=SICcV9_EFqqk6ASA3ZaABA#q=${goodData.goodsNm}` }}
-         />
-      </View>
-        </View>
-    )
-  }
+      </TouchableOpacity>
+      <WebView
+        source={{ uri: webViewUrl }}
+        onNavigationStateChange={this.onNavigationStateChange}
+        onMessage={this._onMessage}
+        injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
+        style={{ flex: 1 }}
+
+      />
+
+    </View>
+  );
+}
 }
 const styles = StyleSheet.create({
   primeContainer: {
@@ -73,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   container: {
-      flex: 1,
+    flex: 1,
   },
   sortingIcons: {
     flex: 0,
@@ -83,3 +129,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
   },
 });
+
+
+// 로그인 안했을 시
+// {"data":"<!doctype html>\n<html lang=\"ko\">\n<head>\n    <!--<title>결과</title>-->\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <script type=\"text/javascript\">\n    location.replace('http://m.crunchprice.com/member/login.php');\n    </script>\n</head>\n<body>\n</body>\n</html>","status":200,"headers":{"cache-control":"public, max-age=0","content-type":"text/html; charset=UTF-8","connection":"close","content-length":"427","server":"Apache","date":"Thu, 07 Mar 2019 03:04:24 GMT"},"config":{"transformRequest":{},"transformResponse":{},"timeout":0,"xsrfCookieName":"XSRF-TOKEN","xsrfHeaderName":"X-XSRF-TOKEN","maxContentLength":-1,"headers":{"Accept":"application/json, text/plain, */*"},"method":"get","url":"http://m.crunchprice.com/mypage/index.php"},"request":{"UNSENT":0,"OPENED":1,"HEADERS_RECEIVED":2,"LOADING":3,"DONE":4,"readyState":4,"status":200,"timeout":0,"withCredentials":true,"upload":{},"_aborted":false,"_hasError":false,"_method":"GET","_response":"<!doctype html>\n<html lang=\"ko\">\n<head>\n    <!--<title>결과</title>-->\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <script type=\"text/javascript\">\n    location.replace('http://m.crunchprice.com/member/login.php');\n    </script>\n</head>\n<body>\n</body>\n</html>","_url":"http://m.crunchprice.com/mypage/index.php","_timedOut":false,"_trackingName":"unknown","_incrementalEvents":false,"responseHeaders":{"Cache-Control":"public, max-age=0","Content-Type":"text/html; charset=UTF-8","Connection":"close","Content-Length":"427","Server":"Apache","Date":"Thu, 07 Mar 2019 03:04:24 GMT"},"_requestId":null,"_headers":{"accept":"application/json, text/plain, */*"},"_responseType":"","_sent":true,"_lowerCaseResponseHeaders":{"cache-control":"public, max-age=0","content-type":"text/html; charset=UTF-8","connection":"close","content-length":"427","server":"Apache","date":"Thu, 07 Mar 2019 03:04:24 GMT"},"_subscriptions":[],"responseURL":"http://m.crunchprice.com/mypage/index.php"}}
+
+// 로그인 시 trol":"public, max-age=0","Content-Type":"text/html; charset=UTF-8","Date":"Thu, 07 Mar 2019 03:06:30 GMT","Server":"Apache","Set-Cookie":"aceAet=1551927991; expires=Sun, 17-Mar-2019 03:06:31 GMT; Max-Age=864000; path=/; domain=crunchprice.com","last-modified":"Asia/Seoul","X-UA-Compatible":"IE=edge","expires":"Mon, 26 Jul 1997 05:00:00 GMT","content_type":"text/html","p3p":"CP='ALL CURa ADMa DEVa TAIa OUR BUS IND PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA POL HEA PRE LOC OTC'","Connection":"close","Transfer-Encoding":"chunked"},"_requestId":null,"_headers":{"accept":"application/json, text/plain, */*"},"_responseType":"","_sent":true,"_lowerCaseResponseHeaders":{"cache-control":"public, max-age=0","content-type":"text/html; charset=UTF-8","date":"Thu, 07 Mar 2019 03:06:30 GMT","server":"Apache","set-cookie":"aceAet=1551927991; expires=Sun, 17-Mar-2019 03:06:31 GMT; Max-Age=864000; path=/; domain=crunchprice.com","last-modified":"Asia/Seoul","x-ua-compatible":"IE=edge","expires":"Mon, 26 Jul 1997 05:00:00 GMT","content_type":"text/html","p3p":"CP='ALL CURa ADMa DEVa TAIa OUR BUS IND PHY ONL UNI PUR FIN COM NAV INT DEM CNT STA POL HEA PRE LOC OTC'","connection":"close","transfer-encoding":"chunked"},"_subscriptions":[],"responseURL":"http://m.crunchprice.com/mypage/index.php"}}
