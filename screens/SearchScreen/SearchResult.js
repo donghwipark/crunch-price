@@ -19,13 +19,23 @@ import {
 } from 'react-native-responsive-screen';
 
 export default class SearchResult extends React.Component {
+  static navigationOptions = {
+    title: '검색',
+  };
+
   state = {
-    sortingType: 'list',
+    sortingType: 'focused',
     beforeSearch: null,
     search: null,
     searchInfo: '',
     page: 1,
   };
+
+  componentDidMount() {
+    const { navigation } = this.props;
+    this.setState({ searchInfo: navigation.getParam('result') });
+    this.setState({ search: navigation.getParam('search') });
+  }
 
   onPressList = () => {
     this.setState({
@@ -43,6 +53,21 @@ export default class SearchResult extends React.Component {
     this.setState({
       sortingType: 'focused',
     });
+  }
+
+  onSelection = async (item) => {
+    const getItem = await AsyncStorage.getItem('recentlyViewedItems');
+    if (getItem === null) {
+      const array = [];
+      array.push(item);
+      await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(array));
+    } else {
+      let getItemArray = JSON.parse(getItem);
+      getItemArray = new Set(getItemArray);
+      getItemArray = Array.from(getItemArray);
+      getItemArray.push(item);
+      await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(getItemArray));
+    }
   }
 
   updateSearch = async () => {
@@ -148,22 +173,55 @@ export default class SearchResult extends React.Component {
     return description;
   }
 
-  componentDidMount() {
-    const { navigation } = this.props;
-    this.setState({ searchInfo: navigation.getParam('result') });
-    this.setState({ search: navigation.getParam('search') });
-  }
-
   render() {
     const { navigation } = this.props;
     const { sortingType, searchInfo, search, beforeSearch } = this.state;
     const itemInfo = searchInfo || navigation.getParam('result');
+    const oneBigStub = (
+      <View style={styles.onePrimeContainer}>
+        <FlatList
+          data={itemInfo}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.oneContainer}
+              onPress={() => this.onSelection(item)}
+            >
+              <Image source={{ uri: item[2] }} style={styles.oneRecommendedImages} />
+              <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', margin: wp('2.5%'),
+              }}
+              >
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item[0]}</Text>
+                <Text style={{ fontSize: 16, textDecorationLine: 'line-through', color: 'rgb(197,197,197)', marginTop: 5 }}>{Number(item[4])}</Text>
+                <Text style={{ fontSize: 15, marginTop: 5 }}>10개 이상 구매 시 할인가</Text>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}>
+                  {Number(item[3])}
+                  {'원'}
+                </Text>
+
+              </View>
+            </TouchableOpacity>
+          )}
+          numColumns={1}
+          refreshing={false}
+          legacyImplementation={false}
+          onRefresh={() => console.log('done')}
+          onEndReachedThreshold={0.5}
+          onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
+          ListFooterComponent={() => <ActivityIndicator animating size="large" />}
+          key={(item, index) => index.toString()}
+
+        />
+      </View>
+    );
     const grid = (
       <View style={styles.gridPrimeContainer}>
         <FlatList
           data={itemInfo}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.gridContainer}>
+            <TouchableOpacity
+              style={styles.gridContainer}
+              onPress={() => this.onSelection(item)}
+            >
               <Image source={{ uri: item[2], width: wp('45%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
               <View style={{ margin: wp('1.25%') }}>
                 <Text style={{ fontWeight: 'bold' }}>
@@ -196,7 +254,10 @@ export default class SearchResult extends React.Component {
         <FlatList
           data={itemInfo}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.listContainer}>
+            <TouchableOpacity
+              style={styles.listContainer}
+              onPress={() => this.onSelection(item)}
+            >
               <Image source={{ uri: item[2], width: wp('25%'), height: hp('15%') }} style={styles.listRecommendedImages} />
               <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
                 <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 10, marginRight: 10 }}>{item[0]}</Text>
@@ -221,39 +282,7 @@ export default class SearchResult extends React.Component {
         />
       </View>
     );
-    const oneBigStub = (
-      <View style={styles.onePrimeContainer}>
-        <FlatList
-          data={itemInfo}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.oneContainer}>
-              <Image source={{ uri: item[2] }} style={styles.oneRecommendedImages} />
-              <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', margin: wp('2.5%'),
-              }}
-              >
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item[0]}</Text>
-                <Text style={{ fontSize: 16, textDecorationLine: 'line-through', color: 'rgb(197,197,197)', marginTop: 5 }}>{Number(item[4])}</Text>
-                <Text style={{ fontSize: 15, marginTop: 5 }}>10개 이상 구매 시 할인가</Text>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}>
-                  {Number(item[3])}
-                  {'원'}
-                </Text>
 
-              </View>
-            </TouchableOpacity>
-          )}
-          numColumns={1}
-          refreshing={false}
-          legacyImplementation={false}
-          onRefresh={() => console.log('done')}
-          onEndReachedThreshold={0.5}
-          onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
-          ListFooterComponent={() => <ActivityIndicator animating size="large" />}
-          key={(item, index) => index.toString()}
-
-        />
-      </View>
-    );
     return (
       <View style={styles.primeContainer}>
         <SearchBar
@@ -289,6 +318,7 @@ export default class SearchResult extends React.Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   primeContainer: {
     flex: 1,
