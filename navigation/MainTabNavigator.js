@@ -2,13 +2,14 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import HomeScreen from '../screens/HomeScreen';
-import CategoryScreen from '../screens/CategoryScreen';
+import CategoryScreen from '../screens/Category/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen/SearchScreen';
 import SearchResult from '../screens/SearchScreen/SearchResult';
 import MyPageScreen from '../screens/MyPageScreen';
 import OpenedListScreen from '../screens/Home/OpenedList';
 import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 import ProductDetails from '../screens/Home/productDetails';
+import CategoryScreenOne from '../screens/Category/CategoryScreenOne';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -38,6 +39,7 @@ HomeStack.navigationOptions = {
 
 const CategoryStack = createStackNavigator({
   Category: CategoryScreen,
+  CategoryOne: CategoryScreenOne,
 });
 
 CategoryStack.navigationOptions = {

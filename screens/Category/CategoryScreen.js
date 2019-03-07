@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Emoji from 'react-native-emoji';
+import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default class CategoryScreen extends React.Component {
@@ -13,13 +14,13 @@ export default class CategoryScreen extends React.Component {
       ? (
         <Image
           style={{ width: '50%', height: '60%' }}
-          source={require('../assets/images/crunch-logo.png')}
+          source={require('../../assets/images/crunch-logo.png')}
         />
       )
       : (
         <Image
           style={{ width: '70%', height: '55%', resizeMode: 'contain', marginLeft: 25 }}
-          source={require('../assets/images/crunch-logo.png')}
+          source={require('../../assets/images/crunch-logo.png')}
         />
       ),
     headerLeft: (
@@ -38,7 +39,22 @@ export default class CategoryScreen extends React.Component {
     ),
   };
 
+  getCategoryList = async () => {
+    console.log(1);
+  }
+
+  onSelectCategory = (name, num) => {
+    const { navigation } = this.props;
+    axios
+      .get('http://api.crunchprice.com/category/get_category_counts.php?cateCd=006')
+      .then(response => response.data.data)
+      .then((response) => {
+        navigation.navigate('CategoryOne', { cateCd: num, name, category: response });
+      });
+  }
+
   render() {
+    const { navigation } = this.props;
     return (
       <ScrollView>
         <ScrollView
@@ -46,17 +62,17 @@ export default class CategoryScreen extends React.Component {
           horizontal
         >
           <Image
-            source={require('../components/Category/1.jpg')}
+            source={require('../../components/Category/1.jpg')}
             style={styles.recommendImage}
           />
           <Image
-            source={require('../components/Category/2.jpg')}
+            source={require('../../components/Category/2.jpg')}
             style={styles.recommendImage}
           />
         </ScrollView>
         <View style={styles.main}>
           <TouchableOpacity
-            onPress={() => { console.log('식품'); }}
+            onPress={() => { this.onSelectCategory('식품', '006'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -78,7 +94,7 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('생활/건강'); }}
+            onPress={() => { this.onSelectCategory('생활/건강', '004'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -100,7 +116,7 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('출산/육아'); }}
+            onPress={() => { this.onSelectCategory('출산/육아', '008'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -122,7 +138,7 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('화장품/미용'); }}
+            onPress={() => { this.onSelectCategory('화장품/미용', '011'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -144,7 +160,7 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('디지털/가전'); }}
+            onPress={() => { this.onSelectCategory('디지털/가전', '003'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -166,7 +182,7 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('스포츠/레저'); }}
+            onPress={() => { this.onSelectCategory('스포츠/레져', '005'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -188,7 +204,7 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('여행/문화'); }}
+            onPress={() => { this.onSelectCategory('여행/문화', '007'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -210,7 +226,7 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('가구/인테리어'); }}
+            onPress={() => { this.onSelectCategory('가구/인테리어', '002'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -232,11 +248,11 @@ export default class CategoryScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('패션잡화'); }}
+            onPress={() => { this.onSelectCategory('패션잡화', '010'); }}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
-                <Emoji name="womans_clothes" style={styles.emoji} />
+                <Emoji name="handbag" style={styles.emoji} />
                 <Text style={styles.text}>패션잡화</Text>
               </View>
               <View style={styles.categoryList}>
