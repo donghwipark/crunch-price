@@ -18,6 +18,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { Entypo } from 'react-native-vector-icons';
 
 const { width } = Dimensions.get('window');
 const photos = [
@@ -114,6 +115,20 @@ export default class SearchScreen extends React.Component {
     }
   };
 
+  onDeleteSearchedList = async (val) => {
+    const { recentSearch } = this.state;
+    const filterResult = recentSearch;
+    filterResult.splice(filterResult.indexOf(val), 1);
+    console.log(filterResult);
+    await this.setState({ recentSearch: filterResult });
+
+    // delete the val from here with async option
+    const getItem = await AsyncStorage.getItem('search');
+    const getItemArray = JSON.parse(getItem);
+    getItemArray.splice(filterResult.indexOf(val), 1);
+    await AsyncStorage.setItem('search', JSON.stringify(getItemArray));
+  }
+
   componentDidMount = async () => {
     await axios
       .get('http://api.crunchprice.com/goods/get_popular_search.php')
@@ -138,6 +153,7 @@ export default class SearchScreen extends React.Component {
     const { search, popularSearch, recentSearch, getRecentlyViewedItems } = this.state;
     let i = 0;
     let h = 0;
+    console.log(recentSearch);
     // need to put the number of the values and the +2 to calculate the height of the tables
     return (
       <View style={styles.page}>
@@ -185,7 +201,13 @@ export default class SearchScreen extends React.Component {
           <View
             // this will bound the size of the ScrollView to be a square because
             // by default, it will expand regardless if it has a flex value or not
-            style={{ top: 20, width: wp('100%'), height: hp('100%') }}
+            style={{
+              width: wp('100%'),
+              height: hp('65%'),
+              shadowOpacity: 0.3,
+              shadowRadius: 10,
+              shadowOffset: { width: 0, height: hp('1%') },
+            }}
           >
             <ScrollView
               horizontal
@@ -203,7 +225,7 @@ export default class SearchScreen extends React.Component {
                 style={{
                   width: wp('90%'),
                   marginLeft: wp('5%'),
-                  height: hp('5%') * 10,
+                  height: hp('65%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
                   elevation: 10,
@@ -233,7 +255,7 @@ export default class SearchScreen extends React.Component {
                         borderBottomWidth: 1,
                         borderColor: 'rgb(239, 239, 244)',
                         backgroundColor: 'white',
-                        height: hp('5%'),
+                        height: hp('5.5%'),
                         width: wp('90%'),
 
                       }}
@@ -241,6 +263,7 @@ export default class SearchScreen extends React.Component {
                       <Text style={{ margin: 10 }}>
                         {' '}
                         {i}
+                        {' '}
                         {' '}
                         {result.keyword}
                         {' '}
@@ -256,7 +279,7 @@ export default class SearchScreen extends React.Component {
               <View
                 style={{
                   width: wp('90%'),
-                  height: hp('5%') * 10,
+                  height: hp('65%'),
                   marginLeft: wp('10%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
@@ -275,27 +298,43 @@ export default class SearchScreen extends React.Component {
                   h += 1;
                   if (h <= 10) {
                     return (
-                      <TouchableOpacity
-                        key={h}
-                        onPress={() => { this.onClickList(result); }}
-                        style={{
-                          borderLeftWidth: 1,
-                          borderRightWidth: 1,
-                          borderBottomWidth: 1,
-                          borderColor: 'rgb(239, 239, 244)',
-                          backgroundColor: 'white',
-                          height: hp('5%'),
-                          width: wp('90%'),
-                        }}
-                      >
-                        <Text style={{ margin: 10 }}>
-                          {' '}
-                          {h}
-                          {' '}
-                          {result}
-                          {' '}
-                        </Text>
-                      </TouchableOpacity>
+                      <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity
+                          key={h}
+                          onPress={() => { this.onClickList(result); }}
+                          style={{
+                            borderLeftWidth: 1,
+                            borderBottomWidth: 1,
+                            borderColor: 'rgb(239, 239, 244)',
+                            backgroundColor: 'white',
+                            height: hp('5.5%'),
+                            width: wp('80%'),
+                          }}
+                        >
+                          <Text style={{ margin: 10 }}>
+                            {' '}
+                            {h}
+                            {' '}
+                            {' '}
+                            {result}
+                            {' '}
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: 'white',
+                            borderBottomWidth: 1,
+                            borderBottomColor: 'rgb(239, 239, 244)',
+                            height: hp('5.5%'),
+                            width: wp('10%'),
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          onPress={() => this.onDeleteSearchedList(result)}
+                        >
+                          <Entypo name="circle-with-cross" style={{ color: 'grey' }} size={13} />
+                        </TouchableOpacity>
+                      </View>
                     );
                   }
                 })}
@@ -311,7 +350,7 @@ export default class SearchScreen extends React.Component {
                   marginRight: hp('3%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
-                  height: hp('100%'),
+                  height: hp('65%'),
                   marginBottom: 50,
                 }}
               >
@@ -327,7 +366,7 @@ export default class SearchScreen extends React.Component {
                     최근 본 상품
                   </Text>
                 </View>
-                <View style={{ height: hp('50%') }}>
+                <View style={{ height: hp('55%') }}>
                   <ScrollView>
                     {getRecentlyViewedItems.map(result => (
                       <TouchableOpacity
@@ -362,6 +401,8 @@ export default class SearchScreen extends React.Component {
                   style={{
                     justifyContent: 'space-between',
                     flexDirection: 'row',
+                    borderBottomLeftRadius: 10,
+                    borderBottomRightRadius: 10,
                   }}
                 >
                   <Text style={styles.explainText}>저장기능 끄기</Text>

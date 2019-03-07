@@ -19,6 +19,10 @@ import {
 } from 'react-native-responsive-screen';
 
 export default class SearchResult extends React.Component {
+  static navigationOptions = {
+    title: '검색',
+  };
+
   state = {
     sortingType: 'focused',
     beforeSearch: null,
