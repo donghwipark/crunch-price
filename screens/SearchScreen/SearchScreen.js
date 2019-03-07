@@ -5,10 +5,11 @@ import {
   Platform,
   View,
   Alert,
-  Image,
+  TouchableOpacity,
   ScrollView,
   Dimensions,
   Animated,
+  Image,
   AsyncStorage,
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
@@ -44,13 +45,18 @@ export default class SearchScreen extends React.Component {
   state = {
     recentSearch: [],
     popularSearch: [],
-    search: '',
+    search: null,
     searchInfo: [],
+    getRecentlyViewedItems: [],
   };
+
+  onClickList = async (clickedList) => {
+    await this.setState({ search: clickedList });
+    this.updateSearch();
+  }
 
   updateSearch = async () => {
     const { search, recentSearch } = this.state;
-
     axios
       .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
         params: {
@@ -108,23 +114,28 @@ export default class SearchScreen extends React.Component {
     }
   };
 
-  componentDidMount = () => {
-    axios
+  componentDidMount = async () => {
+    await axios
       .get('http://api.crunchprice.com/goods/get_popular_search.php')
       .then((res) => {
         const result = res.data;
         this.setState({ popularSearch: result.data });
       });
 
-    AsyncStorage.getItem('search').then((res) => {
+    await AsyncStorage.getItem('search').then((res) => {
       const getResult = JSON.parse(res);
       this.setState({ recentSearch: getResult.reverse() });
+    });
+
+    await AsyncStorage.getItem('recentlyViewedItems').then((res) => {
+      const recentlyViewedItems = JSON.parse(res);
+      this.setState({ getRecentlyViewedItems: recentlyViewedItems.reverse() });
     });
   };
 
   render() {
     const position = Animated.divide(this.scrollX, width);
-    const { search, popularSearch, recentSearch } = this.state;
+    const { search, popularSearch, recentSearch, getRecentlyViewedItems } = this.state;
     let i = 0;
     let h = 0;
     // need to put the number of the values and the +2 to calculate the height of the tables
@@ -213,8 +224,9 @@ export default class SearchScreen extends React.Component {
                 {popularSearch.map((result) => {
                   i += 1;
                   return (
-                    <View
+                    <TouchableOpacity
                       key={i}
+                      onPress={() => { this.onClickList(result.keyword); }}
                       style={{
                         borderLeftWidth: 1,
                         borderRightWidth: 1,
@@ -233,7 +245,7 @@ export default class SearchScreen extends React.Component {
                         {result.keyword}
                         {' '}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                   );
                 })}
                 <View style={styles.bottom}>
@@ -263,8 +275,9 @@ export default class SearchScreen extends React.Component {
                   h += 1;
                   if (h <= 10) {
                     return (
-                      <View
+                      <TouchableOpacity
                         key={h}
+                        onPress={() => { this.onClickList(result); }}
                         style={{
                           borderLeftWidth: 1,
                           borderRightWidth: 1,
@@ -282,7 +295,7 @@ export default class SearchScreen extends React.Component {
                           {result}
                           {' '}
                         </Text>
-                      </View>
+                      </TouchableOpacity>
                     );
                   }
                 })}
@@ -298,7 +311,8 @@ export default class SearchScreen extends React.Component {
                   marginRight: hp('3%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
-
+                  height: hp('100%'),
+                  marginBottom: 50,
                 }}
               >
                 <View
@@ -308,21 +322,41 @@ export default class SearchScreen extends React.Component {
                   }}
                 >
                   <Text
-                    style={styles.explainText} // we will use i for the key because no two (or more) elements in an array will have the same index
+                    style={styles.explainText}
                   >
                     최근 본 상품
                   </Text>
                 </View>
-                <View
-                  style={{
-                    borderBottomWidth: 0.3,
-                    borderColor: 'rgb(239, 239, 244)',
-                    backgroundColor: 'white',
-                    height: hp('5%'),
-                    width: wp('90%'),
-                  }}
-                >
-                  <Text style={{ margin: 10 }}> 이름 </Text>
+                <View style={{ height: hp('50%') }}>
+                  <ScrollView>
+                    {getRecentlyViewedItems.map(result => (
+                      <TouchableOpacity
+                        key={result[1]}
+                        style={{
+                          position: 'ralative',
+                          borderLeftWidth: 1,
+                          borderRightWidth: 1,
+                          borderBottomWidth: 1,
+                          borderColor: 'rgb(239, 239, 244)',
+                          backgroundColor: 'white',
+                          height: hp('15%'),
+                          width: wp('90%'),
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <View style={{ margin: wp('3%'), width: wp('60%'), flexDirection: 'column', justifyContent: 'space-between' }}>
+                          <Text style={{ fontSize: 14 }}>
+                            {result[0]}
+                          </Text>
+                          <Text style={{ marginBottom: hp('2%'), fontSize: 14, color: 'grey' }}>
+                            {`${Number(result[3])}원~`}
+                          </Text>
+                        </View>
+                        <Image source={{ uri: result[2] }} style={{ flex: 1 }} resizeMode="contain" />
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
                 </View>
                 <View
                   style={{
