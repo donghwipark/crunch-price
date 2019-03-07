@@ -1,7 +1,6 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
-import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen/SearchScreen';
@@ -10,7 +9,6 @@ import MyPageScreen from '../screens/MyPageScreen';
 import OpenedListScreen from '../screens/Home/OpenedList';
 import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 import ProductDetails from '../screens/Home/productDetails';
-
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -22,14 +20,19 @@ const HomeStack = createStackNavigator({
 HomeStack.navigationOptions = {
   tabBarLabel: '홈',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? 'ios-home'
-          : 'md-home'
-      }
-    />
+    focused
+      ? (
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
+          <Image source={require('../assets/images/BottomTabIcons/HomeActive.png')} />
+          <Text style={{ textAlign: 'center', color: 'rgb(93, 190, 143)', fontSize: 10 }}>홈</Text>
+        </View>
+      )
+      : (
+        <View style={{ marginBottom: 25 }}>
+          <Image source={require('../assets/images/BottomTabIcons/HomeInactive.png')} />
+          <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>홈</Text>
+        </View>
+      )
   ),
 };
 
@@ -40,12 +43,19 @@ const CategoryStack = createStackNavigator({
 CategoryStack.navigationOptions = {
   tabBarLabel: '카테고리',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios'
-        ? 'ios-menu'
-        : 'md-menu'}
-    />
+    focused
+      ? (
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
+          <Image source={require('../assets/images/BottomTabIcons/CategoryActive.png')} />
+          <Text style={{ textAlign: 'center', color: 'rgb(93, 190, 143)', fontSize: 10 }}>카테고리</Text>
+        </View>
+      )
+      : (
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
+          <Image source={require('../assets/images/BottomTabIcons/CategoryInactive.png')} />
+          <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>카테고리</Text>
+        </View>
+      )
   ),
 };
 
@@ -57,12 +67,19 @@ const SearchStack = createStackNavigator({
 SearchStack.navigationOptions = {
   tabBarLabel: '검색',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios'
-        ? 'ios-search'
-        : 'md-search'}
-    />
+    focused
+      ? (
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
+          <Image source={require('../assets/images/BottomTabIcons/SearchActive.png')} />
+          <Text style={{ textAlign: 'center', color: 'rgb(93, 190, 143)', fontSize: 10 }}>검색</Text>
+        </View>
+      )
+      : (
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
+          <Image source={require('../assets/images/BottomTabIcons/SearchInactive.png')} />
+          <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>검색</Text>
+        </View>
+      )
   ),
 };
 
@@ -72,14 +89,21 @@ const MyPageScreenStack = createStackNavigator({
 });
 
 MyPageScreenStack.navigationOptions = {
-  tabBarLabel: 'MyPage',
+  tabBarLabel: '마이쇼핑',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios'
-        ? 'ios-person'
-        : 'md-person'}
-    />
+    focused
+      ? (
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
+          <Image source={require('../assets/images/BottomTabIcons/MyActive.png')} />
+          <Text style={{ textAlign: 'left', color: 'rgb(93, 190, 143)', fontSize: 10 }}>마이쇼핑</Text>
+        </View>
+      )
+      : (
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
+          <Image source={require('../assets/images/BottomTabIcons/MyInactive.png')} />
+          <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>마이쇼핑</Text>
+        </View>
+      )
   ),
 };
 
@@ -89,4 +113,13 @@ export default createBottomTabNavigator({
   CategoryStack,
   SearchStack,
   MyPageScreenStack,
+}, {
+  tabBarOptions: {
+    showLabel: false,
+    activeTintColor: 'rgb(93, 190, 143)',
+    style: {
+      backgroundColor: 'rgba(248, 248, 248, 0.82)',
+      height: 87,
+    },
+  },
 });

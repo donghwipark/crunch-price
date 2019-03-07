@@ -25,21 +25,28 @@ import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 
 // 템플릿 아이템 박스, Async헬퍼펑션
 import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/boxTemplate';
-// 현재 3번째 컴포넌트(배너)는 두번째(열어본 상품에)서 같이 렌더되고 있음. 차후 data 받아서 수정 예정 배너 dynamic하게 수정할 예정
 import { asyncStorageSet, asyncStorageGet } from '../helper/asyncHelper';
 import fakeData from '../components/Main/fakeData';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    headerTitle: (
-      <Image
-        style={{ width: '50%', height: '60%' }}
-        source={require('../assets/images/crunch-logo.png')}
-      />
+    headerTitle:
+    Platform.OS === 'ios'
+      ? (
+        <Image
+          style={{ width: '50%', height: '60%' }}
+          source={require('../assets/images/crunch-logo.png')}
+        />
+      )
+      : (
+        <Image
+          style={{ width: '70%', height: '55%', resizeMode: 'contain', marginLeft: 25 }}
+          source={require('../assets/images/crunch-logo.png')}
+        />
+      ),
+    headerLeft: (
+      <Text />
     ),
-    headerTitleStyle: {
-      alignSelf: (Platform.OS === 'android') ? 'flex-end' : 'center',
-    },
     headerRight: (
       <Icon
         name={
@@ -67,13 +74,14 @@ export default class HomeScreen extends React.Component {
   async componentDidMount() {
     const banner = await Axios.get('http://api.crunchprice.com/design/crunch_banner_list.php');
     this.setState({ bannerData: banner.data.data, bannerLoaded: true });
+    // 열어본 상품 listAsync
     await asyncStorageSet('opened', JSON.stringify([1004020377, 1004036866, 1004020315, 100403988, 100405555])); // asyncstorage 추가 할 수 있는 펑션 필요. 최대길이는 10
+    // await AsyncStorage.clear();
     const openedProducts = await (asyncStorageGet('opened'));
     // console.log(openedProducts);
     const receivedOpenedGoods = await Axios.get(`http://api.crunchprice.com/goods/recent_goods.php?todayGoodsNo=${openedProducts}`)
     const processedOpenedResults = JSON.stringify(receivedOpenedGoods.data.data);
     this.setState({ recentlyOpened: JSON.parse(processedOpenedResults), openedProductsLoaded: true });
-
   }
 
   setModalVisible(visible) {
@@ -108,7 +116,7 @@ export default class HomeScreen extends React.Component {
                   <Text>{item.text2}</Text>
                   <Text />
                   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text>{item.text3}</Text>
+                    <Text style={{ color: 'rgb(0, 122, 255)', fontWeight: 'bold' }}>{item.text3}</Text>
                     <Emoji name="point_right" />
                   </View>
                 </View>
@@ -135,7 +143,7 @@ export default class HomeScreen extends React.Component {
     // console.log(bannerData);
     if (!bannerLoaded && !openedProductsLoaded) {
       return (
-        <Text>loading</Text>
+        <Image source={require('../assets/images/crunchLoading.png')} />
       );
     }
     return (
@@ -143,14 +151,15 @@ export default class HomeScreen extends React.Component {
         <ScrollView vertical>
           <MainRecommended bannerData={bannerData} />
           {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened navigation={navigation} recentlyOpened={recentlyOpened} /> }
-          <Text style={{ fontSize: 20 }}>크런치 프라이스에서,</Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: wp('5%'), marginBottom: hp('-2%') }}>크런치 프라이스에서,</Text>
           <MainRecommended bannerData={bannerData} />
           {this.createTemplateBox(kakaotalkAsk)}
           {this.createTemplateBox(kakaotalkSellerCenter)}
-          <View style={{ marginLeft: 10, marginRight: 10, paddingBottom: 60 }}>
+          <View style={{ marginLeft: 20, marginRight: 10, paddingBottom: 60 }}>
+            <View style={styles.footerLine} />
             <Text style={styles.footerChar}>(주)크런치 컴퍼니는 결제정보의 중개서비스 또는 통신판매중개시스템의 제공자로서, 통신판매의 당사자가 아니며 상품의 주문, 배송 및 환불 등과 관련한 의무와 책임은 각 판매자에게 있습니다.</Text>
             <View style={styles.footerLine} />
-            <View style={{ flex: 1, flexDirection: 'row', marginLeft: 10, marginRight: 10, marginBottom: 10 }}>
+            <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10, textAlign: 'left' }}>
               <Text style={styles.footerChar} onPress={() => this.onPressLinking('http://www.crunchprice.com/service/company.php')}>회사소개</Text>
               <Text style={styles.footerDistint}>\</Text>
               <Text style={styles.footerChar} onPress={() => this.onPressLinking('http://www.crunchprice.com/service/agreement.php')}>이용약관</Text>
@@ -182,7 +191,7 @@ export default class HomeScreen extends React.Component {
               <Text style={styles.footerChar}>개인정보관리자 : 김민준</Text>
               <Text style={styles.footerChar}>건강기능식품 판매업 : 제 2018-0109112호</Text>
               <Text />
-              <Text style={styles.footerChar}>copyright (c) CrunchPrice.com all rights reserved.</Text>
+              <Text onPress={this.testCookieRequest} style={styles.footerChar}>copyright (c) CrunchPrice.com all rights reserved.</Text>
             </View>
           </View>
         </ScrollView>
@@ -218,9 +227,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginTop: 20,
     marginBottom: 20,
+    color: 'rgb(235, 235, 235)',
   },
   footerChar: {
     fontSize: 10,
+    color: 'rgb(108, 108, 113)',
   },
   footerDistint: {
     fontSize: 10,

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  WebView,
 } from 'react-native';
 
 /*

@@ -8,11 +8,22 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 export default class CategoryScreen extends React.Component {
   static navigationOptions = {
-    headerTitle: (
-      <Image
-        style={{ width: '50%', height: '60%' }}
-        source={require('../assets/images/crunch-logo.png')}
-      />
+    headerTitle:
+    Platform.OS === 'ios'
+      ? (
+        <Image
+          style={{ width: '50%', height: '60%' }}
+          source={require('../assets/images/crunch-logo.png')}
+        />
+      )
+      : (
+        <Image
+          style={{ width: '70%', height: '55%', resizeMode: 'contain', marginLeft: 25 }}
+          source={require('../assets/images/crunch-logo.png')}
+        />
+      ),
+    headerLeft: (
+      <Text />
     ),
     headerRight: (
       <Icon

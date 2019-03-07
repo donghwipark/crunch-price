@@ -25,7 +25,7 @@ const MainRecommended = ({ bannerData }) => (
       data={bannerData}
       renderItem={({ item}) => (
         <TouchableOpacity style={styles.container} onPress={() =>{Linking.openURL(item.bannerLink)}}>
-          <Image source={{ uri: item.imgLink, width: wp('65%'), height: hp('35%') }} style={styles.recommendedImages} />
+          <Image source={{ uri: item.imgLink, width: wp('85%'), height: hp('30%') }} style={styles.recommendedImages} />
         </TouchableOpacity>
       )}
       numColumns={1}
@@ -47,15 +47,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginLeft: 10,
     marginTop: 10,
   },
   recommendedImages: {
-    marginLeft: 10,
+    marginLeft: 20,
     marginRight: 10,
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 10,
+    resizeMode: 'stretch',
   },
   box: {
     flex: 1,
