@@ -17,9 +17,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-export default class CategoryScreenOne extends React.Component {
+export default class CategoryScreenTwo extends React.Component {
   static navigationOptions = {
-    title: 'CategoryOne',
+    title: 'CategoryTwo',
   };
 
   state = {
@@ -85,7 +85,7 @@ export default class CategoryScreenOne extends React.Component {
           this.setState({ cateCd: num });
           this.updateSearch();
         }
-        navigation.navigate('CategoryTwo', { cateCd: num, name, category: response });
+        navigation.navigate('CategoryThree', { cateCd: num, name, category: response });
       });
   }
 

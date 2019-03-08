@@ -10,6 +10,9 @@ import OpenedListScreen from '../screens/Home/OpenedList';
 import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 import ProductDetails from '../screens/Home/productDetails';
 import CategoryScreenOne from '../screens/Category/CategoryScreenOne';
+import CategoryScreenTwo from '../screens/Category/CategoryScreenTwo';
+import CategoryScreenThree from '../screens/Category/CategoryScreenThree';
+import CategoryScreenFour from '../screens/Category/CategoryScreenFour';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -40,6 +43,9 @@ HomeStack.navigationOptions = {
 const CategoryStack = createStackNavigator({
   Category: CategoryScreen,
   CategoryOne: CategoryScreenOne,
+  CategoryTwo: CategoryScreenTwo,
+  CategoryThree: CategoryScreenThree,
+  CategoryFour: CategoryScreenFour,
 });
 
 CategoryStack.navigationOptions = {
