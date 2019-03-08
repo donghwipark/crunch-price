@@ -11,16 +11,15 @@ import {
   AsyncStorage,
 } from 'react-native';
 import axios from 'axios';
-import { Feather, SimpleLineIcons, FontAwesome } from 'react-native-vector-icons';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
 export default class CategoryScreenThree extends React.Component {
-  static navigationOptions = {
-    title: 'CategoryThree',
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.getParam('name'),
+  });
 
   state = {
     sortingType: 'focused',
@@ -28,6 +27,9 @@ export default class CategoryScreenThree extends React.Component {
     page: 1,
     cateCd: null,
     category: '',
+    listUri: require('../../assets/images/list.png'),
+    gridUri: require('../../assets/images/grid.png'),
+    oneUri: require('../../assets/images/oneAfter.png'),
   };
 
   componentDidMount = async () => {
@@ -39,17 +41,32 @@ export default class CategoryScreenThree extends React.Component {
 
   onPressList = () => {
     this.setState({
+      listUri: require('../../assets/images/listAfter.png'),
+      gridUri: require('../../assets/images/grid.png'),
+      oneUri: require('../../assets/images/one.png'),
+    });
+    this.setState({
       sortingType: 'list',
     });
   }
 
   onPressGrid = () => {
     this.setState({
+      listUri: require('../../assets/images/list.png'),
+      gridUri: require('../../assets/images/gridAfter.png'),
+      oneUri: require('../../assets/images/one.png'),
+    });
+    this.setState({
       sortingType: 'grid',
     });
   }
 
   onPressFocused = () => {
+    this.setState({
+      oneUri: require('../../assets/images/oneAfter.png'),
+      listUri: require('../../assets/images/list.png'),
+      gridUri: require('../../assets/images/grid.png'),
+    });
     this.setState({
       sortingType: 'focused',
     });
@@ -175,7 +192,7 @@ export default class CategoryScreenThree extends React.Component {
 
   render() {
     const { navigation } = this.props;
-    const { sortingType, searchInfo } = this.state;
+    const { sortingType, searchInfo, listUri, gridUri, oneUri } = this.state;
     const itemInfo = searchInfo || navigation.getParam('result');
     const category = navigation.getParam('category');
     const oneBigStub = (
@@ -188,15 +205,19 @@ export default class CategoryScreenThree extends React.Component {
               onPress={() => this.onSelection(item)}
             >
               <Image source={{ uri: item[2] }} style={styles.oneRecommendedImages} />
-              <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', margin: wp('2.5%'),
+              <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', margin: wp('3%'),
               }}
               >
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item[0]}</Text>
-                <Text style={{ fontSize: 16, textDecorationLine: 'line-through', color: 'rgb(197,197,197)', marginTop: 5 }}>{Number(item[4])}</Text>
-                <Text style={{ fontSize: 15, marginTop: 5 }}>10개 이상 구매 시 할인가</Text>
+                <Text style={{ fontSize: 14, color: 'rgb(46,57,67)' }}>{item[0]}</Text>
+                <Text style={{ fontSize: 17.2, fontWeight: 'bold', color: 'rgb(46, 57, 67)', marginTop: 10, marginBottom: 10 }}>
+                  {Number(item[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  {' '}
+-
+                  {' '}
+                  {Number(item[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                </Text>
                 <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}>
-                  {Number(item[3])}
-                  {'원'}
+                  버튼
                 </Text>
 
               </View>
@@ -224,17 +245,18 @@ export default class CategoryScreenThree extends React.Component {
             >
               <Image source={{ uri: item[2], width: wp('45%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
               <View style={{ margin: wp('1.25%') }}>
-                <Text style={{ fontWeight: 'bold' }}>
+                <Text style={{ fontSize: 10, color: 'rgb(46,57,67)' }}>
                   {
                     this.checkLengthOnGrid(item[0])
                   }
                 </Text>
-                <Text style={{ fontSize: 12, textDecorationLine: 'line-through', color: 'rgb(197,197,197)', marginTop: 3, marginBottom: 3 }}>{Number(item[4])}</Text>
-                <Text style={{ fontSize: 12 }}>10개 이상 구매 시 할인가</Text>
-                <Text style={{ fontWeight: 'bold' }}>
-                  {Number(item[3])}
+                <Text style={{ fontSize: 12, fontWeight: 'bold', color: 'rgb(46,57,67)' }}>
+                  {Number(item[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  {' - '}
+                  {Number(item[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   {'원'}
                 </Text>
+                <Text>버튼 여기에</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -259,15 +281,16 @@ export default class CategoryScreenThree extends React.Component {
               onPress={() => this.onSelection(item)}
             >
               <Image source={{ uri: item[2], width: wp('25%'), height: hp('15%') }} style={styles.listRecommendedImages} />
-              <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 10, marginRight: 10 }}>{item[0]}</Text>
-                <Text />
-                <Text style={{ fontSize: 12, color: 'rgb(136,136,136)', textDecorationLine: 'line-through' }}>{Number(item[4])}</Text>
-                <Text style={{ fontSize: 14 }}>10개 이상 구매 시 할인가</Text>
-                <Text style={{ fontWeight: 'bold', marginBottom: 10, fontSize: 16 }}>
-                  {Number(item[3])}
+              <View style={{ flex: 1, margin: wp('5%'), flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
+                <Text style={{ fontSize: 11, marginTop: 10, marginRight: 10, color: 'rgb(46,57,67)' }}>{item[0]}</Text>
+                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(46,57,67)' }}>
+                  {Number(item[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  {' - '}
+                  {Number(item[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   {'원'}
                 </Text>
+                <View />
+                <Text>버튼은 여기에</Text>
               </View>
             </TouchableOpacity>
           )}
@@ -288,7 +311,6 @@ export default class CategoryScreenThree extends React.Component {
         <FlatList
           style={{
             flex: 1,
-            backgroundColor: 'rgba(248,248,248,0.82)',
           }}
           contentContainerStyle={{
             justifyContent: 'center',
@@ -299,16 +321,22 @@ export default class CategoryScreenThree extends React.Component {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => this.onSelectCategory(item.cateCd, item.cateNm)}
+              style={{ marginLeft: wp('3%'),
+              }}
             >
               <View style={{
                 flexDirection: 'row',
-                marginLeft: wp('3%'),
+                backgroundColor: 'rgb(242, 242, 242)',
+                padding: 10,
+                marginLeft: wp('1%'),
+                marginRight: wp('1%'),
+                borderRadius: 11,
               }}
               >
-                <Text style={{ fontSize: 15 }}>
+                <Text style={{ fontSize: 13 }}>
                   {item.cateNm}
                 </Text>
-                <Text style={{ fontSize: 15, marginLeft: wp('1%') }}>
+                <Text style={{ fontSize: 13, marginLeft: wp('1%') }}>
                   {item.cateCount}
                 </Text>
               </View>
@@ -318,24 +346,30 @@ export default class CategoryScreenThree extends React.Component {
           key={item => item.cateCd.toString()}
         />
         <View style={styles.sortingIcons}>
-          <Feather
-            name="list"
-            size={26}
-            style={{ padding: 2 }}
-            onPress={this.onPressList}
-          />
-          <SimpleLineIcons
-            name="grid"
-            size={20}
-            style={{ padding: 2 }}
+          <TouchableOpacity onPress={this.onPressList}>
+            <Image
+              source={listUri}
+              resizeMode="contain"
+              style={{ width: wp('3%'), height: hp('3%'), padding: 10 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={this.onPressGrid}
-          />
-          <FontAwesome
-            name="square-o"
-            size={26}
-            style={{ padding: 2 }}
-            onPress={this.onPressFocused}
-          />
+          >
+            <Image
+              source={gridUri}
+              resizeMode="contain"
+              style={{ width: wp('3%'), height: hp('3%'), padding: 10, marginLeft: wp('1.5%') }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.onPressFocused}>
+            <Image
+              source={oneUri}
+              resizeMode="contain"
+              style={{ width: wp('3%'), height: hp('3%'), padding: 10, marginLeft: wp('1.5%') }}
+              onPress={this.onPressFocused}
+            />
+          </TouchableOpacity>
         </View>
         {sortingType === 'grid' ? grid : sortingType === 'list' ? list : oneBigStub}
       </View>
@@ -360,7 +394,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sortingIcons: {
-    flex: 1,
+    flex: 0.7,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -368,63 +402,72 @@ const styles = StyleSheet.create({
   },
   gridPrimeContainer: {
     flex: 10,
-    backgroundColor: 'rgb(222,222,222)',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: hp('1%') },
   },
   gridContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    width: wp('50%'),
+    width: wp('48%'),
     margin: 5,
-    height: hp('40%'),
+    position: 'relative',
+    height: hp('30%'),
     borderRadius: 10,
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+    overflow: 'hidden',
   },
   gridRecommendedImages: {
-    margin: wp('1.25%'),
-    borderRadius: 10,
+    width: wp('48%'),
+    height: hp('20%'),
+    alignSelf: 'center',
   },
   listPrimeContainer: {
     flex: 10,
     alignItems: 'center',
-    backgroundColor: 'rgb(222,222,222)',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: hp('1%') },
+    overflow: 'hidden',
   },
   listContainer: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#fff',
-    width: wp('95%'),
+    width: wp('92%'),
+    marginBottom: hp('2%'),
     // height: hp('18%'),
-    marginTop: hp('1.5%'),
+    overflow: 'hidden',
     borderRadius: 10,
   },
   listRecommendedImages: {
-    marginLeft: 10,
-    marginRight: 10,
-    borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 10,
+    alignSelf: 'center',
+    width: wp('35%'),
   },
   onePrimeContainer: {
     flex: 10,
     alignItems: 'center',
-    backgroundColor: 'rgb(222,222,222)',
+    shadowOpacity: 0.24,
+    shadowRadius: 10,
+    shadowColor: 'rgb(100,100,100)',
+    shadowOffset: { width: 0, height: hp('0.4%') },
   },
   oneContainer: {
     backgroundColor: '#fff',
     width: wp('90%'),
-    borderRadius: 10,
-    marginTop: hp('2.5%'),
+    borderWidth: 0.5,
+    borderColor: 'rgb(240,240,240)',
+    borderRadius: 8,
+    marginTop: hp('2%'),
     position: 'relative',
+    overflow: 'hidden',
   },
   oneRecommendedImages: {
-    marginLeft: wp('2.5%'),
-    // marginRight: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
-    // marginTop: 10,
-    // marginBottom: 10,
-    resizeMode: 'contain',
-    width: wp('85%'),
-    height: hp('50%'),
-
+    alignSelf: 'center',
+    // borderTopLeftRadius: 10,
+    // borderTopRightRadius: 10,
+    width: wp('90%'),
+    height: hp('40%'),
   },
 });

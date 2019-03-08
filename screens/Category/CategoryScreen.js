@@ -54,7 +54,6 @@ export default class CategoryScreen extends React.Component {
   }
 
   render() {
-    const { navigation } = this.props;
     return (
       <ScrollView>
         <ScrollView
@@ -233,7 +232,7 @@ export default class CategoryScreen extends React.Component {
                 <Emoji name="house" style={styles.emoji} />
                 <Text style={styles.text}>가구/인테리어</Text>
               </View>
-              <View style={styles.categoryList}>
+              <View>
                 <Icon
                   name={
                     Platform.OS === 'ios'
@@ -292,14 +291,16 @@ const styles = StyleSheet.create({
   },
   category: {
     width: wp('90%'),
+    height: hp('5%'),
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderBottomWidth: 0.6,
     borderBottomColor: 'rgb(209, 209, 214)',
-    marginTop: 10,
+    marginTop: 5,
   },
   categoryList: {
     flexDirection: 'row',
+    position: 'absolute',
     marginTop: 10,
     marginBottom: 20,
   },
