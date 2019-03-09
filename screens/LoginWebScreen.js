@@ -26,8 +26,8 @@ export default class StartScreen extends React.Component {
     console.log(url);
 
     // when WebView.onMessage called, there is not-http(s) url
-    if (url.includes('http')) {
-      await this.setState({ webViewUrl: url });
+    if (url.includes('http')) { 
+      this.setState({ webViewUrl: url })
     }
     this._checkNeededCookies();
   }
@@ -74,7 +74,7 @@ export default class StartScreen extends React.Component {
         <WebView
           source={{ uri: webViewUrl }}
           onNavigationStateChange={this.onNavigationStateChange}
-          onMessage={Platform === 'android' ? this._onMessage : false}
+          onMessage={Platform.OS === 'android' ? this._onMessage : false}
           injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
           style={{ flex: 1 }}
 
