@@ -17,6 +17,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+// import Carousel from 'react-native-snap-carousel';
 
 const MainRecommended = ({ bannerData }) => (
   <View style={styles.primeContainer}>

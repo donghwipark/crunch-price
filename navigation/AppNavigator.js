@@ -7,6 +7,8 @@ import MainTabNavigator from './MainTabNavigator';
 // import SignInScreen from '../screens/SignInScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import agreementContent from '../screens/signUps/userAgreements/agreementContent';
+import logIn from '../screens/LoginWebScreen';
+
 
 const SignUpStack = createStackNavigator({
   StartScreen,
@@ -18,5 +20,7 @@ const SignUpStack = createStackNavigator({
 export default createAppContainer(createSwitchNavigator({
   // You could add another route here for authentication.
   // Read more at https://reactnavigation.org/docs/en/auth-flow.html
+  StartScreen,
+  logIn,
   Main: MainTabNavigator,
 }));

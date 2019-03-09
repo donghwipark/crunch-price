@@ -100,7 +100,7 @@ export default class HomeScreen extends React.Component {
     const { navigation } = this.props;
     return (
       <View style={styles.primeContainer}>
-        <View style={styles.kakaoBoxPrimeContainer}>
+        <View elevation={3} style={styles.kakaoBoxPrimeContainer}>
           <FlatList
             data={data}
             renderItem={({ item }) => (
@@ -151,7 +151,7 @@ export default class HomeScreen extends React.Component {
         <ScrollView vertical>
           <MainRecommended bannerData={bannerData} />
           {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened navigation={navigation} recentlyOpened={recentlyOpened} /> }
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: wp('5%'), marginBottom: hp('-2%') }}>크런치 프라이스에서,</Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: wp('5%'), marginBottom: hp('-2%'), fontFamily: 'NanumSquareRoundL' }}>크런치 프라이스에서,</Text>
           <MainRecommended bannerData={bannerData} />
           {this.createTemplateBox(kakaotalkAsk)}
           {this.createTemplateBox(kakaotalkSellerCenter)}
@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
   footerChar: {
     fontSize: 10,
     color: 'rgb(108, 108, 113)',
+    fontFamily: 'NanumSquareRoundL',
   },
   footerDistint: {
     fontSize: 10,
@@ -261,7 +262,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: wp('90%'),
     height: hp('20%'),
-    marginTop: 10,
     borderRadius: 10,
     justifyContent: 'center',
   },
