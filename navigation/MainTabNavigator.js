@@ -26,13 +26,13 @@ HomeStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     focused
       ? (
-        <View style={{ marginLeft: 40, marginBottom: 25, alignItems: 'center' }}>
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
           <Image source={require('../assets/images/BottomTabIcons/HomeActive.png')} />
           <Text style={{ textAlign: 'center', color: 'rgb(93, 190, 143)', fontSize: 10 }}>홈</Text>
         </View>
       )
       : (
-        <View style={{ marginLeft: 40, marginBottom: 25 }}>
+        <View style={{ marginBottom: 25 }}>
           <Image source={require('../assets/images/BottomTabIcons/HomeInactive.png')} />
           <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>홈</Text>
         </View>
@@ -101,13 +101,13 @@ MyPageScreenStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     focused
       ? (
-        <View style={{ marginRight: 40, marginBottom: 25, alignItems: 'center' }}>
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
           <Image source={require('../assets/images/BottomTabIcons/MyActive.png')} />
           <Text style={{ textAlign: 'left', color: 'rgb(93, 190, 143)', fontSize: 10 }}>마이쇼핑</Text>
         </View>
       )
       : (
-        <View style={{ marginRight: 40, marginBottom: 25, alignItems: 'center' }}>
+        <View style={{ marginBottom: 25, alignItems: 'center' }}>
           <Image source={require('../assets/images/BottomTabIcons/MyInactive.png')} />
           <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>마이쇼핑</Text>
         </View>
