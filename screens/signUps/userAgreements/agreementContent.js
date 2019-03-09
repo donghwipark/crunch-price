@@ -17,6 +17,7 @@ export default class agreementContent extends React.Component {
     return (
       <View>
         <Text>
+
 제1조(목적)
 표준약관 제10023호
 
@@ -233,7 +234,7 @@ export default class agreementContent extends React.Component {
 부칙
 
 1. 이 약관은 2017년 07월 01일부터 적용됩니다.
-        </Text>
+</Text>
       </View>
     );
   }

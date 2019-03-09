@@ -200,7 +200,7 @@ export default class SearchScreen extends React.Component {
             // by default, it will expand regardless if it has a flex value or not
             style={{
               width: wp('100%'),
-              height: hp('65%'),
+              height: hp('60%'),
               shadowOpacity: 0.3,
               shadowRadius: 10,
               shadowOffset: { width: 0, height: hp('1%') },
@@ -222,7 +222,7 @@ export default class SearchScreen extends React.Component {
                 style={{
                   width: wp('90%'),
                   marginLeft: wp('5%'),
-                  height: hp('65%'),
+                  height: hp('55%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
                   elevation: 10,
@@ -252,7 +252,7 @@ export default class SearchScreen extends React.Component {
                         borderBottomWidth: 1,
                         borderColor: 'rgb(239, 239, 244)',
                         backgroundColor: 'white',
-                        height: hp('5.5%'),
+                        height: hp('5%'),
                         width: wp('90%'),
 
                       }}
@@ -276,7 +276,7 @@ export default class SearchScreen extends React.Component {
               <View
                 style={{
                   width: wp('90%'),
-                  height: hp('65%'),
+                  height: hp('60%'),
                   marginLeft: wp('10%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
@@ -304,7 +304,7 @@ export default class SearchScreen extends React.Component {
                             borderBottomWidth: 1,
                             borderColor: 'rgb(239, 239, 244)',
                             backgroundColor: 'white',
-                            height: hp('5.5%'),
+                            height: hp('5%'),
                             width: wp('80%'),
                           }}
                         >
@@ -322,7 +322,7 @@ export default class SearchScreen extends React.Component {
                             backgroundColor: 'white',
                             borderBottomWidth: 1,
                             borderBottomColor: 'rgb(239, 239, 244)',
-                            height: hp('5.5%'),
+                            height: hp('5%'),
                             width: wp('10%'),
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -347,7 +347,7 @@ export default class SearchScreen extends React.Component {
                   marginRight: hp('3%'),
                   borderRadius: 10,
                   backgroundColor: 'rgb(239, 239, 244)',
-                  height: hp('65%'),
+                  height: hp('60%'),
                   marginBottom: 50,
                 }}
               >
@@ -363,7 +363,7 @@ export default class SearchScreen extends React.Component {
                     최근 본 상품
                   </Text>
                 </View>
-                <View style={{ height: hp('55%') }}>
+                <View style={{ height: hp('50%') }}>
                   <ScrollView>
                     {getRecentlyViewedItems.map(result => (
                       <TouchableOpacity
