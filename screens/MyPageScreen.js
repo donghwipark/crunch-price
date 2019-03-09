@@ -9,13 +9,20 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import { AntDesign } from 'react-native-vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Axios from 'axios';
 import Emoji from 'react-native-emoji';
 import Colors from '../constants/Colors';
 
+import { handleNumberToPrice } from '../helper/helperFuncs';
+
+// api: http://api.crunchprice.com/member/get_mypage_info.php 로그인된 상태에서 해당 회원의 정보를 불러오는 API
+// res form: {data:{success, data:{...}}
+// state에 저장 형태: response.data.data
+// 주요 props: memNm 사용자명, reviewCount 리뷰 남긴 횟수, wishCount 찜 상품 수, mileage 포인트, memberFl 회원 종류
+
 export default class MyPageScreen extends React.Component {
   static navigationOptions = {
-    title: '마이 쇼핑',
-    headerTitleStyle: {flex: 1, alignSelf: 'flex-end'},
+    headerTitle: '마이 쇼핑',
     headerRight: (
       <TouchableOpacity
         onPress={console.log(1)}
@@ -33,7 +40,29 @@ export default class MyPageScreen extends React.Component {
     ),
   };
 
+  state={
+    userData: {},
+    isLoaded: false,
+  }
+
+  componentDidMount = async () => {
+    this.testCookieRequest();
+    console.log(this.state.userData)
+  }
+
+  testCookieRequest = async () => {
+    const result = await Axios.get('http://api.crunchprice.com/member/get_mypage_info.php');
+    await this.setState({
+      userData: result.data.data,
+      isLoaded: true,
+    });
+  };
+
   render() {
+    const { userData, isLoaded } = this.state;
+    if (!isLoaded) {
+      return (<Text>loading</Text>);
+    }
     return (
       <View style={{ flex: 1 }}>
         <View style={{
@@ -46,14 +75,16 @@ export default class MyPageScreen extends React.Component {
         }}
         >
           <View>
+          <View>
+      </View>
             <View style={{ flexDirection: 'row' }}>
               <Emoji name="bust_in_silhouette" style={{ fontSize: wp('10%'), marginLeft: wp('3%'), marginRight: wp('3%') }} />
               <View style={{ justifyContent: 'space-between' }}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 20 }}>김민준</Text>
+                  <Text style={{ fontSize: 20 }}>{userData.memNm}</Text>
                   <AntDesign name="right" style={{ fontSize: 20, color: 'rgb(209, 209, 214)', marginLeft: wp('1%') }} />
                 </View>
-                <Text style={{ color: 'rgb(142, 142, 147)' }}>일반 회원</Text>
+                <Text style={{ color: 'rgb(142, 142, 147)' }}>{userData.memberFl === 'personal' ? '일반회원' : '사업자회원' }</Text>
               </View>
             </View>
           </View>
@@ -71,13 +102,13 @@ export default class MyPageScreen extends React.Component {
         <View style={styles.middleButtonView}>
           <TouchableOpacity style={styles.middleButton}>
             <View style={styles.middleButtonTextView}>
-              <Text style={styles.buttonText}>5</Text>
+              <Text style={styles.buttonText}>{userData.reviewCount}</Text>
               <Text style={styles.buttonText}>구매후기</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.middleButton}>
             <View style={styles.middleButtonTextView}>
-              <Text style={styles.buttonText}>12</Text>
+              <Text style={styles.buttonText}>{userData.wishCount}</Text>
               <Text style={styles.buttonText}>찜한 상품</Text>
             </View>
           </TouchableOpacity>
@@ -89,7 +120,7 @@ export default class MyPageScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity style={styles.middleButton}>
             <View style={styles.middleButtonTextView}>
-              <Text style={styles.buttonText}>150,000</Text>
+              <Text style={styles.buttonText}>{handleNumberToPrice(Number(userData.mileage))}</Text>
               <Text style={styles.buttonText}>포인트</Text>
             </View>
           </TouchableOpacity>
@@ -315,3 +346,4 @@ const styles = StyleSheet.create({
     padding: 2,
   },
 });
+

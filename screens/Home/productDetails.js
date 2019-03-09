@@ -8,8 +8,8 @@ import {
   FlatList,
   WebView,
   Alert,
+  Platform,
 } from 'react-native';
-import { WebBrowser, AuthSession } from 'expo';
 
 import {
   widthPercentageToDP as wp,
@@ -35,7 +35,7 @@ export default class ProductDetails extends React.Component {
       goodData: {},
       isLoaded: false,
       cookies: {},
-      webViewUrl: 'http://m.crunchprice.com/member/login.php',
+      webViewUrl: 'http://m.crunchprice.com/',
     };
   }
 
@@ -45,6 +45,7 @@ export default class ProductDetails extends React.Component {
     await this.setState({
       goodData,
       isLoaded: true,
+      webViewUrl: `http://m.crunchprice.com/goods/goods_view.php?goodsNo=${goodData.goodsNo}`,
     });
   }
 
@@ -55,18 +56,23 @@ onNavigationStateChange = (webViewState: { url: string }) => {
   if (url.includes('http')) {
     this.setState({ webViewUrl: url })
   }
+  this._checkNeededCookies()
 }
 
 _checkNeededCookies = () => {
   const { cookies, webViewUrl } = this.state;
-
-  if (webViewUrl === 'http://m.crunchprice.com/') {
+  const { navigation } = this.props;
+  console.log(webViewUrl)
+  // 로그아웃일 경우 뒤로 돌림
+  if (webViewUrl === 'http://m.crunchprice.com/member/logout.php') {
     console.log(cookies)
+    navigation.navigate('StartScreen')
   }
 }
 
 _onMessage = (event) => {
   const { data } = event.nativeEvent;
+  console.log(data)
   const cookies = data.split(';'); // `csrftoken=...; rur=...; mid=...; somethingelse=...`
 
   cookies.forEach((cookie) => {
@@ -88,7 +94,6 @@ testCookieRequest = async () => {
 
 render() {
   const { goodData, isLoaded, webViewUrl } = this.state;
-  console.log(webViewUrl);
   if (!isLoaded) {
     return (
       <Text>loading</Text>
@@ -96,19 +101,16 @@ render() {
   }
   return (
     <View style={styles.primeContainer}>
-      <TouchableOpacity onPress={this.testCookieRequest}>
-        <Image source={{ uri: goodData.mainImageUrl, width: wp('40%'), height: hp('25%') }}/>
-        <Text>{goodData.goodsNm}</Text>
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity onPress={this.testCookieRequest}><Text>aaaaaaaa</Text></TouchableOpacity>
+      </View>
       <WebView
         source={{ uri: webViewUrl }}
         onNavigationStateChange={this.onNavigationStateChange}
-        onMessage={this._onMessage}
+        onMessage={Platform === 'android' ? this._onMessage : false}
         injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
         style={{ flex: 1 }}
-
       />
-
     </View>
   );
 }
