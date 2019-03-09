@@ -43,7 +43,7 @@ export default class CategoryScreen extends React.Component {
     console.log(1);
   }
 
-  onSelectCategory = (name, num) => {
+  onSelectCategory = async (name, num) => {
     const { navigation } = this.props;
     axios
       .get(`http://api.crunchprice.com/category/get_category_counts.php?cateCd=${num}`)

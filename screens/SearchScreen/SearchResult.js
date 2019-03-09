@@ -205,6 +205,17 @@ export default class SearchResult extends React.Component {
               onPress={() => this.onSelection(item)}
             >
               <Image source={{ uri: item[2] }} style={styles.oneRecommendedImages} />
+              <Image
+                source={require('../../assets/images/heart.png')}
+                style={{ position: 'absolute',
+                  resizeMode: 'contain',
+                  width: wp('20%'),
+                  height: hp('20%'),
+                  alignItems: 'center',
+                  marginLeft: wp('72%'),
+                  marginTop: hp('26%'),
+                }}
+              />
               <View style={{ justifyContent: 'flex-start', alignItems: 'flex-start', margin: wp('3%'),
               }}
               >
@@ -213,10 +224,21 @@ export default class SearchResult extends React.Component {
                   {Number(item[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   {' - '}
                   {Number(item[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  {' 원'}
                 </Text>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}>
-                  {'버튼'}
-                </Text>
+                <View />
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                  <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: 'rgb(255,127,61)', padding: 8 }}>
+                    <Text style={{ fontSize: 10, color: 'rgb(255,255,255)', marginLeft: wp('1%'), marginRight: wp('1%') }}>
+                      0/00 까지 배송
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={{ alignItems: 'center', marginLeft: wp('1%'), marginRight: wp('1%'), justifyContent: 'center', borderRadius: 15, backgroundColor: 'rgb(242,242,242)', padding: 8, marginLeft: wp('1.5%') }}>
+                    <Text style={{ fontSize: 10, color: 'rgb(102,102,102)', marginLeft: wp('1%'), marginRight: wp('1%') }}>
+                      무료배송
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </TouchableOpacity>
           )}
@@ -228,7 +250,6 @@ export default class SearchResult extends React.Component {
           onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
           ListFooterComponent={() => <ActivityIndicator animating size="large" />}
           key={(item, index) => index.toString()}
-
         />
       </View>
     );
@@ -241,8 +262,21 @@ export default class SearchResult extends React.Component {
               style={styles.gridContainer}
               onPress={() => this.onSelection(item)}
             >
-              <Image source={{ uri: item[2], width: wp('45%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
-              <View style={{ margin: wp('1.25%') }}>
+              <View>
+                <Image source={{ uri: item[2], width: wp('45%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
+                <Image
+                  source={require('../../assets/images/heart.png')}
+                  style={{ position: 'absolute',
+                    resizeMode: 'contain',
+                    width: wp('15%'),
+                    height: hp('15%'),
+                    alignItems: 'center',
+                    marginLeft: wp('34%'),
+                    marginTop: hp('10%'),
+                  }}
+                />
+              </View>
+              <View style={{ flex: 1, margin: wp('2%'), alignItems: 'stretch', justifyContent: 'space-between' }}>
                 <Text style={{ fontSize: 10, color: 'rgb(46,57,67)' }}>
                   {
                     this.checkLengthOnGrid(item[0])
@@ -252,15 +286,28 @@ export default class SearchResult extends React.Component {
                   {Number(item[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   {' - '}
                   {Number(item[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                  {'원'}
+                  {' 원'}
                 </Text>
-                <Text>버튼 여기에</Text>
+                <View />
+                <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                  <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: 'rgb(255,127,61)', padding: 8 }}>
+                    <Text style={{ fontSize: 10, color: 'rgb(255,255,255)', marginLeft: wp('1%'), marginRight: wp('1%') }}>
+                      0/00 까지 배송
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={{ alignItems: 'center', marginLeft: wp('1%'), marginRight: wp('1%'), justifyContent: 'center', borderRadius: 15, backgroundColor: 'rgb(242,242,242)', padding: 8, marginLeft: wp('1.5%') }}>
+                    <Text style={{ fontSize: 10, color: 'rgb(102,102,102)', marginLeft: wp('1%'), marginRight: wp('1%') }}>
+                      무료배송
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </TouchableOpacity>
           )}
           numColumns={2}
           refreshing={false}
           legacyImplementation={false}
+          onRefresh={() => console.log('done')}
           onEndReachedThreshold={0.5}
           onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
           ListFooterComponent={() => <ActivityIndicator animating size="large" />}
@@ -277,17 +324,43 @@ export default class SearchResult extends React.Component {
               style={styles.listContainer}
               onPress={() => this.onSelection(item)}
             >
-              <Image source={{ uri: item[2], width: wp('25%'), height: hp('15%') }} style={styles.listRecommendedImages} />
-              <View style={{ flex: 1, margin: wp('5%'), flexDirection: 'column', justifyContent: 'space-between', alignItems: 'stretch' }}>
-                <Text style={{ fontSize: 11, marginTop: 10, marginRight: 10, color: 'rgb(46,57,67)' }}>{item[0]}</Text>
+              <View>
+                <Image source={{ uri: item[2], width: wp('25%'), height: hp('15%') }} style={styles.listRecommendedImages} />
+              </View>
+              <View style={{ flex: 1, margin: wp('4%'), flexDirection: 'column', justifyContent: 'space-between' }}>
+                <Text style={{ fontSize: 11, color: 'rgb(46,57,67)' }}>{item[0]}</Text>
                 <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(46,57,67)' }}>
                   {Number(item[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   {' - '}
                   {Number(item[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                  {'원'}
+                  {' 원'}
                 </Text>
                 <View />
-                <Text>버튼은 여기에</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 15, backgroundColor: 'rgb(255,127,61)', padding: 6 }}>
+                      <Text style={{ fontSize: 8, color: 'rgb(255,255,255)', marginLeft: wp('2%'), marginRight: wp('2%') }}>
+                        0/00 까지 배송
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ alignItems: 'center', marginLeft: wp('2%'), justifyContent: 'center', borderRadius: 15, backgroundColor: 'rgb(242,242,242)', padding: 6 }}>
+                      <Text style={{ fontSize: 8, color: 'rgb(102,102,102)', marginLeft: wp('2%'), marginRight: wp('2%') }}>
+                        무료배송
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View>
+                    <Image
+                      source={require('../../assets/images/heart.png')}
+                      style={{
+                        resizeMode: 'contain',
+                        width: wp('8%'),
+                        height: hp('3%'),
+                        alignItems: 'center',
+                      }}
+                    />
+                  </View>
+                </View>
               </View>
             </TouchableOpacity>
           )}
