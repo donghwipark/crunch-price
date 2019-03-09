@@ -7,14 +7,29 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import Axios from 'axios';
 
 export default class StartScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
 
+  // 유저인포 호출해서 성공하면 로그인 되어 있기 때문에 곧바로 메인으로 보냄 아니라면 로그인창
+  // 로그인 안된 상태에서 호출 시 data.data에는 mem관련 key가 없음.
+
+  checkLogin = async () => {
+    const { navigation } = this.props;
+    const result = await Axios.get('http://api.crunchprice.com/member/get_mypage_info.php');
+    console.log(JSON.stringify(result.data.data))
+    if (JSON.stringify(result.data.data.memNm)) {
+      navigation.navigate('Main');
+    } else {
+      navigation.navigate('logIn');
+    }
+  }
+
   render() {
-    const { navigation } = this.props
+    const { navigation } = this.props;
     return (
       <View style={styles.container}>
         <Image
@@ -24,18 +39,10 @@ export default class StartScreen extends React.Component {
         <Text style={styles.title}> 더-싸지는 쇼핑 </Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { navigation.navigate('logIn'); }}
+          onPress={this.checkLogin}
         >
           <View style={styles.borders}>
             <Text style={styles.startTitle}> 시작하기 </Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => { navigation.navigate('SignUp'); }}
-        >
-          <View style={styles.borders}>
-            <Text style={styles.startTitle}> 회원가입 </Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -75,6 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: wp('80%'),
     height: hp('8%'),
+    elevation: 5,
   },
   borders: {
     flexDirection: 'row',

@@ -100,7 +100,7 @@ export default class HomeScreen extends React.Component {
     const { navigation } = this.props;
     return (
       <View style={styles.primeContainer}>
-        <View elevation={3} style={styles.kakaoBoxPrimeContainer}>
+        <View style={styles.kakaoBoxPrimeContainer}>
           <FlatList
             data={data}
             renderItem={({ item }) => (
@@ -243,27 +243,26 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontWeight: 'bold',
   },
-  callKaKao: {
-    width: wp('90%'),
-    height: hp('20%'),
-    marginLeft: 10,
-    marginTop: 10,
-    backgroundColor: 'white',
-    borderRadius: 10,
-  },
   kakaoBoxPrimeContainer: {
     flex: 1,
     alignItems: 'center',
-    marginBottom: hp('3%'),
+    marginBottom: 10,
+    
+    borderRadius: 10,
+    //width: wp('85%'),
+    //height: hp('20%'),
+    alignSelf: 'center',
+    elevation: 10,
   },
   kakaoBoxContainer: {
     flex: 1,
+    width: wp('84%'),
+    height: hp('19%'),
+    backgroundColor: 'white',
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    width: wp('90%'),
-    height: hp('20%'),
     borderRadius: 10,
     justifyContent: 'center',
+    
   },
   recommendedImages: {
     marginLeft: 10,

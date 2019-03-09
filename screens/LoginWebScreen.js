@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   WebView,
+  Platform,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -24,9 +25,10 @@ export default class StartScreen extends React.Component {
     const { url } = webViewState;
     console.log(url)
     // when WebView.onMessage called, there is not-http(s) url
-    if (url.includes('http')) {
+    if (url.includes('http')) { 
       this.setState({ webViewUrl: url })
     }
+    this._checkNeededCookies();
   }
 
   _checkNeededCookies = () => {
@@ -71,7 +73,7 @@ export default class StartScreen extends React.Component {
         <WebView
           source={{ uri: webViewUrl }}
           onNavigationStateChange={this.onNavigationStateChange}
-          onMessage={this._onMessage}
+          onMessage={Platform.OS === 'android' ? this._onMessage : false}
           injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
           style={{ flex: 1 }}
 
