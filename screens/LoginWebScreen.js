@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   WebView,
+  Platform,
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -15,18 +16,20 @@ export default class StartScreen extends React.Component {
   };
 
   state ={
-      webViewUrl: 'http://m.crunchprice.com/member/login.php',
-      cookies: {},
-      isLogIn: false,
+    webViewUrl: 'http://m.crunchprice.com/member/login.php',
+    cookies: {},
+    isLogIn: false,
   }
 
-  onNavigationStateChange = (webViewState: { url: string }) => {
+  onNavigationStateChange = async (webViewState: { url: string }) => {
     const { url } = webViewState;
-    console.log(url)
+    console.log(url);
+
     // when WebView.onMessage called, there is not-http(s) url
     if (url.includes('http')) {
-      this.setState({ webViewUrl: url })
+      await this.setState({ webViewUrl: url });
     }
+    this._checkNeededCookies();
   }
 
   _checkNeededCookies = () => {
@@ -34,24 +37,24 @@ export default class StartScreen extends React.Component {
     const { navigation } = this.props;
 
     if (webViewUrl === 'http://m.crunchprice.com/' || webViewUrl === 'http://m.crunchprice.com/main/index.php') {
-      console.log(cookies)
-      navigation.navigate('Main')
+      console.log(cookies);
+      navigation.navigate('Main');
     }
   }
 
   _onMessage = (event) => {
     const { data } = event.nativeEvent;
     const cookies = data.split(';'); // `csrftoken=...; rur=...; mid=...; somethingelse=...`
-  
+
     cookies.forEach((cookie) => {
       const c = cookie.trim().split('=');
-  
+
       const newCookies = this.state.cookies;
       newCookies[c[0]] = c[1];
-  
+
       this.setState({ cookies: newCookies });
     });
-  
+
     this._checkNeededCookies();
   }
 
@@ -71,7 +74,7 @@ export default class StartScreen extends React.Component {
         <WebView
           source={{ uri: webViewUrl }}
           onNavigationStateChange={this.onNavigationStateChange}
-          onMessage={this._onMessage}
+          onMessage={Platform === 'android' ? this._onMessage : false}
           injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
           style={{ flex: 1 }}
 
