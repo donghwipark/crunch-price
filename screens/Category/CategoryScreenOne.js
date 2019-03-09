@@ -220,7 +220,6 @@ export default class CategoryScreenOne extends React.Component {
                 <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 5 }}>
                   버튼
                 </Text>
-
               </View>
             </TouchableOpacity>
           )}
