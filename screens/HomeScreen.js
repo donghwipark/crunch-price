@@ -13,6 +13,7 @@ import {
   FlatList,
   AsyncStorage,
 } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -65,6 +66,7 @@ export default class HomeScreen extends React.Component {
       // setModalVisible: false,
       recentlyOpened: [],
       openedProductsLoaded: false,
+      isProductRemoved: false,
     };
   }
 
@@ -72,17 +74,40 @@ export default class HomeScreen extends React.Component {
     const banner = await Axios.get('http://api.crunchprice.com/design/crunch_banner_list.php');
     this.setState({ bannerData: banner.data.data, bannerLoaded: true });
     // 열어본 상품 listAsync
-    await asyncStorageSet('opened', JSON.stringify([1004020377, 1004036866, 1004020315, 100403988, 100405555])); // asyncstorage 추가 할 수 있는 펑션 필요. 최대길이는 10
-    // await AsyncStorage.clear();
-    const openedProducts = await (asyncStorageGet('opened'));
+    // await asyncStorageSet('opened', JSON.stringify([1004020377, 1004036866, 1004020315, 100403988, 100405555])); // asyncstorage 추가 할 수 있는 펑션 필요. 최대길이는 10
     // console.log(openedProducts);
-    const receivedOpenedGoods = await Axios.get(`http://api.crunchprice.com/goods/recent_goods.php?todayGoodsNo=${openedProducts}`)
-    const processedOpenedResults = JSON.stringify(receivedOpenedGoods.data.data);
-    this.setState({ recentlyOpened: JSON.parse(processedOpenedResults), openedProductsLoaded: true });
+    await this.handleAsyncOpenedProducts();
   }
+
+  componentDidUpdate = async (prevProps, prevState) => {
+    /*
+    const { recentlyOpened } = this.state;
+    const openedList = await asyncStorageGet('openedProducts');
+    if (prevState.recentlyOpened !== JSON.stringify(openedList)) {
+      await this.setState({ recentlyOpened });
+    } else {
+      return false;
+    }
+    return recentlyOpened;
+    */
+  }
+  
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
+  }
+
+  handleAsyncOpenedProducts = async () => {
+    const openedProducts = await (asyncStorageGet('openedProducts'));
+    console.log(JSON.stringify(openedProducts))
+    const productsArray = [];
+    for (let i = 0; i < openedProducts.length; i += 1) {
+      productsArray.push(Number(openedProducts[i]));
+    }
+    const receivedOpenedGoods = await Axios.get(`http://api.crunchprice.com/goods/recent_goods.php?todayGoodsNo=[${productsArray}]`);
+    // console.log(JSON.stringify(receivedOpenedGoods));
+    const processedOpenedResults = JSON.stringify(receivedOpenedGoods.data.data);
+    this.setState({ recentlyOpened: JSON.parse(processedOpenedResults), openedProductsLoaded: true });
   }
 
   onPressLinking = async (URL) => {
@@ -128,6 +153,26 @@ export default class HomeScreen extends React.Component {
     );
   };
 
+  onViewedProductRemoved = async () => {
+    console.log('activated');
+    const openedProducts = await (asyncStorageGet('openedProducts'));
+    if (openedProducts) {
+      const productsArray = [];
+      for (let i = 0; i < openedProducts.length; i += 1) {
+        productsArray.push(Number(openedProducts[i]));
+      }
+      // console.log(productsArray)
+      const receivedOpenedGoods = await Axios.get(`http://api.crunchprice.com/goods/recent_goods.php?todayGoodsNo=[${productsArray}]`);
+      // console.log(JSON.stringify(receivedOpenedGoods));
+      const processedOpenedResults = JSON.stringify(receivedOpenedGoods.data.data);
+      await this.setState({ recentlyOpened: JSON.parse(processedOpenedResults) });
+      // console.log(this.state.recentlyOpened)
+    } else {
+      return null;
+    }
+    return 'anything';
+  }
+
   render() {
     const {
       bannerData,
@@ -135,6 +180,7 @@ export default class HomeScreen extends React.Component {
       // modalVisible,
       recentlyOpened,
       openedProductsLoaded,
+      isProductRemoved,
     } = this.state;
     const { navigation } = this.props;
     // console.log(bannerData);
@@ -145,9 +191,15 @@ export default class HomeScreen extends React.Component {
     }
     return (
       <View style={styles.primeContainer}>
+        <NavigationEvents
+          onWillFocus={() => {
+            this.onViewedProductRemoved();
+            console.log('onWillFocus');
+          }}
+        />
         <ScrollView vertical>
           <MainRecommended bannerData={bannerData} />
-          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened navigation={navigation} recentlyOpened={recentlyOpened} /> }
+          {recentlyOpened.length === 0 ? this.createTemplateBox(noOpenedGoods) : <MainRecentlyOpened navigation={navigation} recentlyOpened={recentlyOpened} isProductRemoved={isProductRemoved} onViewedProductRemoved={this.onViewedProductRemoved} /> }
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: wp('5%'), marginBottom: hp('-2%'), fontFamily: 'NanumSquareRoundL' }}>크런치 프라이스에서,</Text>
           <MainRecommended bannerData={bannerData} />
           {this.createTemplateBox(kakaotalkAsk)}

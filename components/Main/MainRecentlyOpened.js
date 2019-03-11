@@ -32,11 +32,22 @@ export default class MainRecentlyOpened extends React.Component {
   }
 
   onPressMoreDetails = () => {
-    const { navigation } = this.props;
+    const { navigation, onViewedProductRemoved } = this.props;
     const { recentlyOpened } = this.state;
     navigation.navigate('OpenedList', {
       recentlyOpened,
+      onViewedProductRemoved,
     });
+  }
+
+  componentDidUpdate = async (prevProps) => {
+    const { recentlyOpened } = this.props;
+    if (prevProps.recentlyOpened !== recentlyOpened) {
+      await this.setState({ recentlyOpened });
+    } else {
+      return false;
+    }
+    return recentlyOpened;
   }
 
 
@@ -57,7 +68,7 @@ export default class MainRecentlyOpened extends React.Component {
             renderItem={({ item }) => (
               <View style={styles.container}>
                 <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { item })} style={{ backgroundColor: 'white', width: wp('32%'), height: hp('26%'), borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
-                  <Image source={{ uri: item.mainImageUrl, width: wp('32%'), height: hp('15%') }} style={styles.recommendedImages} />
+                  <Image source={{ uri: item.mainImageUrl, width: wp('32%'), height: hp('17%') }} style={styles.recommendedImages} />
                   <View style={{ marginLeft: 10, marginRight: 10 }}>
                     <Text style={{ fontSize: 9, fontWeight: 'bold' }} numberOfLines={2}>{item.goodsNm}</Text>
                     {
