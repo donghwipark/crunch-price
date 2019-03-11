@@ -13,7 +13,7 @@ export default class CategoryScreen extends React.Component {
     Platform.OS === 'ios'
       ? (
         <Image
-          style={{ width: '50%', height: '60%' }}
+          style={{ width: '45%', height: '65%' }}
           source={require('../../assets/images/crunch-logo.png')}
         />
       )
@@ -27,15 +27,13 @@ export default class CategoryScreen extends React.Component {
       <Text />
     ),
     headerRight: (
-      <Icon
-        name={
-          Platform.OS === 'ios'
-            ? 'ios-cart'
-            : 'md-cart'
-        }
-        size={26}
-        style={{ marginRight: wp('3%') }}
-      />
+      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          source={require('../../assets/images/trolley.png')}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
     ),
   };
 

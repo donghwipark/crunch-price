@@ -26,7 +26,6 @@ import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 // 템플릿 아이템 박스, Async헬퍼펑션
 import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/boxTemplate';
 import { asyncStorageSet, asyncStorageGet } from '../helper/asyncHelper';
-import fakeData from '../components/Main/fakeData';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -34,7 +33,7 @@ export default class HomeScreen extends React.Component {
     Platform.OS === 'ios'
       ? (
         <Image
-          style={{ width: '50%', height: '60%' }}
+          style={{ width: '45%', height: '65%' }}
           source={require('../assets/images/crunch-logo.png')}
         />
       )
@@ -48,15 +47,13 @@ export default class HomeScreen extends React.Component {
       <Text />
     ),
     headerRight: (
-      <Icon
-        name={
-          Platform.OS === 'ios'
-            ? 'ios-cart'
-            : 'md-cart'
-        }
-        size={26}
-        style={{ marginRight: wp('3%') }}
-      />
+      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          source={require('../assets/images/trolley.png')}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
     ),
   };
 
