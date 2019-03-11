@@ -19,6 +19,15 @@ import {
 export default class CategoryScreenTwo extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam('name'),
+    headerRight: (
+      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          source={require('../../assets/images/trolley.png')}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    ),
   });
 
   state = {
@@ -73,6 +82,7 @@ export default class CategoryScreenTwo extends React.Component {
 
 
   onSelection = async (item) => {
+    const { navigation } = this.props
     const getItem = await AsyncStorage.getItem('recentlyViewedItems');
     if (getItem === null) {
       const array = [];
@@ -85,6 +95,7 @@ export default class CategoryScreenTwo extends React.Component {
       getItemArray.push(item);
       await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(getItemArray));
     }
+    navigation.navigate('WebView', { goodsNo: item[1] });
   }
 
   onSelectCategory = (num, name) => {
@@ -263,7 +274,7 @@ export default class CategoryScreenTwo extends React.Component {
               onPress={() => this.onSelection(item)}
             >
               <View>
-                <Image source={{ uri: item[2], width: wp('45%'), height: hp('25%') }} style={styles.gridRecommendedImages} />
+                <Image source={{ uri: item[2], width: wp('45%'), height: hp('27%') }} style={styles.gridRecommendedImages} />
                 <Image
                   source={require('../../assets/images/heart.png')}
                   style={{ position: 'absolute',

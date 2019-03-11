@@ -23,6 +23,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.crunchprice",
       "supportsTablet": true
     },
     "android": {

@@ -3,6 +3,7 @@ import {
   Text,
   Platform,
   View,
+  Image,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
@@ -11,7 +12,6 @@ import { AntDesign } from 'react-native-vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Axios from 'axios';
 import Emoji from 'react-native-emoji';
-import Colors from '../constants/Colors';
 
 import { handleNumberToPrice } from '../helper/helperFuncs';
 
@@ -24,17 +24,11 @@ export default class MyPageScreen extends React.Component {
   static navigationOptions = {
     headerTitle: '마이 쇼핑',
     headerRight: (
-      <TouchableOpacity
-        onPress={console.log(1)}
-      >
-        <Icon
-          name={
-          Platform.OS === 'ios'
-            ? 'ios-cart'
-            : 'md-cart'
-        }
-          size={26}
-          style={{ marginRight: wp('3%') }}
+      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          source={require('../assets/images/trolley.png')}
+          resizeMode="contain"
         />
       </TouchableOpacity>
     ),
@@ -75,8 +69,6 @@ export default class MyPageScreen extends React.Component {
         }}
         >
           <View>
-          <View>
-      </View>
             <View style={{ flexDirection: 'row' }}>
               <Emoji name="bust_in_silhouette" style={{ fontSize: wp('10%'), marginLeft: wp('3%'), marginRight: wp('3%') }} />
               <View style={{ justifyContent: 'space-between' }}>
@@ -106,7 +98,10 @@ export default class MyPageScreen extends React.Component {
               <Text style={styles.buttonText}>구매후기</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.middleButton}>
+          <TouchableOpacity
+            style={styles.middleButton}
+            onPress={()=>{this.props.navigation.navigate('PokeList')}}
+          >
             <View style={styles.middleButtonTextView}>
               <Text style={styles.buttonText}>{userData.wishCount}</Text>
               <Text style={styles.buttonText}>찜한 상품</Text>

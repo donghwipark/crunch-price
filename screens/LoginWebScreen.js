@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-export default class StartScreen extends React.Component {
+export default class logIn extends React.Component {
   static navigationOptions = {
     header: null,
   };
