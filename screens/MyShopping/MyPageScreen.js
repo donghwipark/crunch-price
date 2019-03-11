@@ -13,7 +13,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import Axios from 'axios';
 import Emoji from 'react-native-emoji';
 
-import { handleNumberToPrice } from '../helper/helperFuncs';
+import { handleNumberToPrice } from '../../helper/helperFuncs';
 
 // api: http://api.crunchprice.com/member/get_mypage_info.php 로그인된 상태에서 해당 회원의 정보를 불러오는 API
 // res form: {data:{success, data:{...}}
@@ -27,7 +27,7 @@ export default class MyPageScreen extends React.Component {
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Image
           style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
-          source={require('../assets/images/trolley.png')}
+          source={require('../../assets/images/trolley.png')}
           resizeMode="contain"
         />
       </TouchableOpacity>
@@ -37,11 +37,13 @@ export default class MyPageScreen extends React.Component {
   state={
     userData: {},
     isLoaded: false,
+    cancel: false,
+    refund: false,
   }
 
   componentDidMount = async () => {
     this.testCookieRequest();
-    console.log(this.state.userData)
+    console.log(this.state.userData);
   }
 
   testCookieRequest = async () => {
@@ -53,7 +55,8 @@ export default class MyPageScreen extends React.Component {
   };
 
   render() {
-    const { userData, isLoaded } = this.state;
+    const { userData, isLoaded, cancel, refund } = this.state;
+    const { navigation } = this.props;
     if (!isLoaded) {
       return (<Text>loading</Text>);
     }
@@ -91,8 +94,13 @@ export default class MyPageScreen extends React.Component {
             </View>
           </View>
         </View>
-        <View style={styles.middleButtonView}>
-          <TouchableOpacity style={styles.middleButton}>
+        <View
+          style={styles.middleButtonView}
+        >
+          <TouchableOpacity
+            style={styles.middleButton}
+            onPress={() => navigation.navigate('WebView', { page: 'mypage_goods_review.php' })}
+          >
             <View style={styles.middleButtonTextView}>
               <Text style={styles.buttonText}>{userData.reviewCount}</Text>
               <Text style={styles.buttonText}>구매후기</Text>
@@ -100,7 +108,7 @@ export default class MyPageScreen extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.middleButton}
-            onPress={()=>{this.props.navigation.navigate('PokeList')}}
+            onPress={() => navigation.navigate('PokeList')}
           >
             <View style={styles.middleButtonTextView}>
               <Text style={styles.buttonText}>{userData.wishCount}</Text>
@@ -113,7 +121,10 @@ export default class MyPageScreen extends React.Component {
               <Text style={styles.buttonText}>최근 본 상품</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.middleButton}>
+          <TouchableOpacity
+            style={styles.middleButton}
+            onPress={() => navigation.navigate('WebView', { page: 'mileage.php' })}
+          >
             <View style={styles.middleButtonTextView}>
               <Text style={styles.buttonText}>{handleNumberToPrice(Number(userData.mileage))}</Text>
               <Text style={styles.buttonText}>포인트</Text>
@@ -125,7 +136,7 @@ export default class MyPageScreen extends React.Component {
         }}
         >
           <TouchableOpacity
-            onPress={() => { console.log('주문목록/배송조회'); }}
+            onPress={() => navigation.navigate('WebView', { page: 'order_list.php' })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -146,7 +157,7 @@ export default class MyPageScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('취소/반품/교환 내역'); }}
+            onPress={() => this.setState({ cancel: !cancel })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -156,8 +167,8 @@ export default class MyPageScreen extends React.Component {
                 <Icon
                   name={
                     Platform.OS === 'ios'
-                      ? 'ios-arrow-forward'
-                      : 'md-arrow-forward'
+                      ? 'ios-arrow-down'
+                      : 'md-arrow-down'
                   }
                   size={26}
                   style={styles.arrow}
@@ -165,9 +176,53 @@ export default class MyPageScreen extends React.Component {
                 />
               </View>
             </View>
+            {cancel && (
+              <View>
+                <TouchableOpacity
+                  style={styles.categoryTwo}
+                  onPress={() => navigation.navigate('WebView', { page: 'order_list.php?mode=cancelRequest' })}
+                >
+                  <View style={styles.categoryListTwo}>
+                    <Text style={styles.textTwo}>취소/반품/교환 신청 내역</Text>
+                  </View>
+                  <View style={styles.categoryListTwo}>
+                    <Icon
+                      name={
+                        Platform.OS === 'ios'
+                          ? 'ios-arrow-forward'
+                          : 'md-arrow-forward'
+                      }
+                      size={26}
+                      style={styles.arrow}
+                      color="rgb(209, 209, 214)"
+                    />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.categoryTwo}
+                  onPress={() => navigation.navigate('WebView', { page: 'order_list.php?mode=cancel' })}
+                >
+                  <View style={styles.categoryListTwo}>
+                    <Text style={styles.textTwo}>취소/반품/교환 처리 내역</Text>
+                  </View>
+                  <View style={styles.categoryListTwo}>
+                    <Icon
+                      name={
+                        Platform.OS === 'ios'
+                          ? 'ios-arrow-forward'
+                          : 'md-arrow-forward'
+                      }
+                      size={26}
+                      style={styles.arrow}
+                      color="rgb(209, 209, 214)"
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('환불/입금 내역'); }}
+            onPress={() => this.setState({ refund: !refund })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -177,8 +232,8 @@ export default class MyPageScreen extends React.Component {
                 <Icon
                   name={
                     Platform.OS === 'ios'
-                      ? 'ios-arrow-forward'
-                      : 'md-arrow-forward'
+                      ? 'ios-arrow-down'
+                      : 'md-arrow-down'
                   }
                   size={26}
                   style={styles.arrow}
@@ -186,9 +241,53 @@ export default class MyPageScreen extends React.Component {
                 />
               </View>
             </View>
+            { refund && (
+            <View>
+              <TouchableOpacity
+                style={styles.categoryTwo}
+                onPress={() => navigation.navigate('WebView', { page: 'order_list.php?mode=refundRequest' })}
+              >
+                <View style={styles.categoryListTwo}>
+                  <Text style={styles.textTwo}>환불 신청 내역</Text>
+                </View>
+                <View style={styles.categoryListTwo}>
+                  <Icon
+                    name={
+                            Platform.OS === 'ios'
+                              ? 'ios-arrow-forward'
+                              : 'md-arrow-forward'
+                          }
+                    size={26}
+                    style={styles.arrow}
+                    color="rgb(209, 209, 214)"
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.categoryTwo}
+                onPress={() => navigation.navigate('WebView', { page: 'order_list.php?mode=refund' })}
+              >
+                <View style={styles.categoryListTwo}>
+                  <Text style={styles.textTwo}>환불/입금 처리 내역</Text>
+                </View>
+                <View style={styles.categoryListTwo}>
+                  <Icon
+                    name={
+                            Platform.OS === 'ios'
+                              ? 'ios-arrow-forward'
+                              : 'md-arrow-forward'
+                          }
+                    size={26}
+                    style={styles.arrow}
+                    color="rgb(209, 209, 214)"
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+            )}
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('쿠폰'); }}
+            onPress={() => navigation.navigate('WebView', { page: 'deposit.php' })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -209,7 +308,7 @@ export default class MyPageScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('포인트'); }}
+            onPress={() => navigation.navigate('WebView', { page: 'mileage.php' })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -230,7 +329,7 @@ export default class MyPageScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('1:1 문의 내역'); }}
+            onPress={() => navigation.navigate('WebView', { page: 'mypage_qa.php' })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -251,7 +350,7 @@ export default class MyPageScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('나의 상품문의'); }}
+            onPress={() => navigation.navigate('WebView', { page: 'mypage_goods_qa.php' })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -272,7 +371,7 @@ export default class MyPageScreen extends React.Component {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { console.log('배송지 관리'); }}
+            onPress={() => navigation.navigate('WebView', { page: 'shipping.php' })}
           >
             <View style={styles.category}>
               <View style={styles.categoryList}>
@@ -311,10 +410,27 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgb(209, 209, 214)',
     marginTop: 10,
   },
+  categoryTwo: {
+    width: wp('88%'),
+    marginLeft: wp('2%'),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 0.6,
+    borderBottomColor: 'rgb(209, 209, 214)',
+    marginTop: 7,
+  },
   categoryList: {
     flexDirection: 'row',
     marginTop: 10,
     marginBottom: 10,
+  },
+  categoryListTwo: {
+    flexDirection: 'row',
+    marginTop: 7,
+    marginBottom: 7,
+  },
+  textTwo: {
+    fontSize: 12,
   },
   middleButtonView: {
     flex: 1,
@@ -341,4 +457,3 @@ const styles = StyleSheet.create({
     padding: 2,
   },
 });
-
