@@ -13,6 +13,8 @@ import CategoryScreenOne from '../screens/Category/CategoryScreenOne';
 import CategoryScreenTwo from '../screens/Category/CategoryScreenTwo';
 import CategoryScreenThree from '../screens/Category/CategoryScreenThree';
 import CategoryScreenFour from '../screens/Category/CategoryScreenFour';
+import PokeListScreen from '../screens/PokeListScreen';
+import WebViewScreen from '../screens/WebViewScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -46,6 +48,7 @@ const CategoryStack = createStackNavigator({
   CategoryTwo: CategoryScreenTwo,
   CategoryThree: CategoryScreenThree,
   CategoryFour: CategoryScreenFour,
+  WebView: WebViewScreen,
 });
 
 CategoryStack.navigationOptions = {
@@ -70,6 +73,7 @@ CategoryStack.navigationOptions = {
 const SearchStack = createStackNavigator({
   Search: SearchScreen,
   Result: SearchResult,
+  WebView: WebViewScreen,
 });
 
 SearchStack.navigationOptions = {
@@ -94,6 +98,7 @@ SearchStack.navigationOptions = {
 
 const MyPageScreenStack = createStackNavigator({
   MyPage: MyPageScreen,
+  PokeList: PokeListScreen,
 });
 
 MyPageScreenStack.navigationOptions = {

@@ -21,6 +21,15 @@ import {
 export default class SearchResult extends React.Component {
   static navigationOptions = {
     title: '검색',
+    headerRight: (
+      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          source={require('../../assets/images/trolley.png')}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+    ),
   };
 
   state = {
@@ -74,7 +83,7 @@ export default class SearchResult extends React.Component {
   }
 
   onSelection = async (item) => {
-    // console.log(item);
+    const { navigation } = this.props
     const getItem = await AsyncStorage.getItem('openedProducts');
     if (getItem === null) {
       const opened = [];
@@ -101,7 +110,7 @@ export default class SearchResult extends React.Component {
         await AsyncStorage.setItem('openedProducts', JSON.stringify(getItemArray));
       }
     }
-    return 'error';
+    navigation.navigate('WebView', { goodsNo: item[1] });
   }
 
   updateSearch = async () => {
