@@ -74,18 +74,34 @@ export default class SearchResult extends React.Component {
   }
 
   onSelection = async (item) => {
-    const getItem = await AsyncStorage.getItem('recentlyViewedItems');
+    // console.log(item);
+    const getItem = await AsyncStorage.getItem('openedProducts');
     if (getItem === null) {
-      const array = [];
-      array.push(item);
-      await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(array));
+      const opened = [];
+      const goodNum = item[1];
+      opened.push(goodNum);
+      await AsyncStorage.setItem('openedProducts', JSON.stringify(opened));
     } else {
+      // console.log(getItem);
       let getItemArray = JSON.parse(getItem);
-      getItemArray = new Set(getItemArray);
-      getItemArray = Array.from(getItemArray);
-      getItemArray.push(item);
-      await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(getItemArray));
+      // console.log(getItemArray);
+      // getItemArray = Array.from(getItemArray);
+      // getItemArray.push(item);
+      // await AsyncStorage.setItem('openedProducts', JSON.stringify(getItemArray));
+      const goodNum = item[1];
+      if (getItemArray.includes(goodNum)) {
+        return false;
+      }
+      if (getItemArray.length >= 10) {
+        getItemArray.pop();
+        getItemArray.unshift(goodNum);
+        await AsyncStorage.setItem('openedProducts', JSON.stringify(getItemArray));
+      } else {
+        getItemArray.unshift(goodNum);
+        await AsyncStorage.setItem('openedProducts', JSON.stringify(getItemArray));
+      }
     }
+    return 'error';
   }
 
   updateSearch = async () => {
