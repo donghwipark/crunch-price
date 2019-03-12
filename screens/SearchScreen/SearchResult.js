@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import { SearchBar } from 'react-native-elements';
-import { Feather, SimpleLineIcons, FontAwesome } from 'react-native-vector-icons';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -24,7 +23,7 @@ export default class SearchResult extends React.Component {
     headerRight: (
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
           source={require('../../assets/images/trolley.png')}
           resizeMode="contain"
         />
@@ -45,8 +44,7 @@ export default class SearchResult extends React.Component {
 
   componentDidMount() {
     const { navigation } = this.props;
-    this.setState({ searchInfo: navigation.getParam('result') });
-    this.setState({ search: navigation.getParam('search') });
+    this.updateSearch(navigation.getParam('search'));
   }
 
   onPressList = () => {
@@ -83,25 +81,41 @@ export default class SearchResult extends React.Component {
   }
 
   onSelection = async (item) => {
-    const { navigation } = this.props
-    const getItem = await AsyncStorage.getItem('recentlyViewedItems');
+    const { navigation } = this.props;
+    const getItem = await AsyncStorage.getItem('openedProducts');
     if (getItem === null) {
-      const array = [];
-      array.push(item);
-      await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(array));
+      const opened = [];
+      const goodNum = item[1];
+      opened.push(goodNum);
+      await AsyncStorage.setItem('openedProducts', JSON.stringify(opened));
     } else {
-      let getItemArray = JSON.parse(getItem);
-      getItemArray = new Set(getItemArray);
-      getItemArray = Array.from(getItemArray);
-      getItemArray.push(item);
-      await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(getItemArray));
+      // console.log(getItem);
+      const getItemArray = JSON.parse(getItem);
+      // console.log(getItemArray);
+      // getItemArray = Array.from(getItemArray);
+      // getItemArray.push(item);
+      // await AsyncStorage.setItem('openedProducts', JSON.stringify(getItemArray));
+      const goodNum = item[1];
+      if (getItemArray.includes(goodNum)) {
+        return false;
+      }
+      if (getItemArray.length >= 10) {
+        getItemArray.pop();
+        getItemArray.unshift(goodNum);
+        await AsyncStorage.setItem('openedProducts', JSON.stringify(getItemArray));
+      } else {
+        getItemArray.unshift(goodNum);
+        await AsyncStorage.setItem('openedProducts', JSON.stringify(getItemArray));
+      }
     }
     navigation.navigate('WebView', { goodsNo: item[1] });
   }
 
-  updateSearch = async () => {
+  updateSearch = async (val) => {
     const { beforeSearch } = this.state;
-    const search = beforeSearch;
+    const search = beforeSearch || val;
+    await this.setState({ search });
+
     axios
       .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
         params: {
@@ -138,7 +152,6 @@ export default class SearchResult extends React.Component {
         console.error(error);
       });
     // await AsyncStorage.removeItem('search')
-
     if (search.length > 0) {
       const getItem = await AsyncStorage.getItem('search');
       if (getItem === null) {
@@ -157,6 +170,7 @@ export default class SearchResult extends React.Component {
 
   makeRemoteRequest = async (val) => {
     const { search, searchInfo, page } = this.state;
+    console.log('state for search on update',search)
     let num = Number(page);
     num += 1;
     this.setState({ page: num });
@@ -204,6 +218,8 @@ export default class SearchResult extends React.Component {
 
   render() {
     const { navigation } = this.props;
+    const { search } = this.state;
+    console.log('changing of the search', search);
     const { sortingType, searchInfo, beforeSearch, listUri, gridUri, oneUri } = this.state;
     const itemInfo = searchInfo || navigation.getParam('result');
     const oneBigStub = (

@@ -32,7 +32,7 @@ export default class MyShoppingWebViewScreen extends React.Component {
     headerRight: (
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
           source={require('../../assets/images/trolley.png')}
           resizeMode="contain"
         />

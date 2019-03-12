@@ -43,8 +43,7 @@ export default class SearchScreen extends React.Component {
   state = {
     recentSearch: [],
     popularSearch: [],
-    search: null,
-    searchInfo: [],
+    search: [],
     getRecentlyViewedItems: [],
   };
 
@@ -54,42 +53,9 @@ export default class SearchScreen extends React.Component {
   }
 
   updateSearch = async () => {
-    const { search, recentSearch } = this.state;
-    axios
-      .get('http://api.crunchprice.com/goods/get_search_word_goods.php', {
-        params: {
-          page: '1',
-          searchWords: search,
-        },
-      })
-      .then((response) => {
-        const { length } = response.data.data;
-        if (length > 0) {
-          const itemsInfo = [];
-          for (let i = 0; i < length; i++) {
-            const produceInfo = [];
-            produceInfo.push(response.data.data[i].goodsNm);
-            produceInfo.push(response.data.data[i].goodsNo);
-            produceInfo.push(response.data.data[i].mainImageUrl);
-            produceInfo.push(response.data.data[i].goodsUnitPrice10);
-            produceInfo.push(response.data.data[i].goodsUnitPrice1);
-            itemsInfo.push(produceInfo);
-          }
-          return itemsInfo;
-        }
-        // name response.data.data[0].goodsNm
-        // key response.data.data[0].goodsNo
-        // image  response.data.data[0].mainImageUrl
-        // 10th price response.data.data[0].goodsUnitPrice10
-        // 1th price response.data.data[0].goodsUnitPrice1
-      })
-      .then((result) => {
-        const { navigation } = this.props;
-        navigation.navigate('Result', { result, search });
-      })
-      .catch((error) => {
-        Alert(error);
-      });
+    const { search } = this.state;
+    const { navigation } = this.props;
+    navigation.navigate('Result', { search });
     // await AsyncStorage.removeItem('search')
 
     if (search.length > 0) {
@@ -116,7 +82,6 @@ export default class SearchScreen extends React.Component {
     const { recentSearch } = this.state;
     const filterResult = recentSearch;
     filterResult.splice(filterResult.indexOf(val), 1);
-    console.log(filterResult);
     await this.setState({ recentSearch: filterResult });
 
     // delete the val from here with async option
@@ -140,8 +105,10 @@ export default class SearchScreen extends React.Component {
     });
 
     await AsyncStorage.getItem('recentlyViewedItems').then((res) => {
-      const recentlyViewedItems = JSON.parse(res);
+      let recentlyViewedItems = JSON.parse(res);
+      recentlyViewedItems = recentlyViewedItems.slice(-10);
       this.setState({ getRecentlyViewedItems: recentlyViewedItems.reverse() });
+      AsyncStorage.SetItem('recentlyViewedItems', JSON.stringify(recentlyViewedItems))
     });
   };
 
@@ -150,7 +117,6 @@ export default class SearchScreen extends React.Component {
     const { search, popularSearch, recentSearch, getRecentlyViewedItems } = this.state;
     let i = 0;
     let h = 0;
-    console.log(recentSearch);
     // need to put the number of the values and the +2 to calculate the height of the tables
     return (
       <View style={styles.page}>
@@ -369,7 +335,7 @@ export default class SearchScreen extends React.Component {
                       <TouchableOpacity
                         key={result[1]}
                         style={{
-                          position: 'ralative',
+                          position: 'relative',
                           borderLeftWidth: 1,
                           borderRightWidth: 1,
                           borderBottomWidth: 1,

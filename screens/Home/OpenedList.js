@@ -19,6 +19,7 @@ import {
 } from 'react-native-responsive-screen';
 
 import { handleNumberToPrice } from '../../helper/helperFuncs';
+import { asyncStorageSet, asyncStorageGet } from '../../helper/asyncHelper';
 
 // import List from '../../components/Main/sorter/List';
 // import Grid from '../../components/Main/sorter/Grid';
@@ -40,6 +41,7 @@ export default class OpenedList extends React.Component {
     super(props);
     this.state = {
       isLoaded: false,
+      recentlyOpened: null,
     };
   }
 
@@ -50,6 +52,20 @@ export default class OpenedList extends React.Component {
       recentlyOpened,
       isLoaded: true,
     });
+  }
+
+  onDeleteProduct = async (goodsNo) => {
+    const { navigation } = this.props;
+    const { recentlyOpened } = this.state;
+    const onViewedProductRemoved = navigation.getParam('onViewedProductRemoved');
+    const filtered = recentlyOpened.filter(item => item.goodsNo !== goodsNo);
+    this.setState({ recentlyOpened: filtered });
+    const openedList = await asyncStorageGet('openedProducts');
+    // console.log(openedList);
+    const goodIndex = openedList.indexOf((goodsNo).toString());
+    openedList.splice(goodIndex, 1);
+    await asyncStorageSet('openedProducts', openedList);
+    onViewedProductRemoved();
   }
 
   render() {
@@ -74,16 +90,13 @@ export default class OpenedList extends React.Component {
                 <Text />
                 <Text style={{ color: 'rgb(142, 142, 147)' }}>{`${handleNumberToPrice(Number(item.goodsUnitPrice1))}원`}</Text>
                 <View style={{ flex: 1, justifyContent: 'flex-end', alignItem: 'flex-end' }}>
-                  <TouchableOpacity style={{ alignSelf: 'flex-start' }}>
+                  <TouchableOpacity onPress={() => this.onDeleteProduct(item.goodsNo)} style={{ alignSelf: 'flex-start' }}>
                     <Text style={{ fontSize: 20, color: 'rgb(0, 122, 255)' }}>삭제</Text>
                   </TouchableOpacity>
                 </View>
               </View>
               <View style={{ width: '40%', alignItem: 'flex-end', paddingRight: 10, marginTop: 15, marginRight: 10 }}>
                 <Image source={{ uri: item.mainImageUrl, width: 120, height: 100 }} style={{ alignSelf: 'flex-end' }} />
-                <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
-                  <Text style={{ fontSize: 20, marginTop: 10, color: 'rgb(0, 122, 255)' }}>장바구니 담기</Text>
-                </TouchableOpacity>
               </View>
             </View>
           )}

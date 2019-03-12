@@ -29,7 +29,7 @@ export default class CategoryScreen extends React.Component {
     headerRight: (
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
           source={require('../../assets/images/trolley.png')}
           resizeMode="contain"
         />
@@ -37,17 +37,14 @@ export default class CategoryScreen extends React.Component {
     ),
   };
 
-  getCategoryList = async () => {
-    console.log(1);
-  }
-
   onSelectCategory = async (name, num) => {
     const { navigation } = this.props;
-    axios
+    navigation.navigate('CategoryOne', { cateCd: num });
+    await axios
       .get(`http://api.crunchprice.com/category/get_category_counts.php?cateCd=${num}`)
       .then(response => response.data.data)
       .then((response) => {
-        navigation.navigate('CategoryOne', { cateCd: num, name, category: response });
+        navigation.navigate('CategoryOne', { name, category: response });
       });
   }
 
