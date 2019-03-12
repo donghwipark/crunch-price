@@ -34,8 +34,19 @@ const photos = [
 ];
 
 export default class SearchScreen extends React.Component {
-  static navigationOptions = {
-    title: '검색',
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: '검색',
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('cartWebScreen')} style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
+            source={require('../../assets/images/trolley.png')}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      ),
+    };
   };
 
   scrollX = new Animated.Value(0);

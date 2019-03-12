@@ -21,17 +21,19 @@ import { handleNumberToPrice } from '../../helper/helperFuncs';
 // 주요 props: memNm 사용자명, reviewCount 리뷰 남긴 횟수, wishCount 찜 상품 수, mileage 포인트, memberFl 회원 종류
 
 export default class MyPageScreen extends React.Component {
-  static navigationOptions = {
-    headerTitle: '마이 쇼핑',
-    headerRight: (
-      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
-          source={require('../../assets/images/trolley.png')}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-    ),
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle: '마이 쇼핑',
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('cartWebScreen')} style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
+            source={require('../../assets/images/trolley.png')}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      ),
+    };
   };
 
   state={

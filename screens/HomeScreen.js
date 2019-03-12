@@ -21,41 +21,44 @@ import Emoji from 'react-native-emoji';
 
 import MainRecommended from '../components/Main/MainRecommended';
 import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
+
 // import MainBannerLinks from '../components/Main/MainBannerLinks';
 // import fakeData from '../components/Main/fakeData';
 
-// 템플릿 아이템 박스, Async헬퍼펑션
+// 템플릿 아이템 박스, Async, 헬퍼펑션
 import { kakaotalkAsk, kakaotalkSellerCenter, noOpenedGoods } from '../helper/boxTemplate';
 import { asyncStorageSet, asyncStorageGet } from '../helper/asyncHelper';
 
 export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    headerTitle:
-    Platform.OS === 'ios'
-      ? (
-        <Image
-          style={{ width: '45%', height: '65%' }}
-          source={require('../assets/images/crunch-logo.png')}
-        />
-      )
-      : (
-        <Image
-          style={{ width: '70%', height: '55%', resizeMode: 'contain', marginLeft: 25 }}
-          source={require('../assets/images/crunch-logo.png')}
-        />
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle:
+      Platform.OS === 'ios'
+        ? (
+          <Image
+            style={{ width: '45%', height: '65%' }}
+            source={require('../assets/images/crunch-logo.png')}
+          />
+        )
+        : (
+          <Image
+            style={{ width: '70%', height: '55%', resizeMode: 'contain', marginLeft: 25 }}
+            source={require('../assets/images/crunch-logo.png')}
+          />
+        ),
+      headerLeft: (
+        <Text />
       ),
-    headerLeft: (
-      <Text />
-    ),
-    headerRight: (
-      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
-          source={require('../assets/images/trolley.png')}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-    ),
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('cartWebScreen')} style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
+            source={require('../assets/images/trolley.png')}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      ),
+    };
   };
 
   constructor() {
@@ -78,20 +81,6 @@ export default class HomeScreen extends React.Component {
     // console.log(openedProducts);
     await this.handleAsyncOpenedProducts();
   }
-
-  componentDidUpdate = async (prevProps, prevState) => {
-    /*
-    const { recentlyOpened } = this.state;
-    const openedList = await asyncStorageGet('openedProducts');
-    if (prevState.recentlyOpened !== JSON.stringify(openedList)) {
-      await this.setState({ recentlyOpened });
-    } else {
-      return false;
-    }
-    return recentlyOpened;
-    */
-  }
-  
 
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
