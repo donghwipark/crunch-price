@@ -38,8 +38,16 @@ export default class App extends React.Component {
         ...Icon.Ionicons.font,
         // We include SpaceMono because we use it in HomeScreen.js. Feel free
         // to remove this if you are not using it in your app
-        'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+        NanumSquareRoundB: require('./assets/fonts/NanumSquareRoundB.ttf'),
+        NanumSquareRoundEB: require('./assets/fonts/NanumSquareRoundEB.ttf'),
         NanumSquareRoundL: require('./assets/fonts/NanumSquareRoundL.ttf'),
+        NanumSquareRoundR: require('./assets/fonts/NanumSquareRoundR.ttf'),
+        NotoSans_Black: require('./assets/fonts/NotoSans-Black.ttf'),
+        NotoSans_Bold: require('./assets/fonts/NotoSans-Bold.ttf'),
+        NotoSans_Light: require('./assets/fonts/NotoSans-Light.ttf'),
+        NotoSans_Medium: require('./assets/fonts/NotoSans-Medium.ttf'),
+        NotoSans_Regular: require('./assets/fonts/NotoSans-Regular.ttf'),
+        NotoSans_Thin: require('./assets/fonts/NotoSans-Thin.ttf'),
 
       }),
     ]);

@@ -16,6 +16,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { openedItemAsync } from '../../helper/helperFuncs';
+
 export default class CategoryScreenThree extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam('name'),
@@ -95,6 +97,7 @@ export default class CategoryScreenThree extends React.Component {
       getItemArray.push(item);
       await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(getItemArray));
     }
+    await openedItemAsync(item);
     navigation.navigate('WebView', { goodsNo: item[1] });
   }
 
