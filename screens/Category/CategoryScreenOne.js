@@ -21,7 +21,7 @@ export default class CategoryScreenOne extends React.Component {
     headerRight: (
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
           source={require('../../assets/images/trolley.png')}
           resizeMode="contain"
         />
@@ -99,7 +99,6 @@ export default class CategoryScreenOne extends React.Component {
   }
 
   onSelectCategory = (num, name) => {
-    console.log('on select the list', name, num);
     const { navigation } = this.props;
     axios
       .get('http://api.crunchprice.com/category/get_category_counts.php', {
@@ -119,7 +118,8 @@ export default class CategoryScreenOne extends React.Component {
 
 
   updateSearch = async () => {
-    const { cateCd } = this.state;
+    const { navigation } = this.props;
+    const cateCd = navigation.getParam('cateCd');
     axios
       .get('http://api.crunchprice.com/goods/get_category_goods.php', {
         params: {
@@ -155,11 +155,13 @@ export default class CategoryScreenOne extends React.Component {
       .catch((error) => {
         console.error(error);
       });
+      await this.setState({ cateCd })
     // await AsyncStorage.removeItem('search')
   };
 
   makeRemoteRequest = async (val) => {
     const { cateCd, searchInfo, page } = this.state;
+    console.log('num from the props', cateCd)
     let num = Number(page);
     num += 1;
     this.setState({ page: num });
@@ -322,7 +324,6 @@ export default class CategoryScreenOne extends React.Component {
           numColumns={2}
           refreshing={false}
           legacyImplementation={false}
-          onRefresh={() => console.log('done')}
           onEndReachedThreshold={0.5}
           onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
           ListFooterComponent={() => <ActivityIndicator animating size="large" />}
@@ -382,7 +383,6 @@ export default class CategoryScreenOne extends React.Component {
           numColumns={1}
           refreshing={false}
           legacyImplementation={false}
-          onRefresh={() => console.log('done')}
           onEndReachedThreshold={0.5}
           onEndReached={distanceFromEnd => this.makeRemoteRequest(distanceFromEnd)}
           ListFooterComponent={() => <ActivityIndicator animating />}

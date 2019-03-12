@@ -1,11 +1,11 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator, createBottomTabNavigator, NavigationActions } from 'react-navigation';
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/Category/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen/SearchScreen';
 import SearchResult from '../screens/SearchScreen/SearchResult';
-import MyPageScreen from '../screens/MyPageScreen';
+import MyPageScreen from '../screens/MyShopping/MyPageScreen';
 import OpenedListScreen from '../screens/Home/OpenedList';
 import MainRecentlyOpened from '../components/Main/MainRecentlyOpened';
 import ProductDetails from '../screens/Home/productDetails';
@@ -13,8 +13,19 @@ import CategoryScreenOne from '../screens/Category/CategoryScreenOne';
 import CategoryScreenTwo from '../screens/Category/CategoryScreenTwo';
 import CategoryScreenThree from '../screens/Category/CategoryScreenThree';
 import CategoryScreenFour from '../screens/Category/CategoryScreenFour';
-import PokeListScreen from '../screens/PokeListScreen';
+import PokeListScreen from '../screens/MyShopping/PokeListScreen';
 import WebViewScreen from '../screens/WebViewScreen';
+import MyShoppingWebViewScreen from '../screens/MyShopping/MyShoppingWebViewScreen';
+
+const resetStack = (navigation, routes) => {
+  if (routes.length > 1) {
+    const { routeName } = routes[0];
+    navigation.dispatch(NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({ routeName })],
+    }));
+  }
+};
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -99,6 +110,7 @@ SearchStack.navigationOptions = {
 const MyPageScreenStack = createStackNavigator({
   MyPage: MyPageScreen,
   PokeList: PokeListScreen,
+  WebView: MyShoppingWebViewScreen,
 });
 
 MyPageScreenStack.navigationOptions = {
@@ -118,6 +130,10 @@ MyPageScreenStack.navigationOptions = {
         </View>
       )
   ),
+  tabBarOnPress: ({ navigation, defaultHandler }) => {
+    navigation.popToTop();
+    defaultHandler();
+  },
 };
 
 

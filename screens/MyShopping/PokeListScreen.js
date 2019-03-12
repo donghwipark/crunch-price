@@ -14,20 +14,16 @@ export default class PokeListScreen extends React.Component {
     headerRight: (
       <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%'), marginBottom: hp('1%') }}
-          source={require('../assets/images/trolley.png')}
+          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
+          source={require('../../assets/images/trolley.png')}
           resizeMode="contain"
         />
       </TouchableOpacity>
     ),
   };
 
-  constructor () {
-    super()
-    this.state = {
-      selectedIndex: 0
-    }
-    this.updateIndex = this.updateIndex.bind(this)
+  state = {
+    selectedIndex: 0
   }
   
   updateIndex (selectedIndex) {
@@ -51,7 +47,7 @@ export default class PokeListScreen extends React.Component {
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
           <Image
             style={{ marginLeft: wp('2%'), width: wp('13%'), height: wp('16%') }}
-            source={require('../assets/images/heartAfter.png')}
+            source={require('../../assets/images/heartAfter.png')}
             resizeMode="contain"
           />
           <Text style={{ fontSize: '20', color: 'grey' }}>찜한 브랜드</Text>
