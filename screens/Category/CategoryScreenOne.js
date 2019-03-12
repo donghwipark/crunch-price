@@ -15,6 +15,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
+import { openedItemAsync } from '../../helper/helperFuncs';
+
 export default class CategoryScreenOne extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam('name'),
@@ -88,6 +90,11 @@ export default class CategoryScreenOne extends React.Component {
       const array = [];
       array.push(item);
       await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(array));
+      // Home스크린 asyncStorage 삽입
+      const opened = [];
+      const goodNum = item[1];
+      opened.push(goodNum);
+      await AsyncStorage.setItem('openedProducts', JSON.stringify(opened));
     } else {
       let getItemArray = JSON.parse(getItem);
       getItemArray = new Set(getItemArray);
@@ -95,6 +102,7 @@ export default class CategoryScreenOne extends React.Component {
       getItemArray.push(item);
       await AsyncStorage.setItem('recentlyViewedItems', JSON.stringify(getItemArray));
     }
+    await openedItemAsync(item);
     navigation.navigate('WebView', { goodsNo: item[1] });
   }
 

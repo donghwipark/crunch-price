@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
-export default class logIn extends React.Component {
+export default class LoginWebScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -76,7 +76,7 @@ export default class logIn extends React.Component {
           onNavigationStateChange={this.onNavigationStateChange}
           onMessage={Platform.OS === 'android' ? this._onMessage : false}
           injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
-          style={{ flex: 1 }}
+          style={{height: '100%', width: '100%', marginTop: -hp('30%')}}
 
         />
       </View>

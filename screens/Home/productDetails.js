@@ -101,17 +101,17 @@ render() {
   }
   return (
     <View style={styles.primeContainer}>
-      <View>
-        <TouchableOpacity onPress={this.testCookieRequest}><Text>aaaaaaaa</Text></TouchableOpacity>
-      </View>
       <WebView
         source={{ uri: webViewUrl }}
         onNavigationStateChange={this.onNavigationStateChange}
         onMessage={Platform.OS === 'android' ? this._onMessage : false}
         injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
-        style={{ flex: 1 }}
+        style={{height: '100%', width: '100%', marginTop: -hp('30%')}}
+        automaticallyAdjustContentInsets={false}
+        scrollEnabled={false}
       />
     </View>
+
   );
 }
 }

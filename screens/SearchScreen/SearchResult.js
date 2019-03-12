@@ -83,7 +83,7 @@ export default class SearchResult extends React.Component {
   }
 
   onSelection = async (item) => {
-    const { navigation } = this.props
+    const { navigation } = this.props;
     const getItem = await AsyncStorage.getItem('openedProducts');
     if (getItem === null) {
       const opened = [];

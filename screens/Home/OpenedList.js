@@ -96,7 +96,9 @@ export default class OpenedList extends React.Component {
                 </View>
               </View>
               <View style={{ width: '40%', alignItem: 'flex-end', paddingRight: 10, marginTop: 15, marginRight: 10 }}>
+                <TouchableOpacity>
                 <Image source={{ uri: item.mainImageUrl, width: 120, height: 100 }} style={{ alignSelf: 'flex-end' }} />
+                </TouchableOpacity>
               </View>
             </View>
           )}

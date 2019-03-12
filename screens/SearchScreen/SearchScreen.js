@@ -369,7 +369,7 @@ export default class SearchScreen extends React.Component {
                       <TouchableOpacity
                         key={result[1]}
                         style={{
-                          position: 'ralative',
+                          position: 'relative',
                           borderLeftWidth: 1,
                           borderRightWidth: 1,
                           borderBottomWidth: 1,
