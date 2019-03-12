@@ -31,5 +31,4 @@ const openedItemAsync = async (item) => {
   }
 };
 
-
 export { handleNumberToPrice, openedItemAsync };

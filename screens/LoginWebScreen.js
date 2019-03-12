@@ -76,7 +76,7 @@ export default class LoginWebScreen extends React.Component {
           onNavigationStateChange={this.onNavigationStateChange}
           onMessage={Platform.OS === 'android' ? this._onMessage : false}
           injectedJavaScript={'setTimeout(() => window.postMessage(document.cookie), 0)'}
-          style={{height: '100%', width: '100%', marginTop: -hp('30%')}}
+          style={{height: '100%', width: '100%', marginTop: -hp('57.5%')}}
 
         />
       </View>

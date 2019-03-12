@@ -8,33 +8,35 @@ import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 export default class CategoryScreen extends React.Component {
-  static navigationOptions = {
-    headerTitle:
-    Platform.OS === 'ios'
-      ? (
-        <Image
-          style={{ width: '45%', height: '65%' }}
-          source={require('../../assets/images/crunch-logo.png')}
-        />
-      )
-      : (
-        <Image
-          style={{ width: '70%', height: '55%', resizeMode: 'contain', marginLeft: 25 }}
-          source={require('../../assets/images/crunch-logo.png')}
-        />
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerTitle:
+      Platform.OS === 'ios'
+        ? (
+          <Image
+            style={{ width: '45%', height: '65%' }}
+            source={require('../../assets/images/crunch-logo.png')}
+          />
+        )
+        : (
+          <Image
+            style={{ width: '70%', height: '55%', resizeMode: 'contain', marginLeft: 25 }}
+            source={require('../../assets/images/crunch-logo.png')}
+          />
+        ),
+      headerLeft: (
+        <Text />
       ),
-    headerLeft: (
-      <Text />
-    ),
-    headerRight: (
-      <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Image
-          style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
-          source={require('../../assets/images/trolley.png')}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-    ),
+      headerRight: (
+        <TouchableOpacity onPress={() => navigation.navigate('cartWebScreen')} style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            style={{ width: wp('6.5%'), height: wp('8%'), marginRight: wp('3%') }}
+            source={require('../../assets/images/trolley.png')}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      ),
+    };
   };
 
   onSelectCategory = async (name, num) => {

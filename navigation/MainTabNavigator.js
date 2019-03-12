@@ -1,6 +1,8 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator, NavigationActions } from 'react-navigation';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 import HomeScreen from '../screens/HomeScreen';
 import CategoryScreen from '../screens/Category/CategoryScreen';
 import SearchScreen from '../screens/SearchScreen/SearchScreen';
@@ -16,6 +18,7 @@ import CategoryScreenFour from '../screens/Category/CategoryScreenFour';
 import PokeListScreen from '../screens/MyShopping/PokeListScreen';
 import WebViewScreen from '../screens/WebViewScreen';
 import MyShoppingWebViewScreen from '../screens/MyShopping/MyShoppingWebViewScreen';
+import cartWebScreen from '../screens/cartWebScreen';
 
 const resetStack = (navigation, routes) => {
   if (routes.length > 1) {
@@ -32,6 +35,7 @@ const HomeStack = createStackNavigator({
   OpenedList: OpenedListScreen,
   MainRecentlyOpened,
   ProductDetails,
+  cartWebScreen,
 });
 
 HomeStack.navigationOptions = {
@@ -40,13 +44,13 @@ HomeStack.navigationOptions = {
     focused
       ? (
         <View style={{ marginBottom: 25, alignItems: 'center' }}>
-          <Image source={require('../assets/images/BottomTabIcons/HomeActive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/HomeActive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'center', color: 'rgb(93, 190, 143)', fontSize: 10 }}>홈</Text>
         </View>
       )
       : (
         <View style={{ marginBottom: 25 }}>
-          <Image source={require('../assets/images/BottomTabIcons/HomeInactive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/HomeInactive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>홈</Text>
         </View>
       )
@@ -60,6 +64,7 @@ const CategoryStack = createStackNavigator({
   CategoryThree: CategoryScreenThree,
   CategoryFour: CategoryScreenFour,
   WebView: WebViewScreen,
+  cartWebScreen,
 });
 
 CategoryStack.navigationOptions = {
@@ -68,13 +73,13 @@ CategoryStack.navigationOptions = {
     focused
       ? (
         <View style={{ marginBottom: 25, alignItems: 'center' }}>
-          <Image source={require('../assets/images/BottomTabIcons/CategoryActive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/CategoryActive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'center', color: 'rgb(93, 190, 143)', fontSize: 10 }}>카테고리</Text>
         </View>
       )
       : (
         <View style={{ marginBottom: 25, alignItems: 'center' }}>
-          <Image source={require('../assets/images/BottomTabIcons/CategoryInactive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/CategoryInactive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>카테고리</Text>
         </View>
       )
@@ -85,6 +90,7 @@ const SearchStack = createStackNavigator({
   Search: SearchScreen,
   Result: SearchResult,
   WebView: WebViewScreen,
+  cartWebScreen,
 });
 
 SearchStack.navigationOptions = {
@@ -93,13 +99,13 @@ SearchStack.navigationOptions = {
     focused
       ? (
         <View style={{ marginBottom: 25, alignItems: 'center' }}>
-          <Image source={require('../assets/images/BottomTabIcons/SearchActive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/SearchActive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'center', color: 'rgb(93, 190, 143)', fontSize: 10 }}>검색</Text>
         </View>
       )
       : (
         <View style={{ marginBottom: 25, alignItems: 'center' }}>
-          <Image source={require('../assets/images/BottomTabIcons/SearchInactive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/SearchInactive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>검색</Text>
         </View>
       )
@@ -111,6 +117,7 @@ const MyPageScreenStack = createStackNavigator({
   MyPage: MyPageScreen,
   PokeList: PokeListScreen,
   WebView: MyShoppingWebViewScreen,
+  cartWebScreen,
 });
 
 MyPageScreenStack.navigationOptions = {
@@ -119,13 +126,13 @@ MyPageScreenStack.navigationOptions = {
     focused
       ? (
         <View style={{ marginBottom: 25, alignItems: 'center' }}>
-          <Image source={require('../assets/images/BottomTabIcons/MyActive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/MyActive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'left', color: 'rgb(93, 190, 143)', fontSize: 10 }}>마이쇼핑</Text>
         </View>
       )
       : (
         <View style={{ marginBottom: 25, alignItems: 'center' }}>
-          <Image source={require('../assets/images/BottomTabIcons/MyInactive.png')} />
+          <Image source={require('../assets/images/BottomTabIcons/MyInactive.png')} style={{ width: wp('7%'), height: hp('4%') }} />
           <Text style={{ textAlign: 'center', color: 'rgb(209, 209, 214)', fontSize: 10 }}>마이쇼핑</Text>
         </View>
       )
